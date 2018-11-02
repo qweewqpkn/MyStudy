@@ -1,0 +1,11 @@
+ButtonClick用于实现检测ugui的按钮点击事件监听
+SceneObjClick 可用于UGUI的按钮 也可以用于场景的对象 
+使用：将脚本挂在要监听的对象上就可以了，注意：对于监听场景的物体要添加一个Physics Raycaster 脚本到渲染场景对象的摄像机上。 而监听UI的对象，在添加Canvas的自带就添加了一个Graphic Raycaster组件所以我们自己不用添加了
+
+原理都是：利用射线实现的
+
+A.场景物体要监听点击需要哪些东西？
+1.物体带BoxCollider
+2.场景EventSystem 要有组件EventSystem 和 StandaloneInputModule
+3.物体带SceneObjClick ，该脚本重载了点击事件
+4.摄像机带Physics Raycaster 组件

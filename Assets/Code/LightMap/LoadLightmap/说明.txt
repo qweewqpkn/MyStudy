@@ -1,0 +1,2 @@
+1.使用BakeLightMap场景烘焙lightmap后，右键点击挂载LightMapTest对象上得脚本LightMapConfig的SaveData后， 保存prefab.
+2.使用LoadLightMap场景加载之前的prefab后，调用LightMapConfig脚本中的Setup，将光照信息设置出来。
