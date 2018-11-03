@@ -1,0 +1,7 @@
+.vs/
+Library/
+Temp/
+ProjectSettings/ProjectVersion.txt
+ProjectSettings/PresetManager.asset
+Packages/manifest.json
+UnityPackageManager/
