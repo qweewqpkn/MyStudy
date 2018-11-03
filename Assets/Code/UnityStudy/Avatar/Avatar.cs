@@ -25,6 +25,28 @@ public class Avatar : MonoBehaviour
     public List<PartData> mPartParentList= new List<PartData>();
     private Dictionary<PartType, GameObject> mPartDic = new Dictionary<PartType, GameObject>();
 
+    private Animation mAnimation;
+    public Animation Animation
+    {
+        get
+        {
+            if(mAnimation == null)
+            {
+                GameObject obj;
+                if(mPartDic.TryGetValue(PartType.eSkeleton, out obj))
+                {
+                    mAnimation = obj.GetComponentInChildren<Animation>();
+                }
+                else
+                {
+                    Debug.LogError("请加载骨骼后，在获取动画对象");
+                }
+            }
+
+            return mAnimation;
+        }
+    }
+
     public void ChangeMaterial(PartType partType, string partID)
     {
         GameObject obj;

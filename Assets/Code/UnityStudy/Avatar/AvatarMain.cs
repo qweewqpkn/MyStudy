@@ -11,11 +11,11 @@ public class AvatarMain : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        GameObject obj = AvatarManager.Instance.CreateAvatar("AvatarWrap");
-        AvatarManager.Instance.ChangePart(obj, Avatar.PartType.eSkeleton, "Female/female_skeleton");
-        AvatarManager.Instance.ChangePart(obj, Avatar.PartType.eHair, "Female/female_hair-1_red");
-        AvatarManager.Instance.ChangePart(obj, Avatar.PartType.eFace, "Female/female_face-1");
-        AvatarManager.Instance.ChangePart(obj, Avatar.PartType.eBody, "Female/female_top-1_blue");
+        Avatar avatar = AvatarManager.Instance.CreateAvatar("AvatarWrap");
+        avatar.ChangePart(Avatar.PartType.eSkeleton, "Female/female_skeleton");
+        avatar.ChangePart(Avatar.PartType.eHair, "Female/female_hair-1_red");
+        avatar.ChangePart(Avatar.PartType.eFace, "Female/female_face-1");
+        avatar.ChangePart(Avatar.PartType.eBody, "Female/female_top-1_blue");
 
         List<string> hairList = new List<string>() { "Female/female_hair-1_brown", "Female/female_hair-1_red", "Female/female_hair-1_yellow", "Female/female_hair-2_cyan", "Female/female_hair-2_dark", "Female/female_hair-2_pink" };
         List<string> faceList = new List<string>() { "Female/female_face-1", "Female/female_face-2" };
@@ -29,7 +29,7 @@ public class AvatarMain : MonoBehaviour {
         {
             if(hairIndex < hairList.Count)
             {
-                AvatarManager.Instance.ChangePart(obj, Avatar.PartType.eHair, hairList[hairIndex]);
+                avatar.ChangePart(Avatar.PartType.eHair, hairList[hairIndex]);
                 hairIndex = (hairIndex + 1) % hairList.Count;
             }
         });
@@ -38,7 +38,7 @@ public class AvatarMain : MonoBehaviour {
         {
             if (faceIndex < faceList.Count)
             {
-                AvatarManager.Instance.ChangePart(obj, Avatar.PartType.eFace, faceList[faceIndex]);
+                avatar.ChangePart(Avatar.PartType.eFace, faceList[faceIndex]);
                 faceIndex = (faceIndex + 1) % faceList.Count;
             }
         });
@@ -47,7 +47,7 @@ public class AvatarMain : MonoBehaviour {
         {
             if (bodyIndex < bodyList.Count)
             {
-                AvatarManager.Instance.ChangePart(obj, Avatar.PartType.eBody, bodyList[bodyIndex]);
+                avatar.ChangePart(Avatar.PartType.eBody, bodyList[bodyIndex]);
                 bodyIndex = (bodyIndex + 1) % bodyList.Count;
             }
         });

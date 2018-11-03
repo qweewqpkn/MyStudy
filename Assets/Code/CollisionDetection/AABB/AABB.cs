@@ -73,17 +73,5 @@ public class AABB {
         }
     }
 
-    private void Generate8Points()
-    {
-        m8PointList.Clear();
-        m8PointList.Add(mMin);
-        m8PointList.Add(new Vector3(mMax.x, mMin.y, mMin.z));
-        m8PointList.Add(new Vector3(mMax.x, mMin.y, mMax.z));
-        m8PointList.Add(new Vector3(mMin.x, mMin.y, mMax.z));
-        m8PointList.Add(new Vector3(mMin.x, mMax.y, mMin.z));
-        m8PointList.Add(new Vector3(mMax.x, mMax.y, mMin.z));
-        m8PointList.Add(new Vector3(mMax.x, mMax.y, mMax.z));
-        m8PointList.Add(new Vector3(mMin.x, mMax.y, mMax.z));
 
-    }
 }

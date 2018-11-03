@@ -238,27 +238,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Code\AABB\AABB.cs" />
-    <Compile Include="Assets\Code\AABB\AABBMain.cs" />
-    <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\AssetLoadRequest.cs" />
-    <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\PrefabAutoDestory.cs" />
-    <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\ResourceManager.cs" />
-    <Compile Include="Assets\Code\Avatar\Avatar.cs" />
-    <Compile Include="Assets\Code\Avatar\AvatarMain.cs" />
-    <Compile Include="Assets\Code\Avatar\AvatarManager.cs" />
-    <Compile Include="Assets\Code\ClickEvent\ButtonClick.cs" />
-    <Compile Include="Assets\Code\ClickEvent\SceneObjClick.cs" />
-    <Compile Include="Assets\Code\GhostShadow\AnimationCallback.cs" />
-    <Compile Include="Assets\Code\GhostShadow\GhostShadow.cs" />
-    <Compile Include="Assets\Code\GhostShadow\GhostShadowCreator.cs" />
-    <Compile Include="Assets\Code\LightMap\LoadLightmap\LightMapConfig.cs" />
-    <Compile Include="Assets\Code\LightMap\LoadLightmap\LoadLightMap.cs" />
+    <Compile Include="Assets\Code\CollisionDetection\AABB\AABB.cs" />
+    <Compile Include="Assets\Code\CollisionDetection\AABB\AABBMain.cs" />
     <Compile Include="Assets\Code\SpacePartition\Grid\GridManager.cs" />
     <Compile Include="Assets\Code\SpacePartition\QuadTree\QuadMain.cs" />
     <Compile Include="Assets\Code\SpacePartition\QuadTree\QuadTree.cs" />
-    <Compile Include="Assets\Code\TestAndroid\TestAndroid.cs" />
-    <Compile Include="Assets\Code\UISceneAdapter\UISceneAdapter.cs" />
-    <Compile Include="Assets\Code\WorldPos2UIPos\WorldPos2UIPos.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Assetbundle\LoadAssetbundle\AssetLoadRequest.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Assetbundle\LoadAssetbundle\PrefabAutoDestory.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Assetbundle\LoadAssetbundle\ResourceManager.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Avatar\Avatar.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Avatar\AvatarMain.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Avatar\AvatarManager.cs" />
+    <Compile Include="Assets\Code\UnityStudy\ClickEvent\ButtonClick.cs" />
+    <Compile Include="Assets\Code\UnityStudy\ClickEvent\SceneObjClick.cs" />
+    <Compile Include="Assets\Code\UnityStudy\GhostShadow\AnimationCallback.cs" />
+    <Compile Include="Assets\Code\UnityStudy\GhostShadow\GhostShadow.cs" />
+    <Compile Include="Assets\Code\UnityStudy\GhostShadow\GhostShadowCreator.cs" />
+    <Compile Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\LightMapConfig.cs" />
+    <Compile Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\LoadLightMap.cs" />
+    <Compile Include="Assets\Code\UnityStudy\TestAndroid\TestAndroid.cs" />
+    <Compile Include="Assets\Code\UnityStudy\UISceneAdapter\UISceneAdapter.cs" />
+    <Compile Include="Assets\Code\UnityStudy\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Shader\AverageBlur\AverageBlur.cs" />
     <Compile Include="Assets\Shader\Depth\DepthToWorldPos\DepthToWorldPos.cs" />
     <Compile Include="Assets\Shader\GodRays\GodRays1\GodRays1.cs" />
@@ -272,10 +272,10 @@
     <Compile Include="Assets\Shader\UVRotation\UVRotation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Code\ClickEvent\说明.txt" />
-    <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
-    <None Include="Assets\Code\LightMap\LoadLightmap\Shader\LightMap.shader" />
-    <None Include="Assets\Code\LightMap\LoadLightmap\说明.txt" />
+    <None Include="Assets\Code\UnityStudy\ClickEvent\说明.txt" />
+    <None Include="Assets\Code\UnityStudy\GhostShadow\GhostShadow.shader" />
+    <None Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\Shader\LightMap.shader" />
+    <None Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\说明.txt" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Shader\AlphaBlend\AlphaBlend.shader" />
     <None Include="Assets\Shader\AnisotropicSpecular\AnisotropicSpecular.shader" />
