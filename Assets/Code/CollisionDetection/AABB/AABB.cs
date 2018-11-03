@@ -9,6 +9,22 @@ public class AABB {
     private Transform mTransform;
     private List<Vector3> m8PointList = new List<Vector3>();
 	
+    public Vector3 Max
+    {
+        get
+        {
+            return mMax;
+        }
+    }
+
+    public Vector3 Min
+    {
+        get
+        {
+            return mMin;
+        }
+    }
+
     public Vector3 Center
     {
         get
@@ -73,5 +89,40 @@ public class AABB {
         }
     }
 
+    //合并AABB
+    public void Merge(AABB aabb)
+    {
+        mMin = Vector3.Min(aabb.Min, mMin);
+        mMax = Vector3.Max(aabb.Max, mMax);
+    }
 
+    //找出aabb上距离指定点最近的点
+    public Vector3 NearestPoint(Vector3 point)
+    {
+        return Vector3.Max(mMin, Vector3.Min(point, mMax));
+    }
+    
+    //检测AABB和圆的碰撞
+    public bool CollisionCircle(Vector3 point, float radius)
+    {
+        Vector3 nearestPoint = NearestPoint(point);
+        return Vector3.Distance(nearestPoint, point) <= radius;
+    }
+
+    //检测AABB和AABB的碰撞
+    public bool CollisionAABB(AABB aabb)
+    {
+        if(mMax.x >= aabb.Min.x && Min.x <= aabb.mMax.x)
+        {
+            if (mMax.y >= aabb.Min.y && Min.y <= aabb.mMax.y)
+            {
+                if (mMax.z >= aabb.Min.z && Min.z <= aabb.mMax.z)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
