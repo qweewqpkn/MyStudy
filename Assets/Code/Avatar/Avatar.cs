@@ -77,7 +77,7 @@ public class Avatar : MonoBehaviour
         if (obj != null && parentObj != null)
         {
             mPartDic[partType] = Instantiate(obj);
-            mPartDic[partType].transform.SetParent(parentObj.transform);
+            mPartDic[partType].transform.SetParent(parentObj.transform, false);
         }
     }
 
@@ -100,7 +100,7 @@ public class Avatar : MonoBehaviour
         if(obj != null && parentObj != null)
         {
             mPartDic[partType] = Instantiate(obj);
-            mPartDic[partType].transform.SetParent(parentObj.transform);
+            mPartDic[partType].transform.SetParent(parentObj.transform, false);
             SkinnedMeshRenderer mr = mPartDic[partType].GetComponentInChildren<SkinnedMeshRenderer>();
             if (mr != null)
             {

@@ -7,10 +7,10 @@ public class AvatarManager {
     public static AvatarManager Instance = new AvatarManager();
     private AvatarManager() { }
 
-	public GameObject LoadAvatar(int id)
+    //加载包装avatar prefab
+    public GameObject CreateAvatar(string avatarWrap)
     {
-        //加载包装prefab
-        GameObject wrapObj = Resources.Load<GameObject>("AvatarWrap");
+        GameObject wrapObj = Resources.Load<GameObject>(avatarWrap);
         wrapObj = GameObject.Instantiate(wrapObj);
         Avatar avatar = wrapObj.GetComponent<Avatar>();
         if(avatar == null)
@@ -18,15 +18,10 @@ public class AvatarManager {
             Debug.LogError("Avatar script is missing, please Check!");
         }
 
-        avatar.ChangePart(Avatar.PartType.eSkeleton, "Female/female_skeleton");
-        avatar.ChangePart(Avatar.PartType.eHair, "Female/female_hair-1_red");
-        avatar.ChangePart(Avatar.PartType.eFace, "Female/female_face-1");
-        avatar.ChangePart(Avatar.PartType.eBody, "Female/female_top-1_blue");
-        avatar.ChangePart(Avatar.PartType.eWeapon, "");
-
         return wrapObj;
     }
 
+    //改变avatar的子部件
     public void ChangePart(GameObject target, Avatar.PartType partType, string partID)
     {
         Avatar avatar = target.GetComponent<Avatar>();
@@ -40,6 +35,7 @@ public class AvatarManager {
         }
     }
 
+    //改变子部件的材质
     public void ChangeMaterial(GameObject target, Avatar.PartType partType, string partID)
     {
         Avatar avatar = target.GetComponent<Avatar>();
