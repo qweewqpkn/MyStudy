@@ -240,6 +240,7 @@
   <ItemGroup>
     <Compile Include="Assets\Code\CollisionDetection\AABB\AABB.cs" />
     <Compile Include="Assets\Code\CollisionDetection\AABB\AABBMain.cs" />
+    <Compile Include="Assets\Code\DataStruct\AVLTree\AVLMain.cs" />
     <Compile Include="Assets\Code\DataStruct\AVLTree\AVLTree.cs" />
     <Compile Include="Assets\Code\DataStruct\BinarySearchTree\BinarySearchMain.cs" />
     <Compile Include="Assets\Code\DataStruct\BinarySearchTree\BinarySearchTree.cs" />
