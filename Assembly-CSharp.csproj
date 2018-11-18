@@ -61,27 +61,32 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Code\AABB\AABB.cs" />
-    <Compile Include="Assets\Code\AABB\AABBMain.cs" />
-    <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\AssetLoadRequest.cs" />
-    <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\PrefabAutoDestory.cs" />
-    <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\ResourceManager.cs" />
-    <Compile Include="Assets\Code\Avatar\Avatar.cs" />
-    <Compile Include="Assets\Code\Avatar\AvatarMain.cs" />
-    <Compile Include="Assets\Code\Avatar\AvatarManager.cs" />
-    <Compile Include="Assets\Code\ClickEvent\ButtonClick.cs" />
-    <Compile Include="Assets\Code\ClickEvent\SceneObjClick.cs" />
-    <Compile Include="Assets\Code\GhostShadow\AnimationCallback.cs" />
-    <Compile Include="Assets\Code\GhostShadow\GhostShadow.cs" />
-    <Compile Include="Assets\Code\GhostShadow\GhostShadowCreator.cs" />
-    <Compile Include="Assets\Code\LightMap\LoadLightmap\LightMapConfig.cs" />
-    <Compile Include="Assets\Code\LightMap\LoadLightmap\LoadLightMap.cs" />
+    <Compile Include="Assets\Code\CollisionDetection\AABB\AABB.cs" />
+    <Compile Include="Assets\Code\CollisionDetection\AABB\AABBMain.cs" />
+    <Compile Include="Assets\Code\CollisionDetection\AABB\World.cs" />
+    <Compile Include="Assets\Code\DataStruct\AVLTree\AVLMain.cs" />
+    <Compile Include="Assets\Code\DataStruct\AVLTree\AVLTree.cs" />
+    <Compile Include="Assets\Code\DataStruct\BinarySearchTree\BinarySearchMain.cs" />
+    <Compile Include="Assets\Code\DataStruct\BinarySearchTree\BinarySearchTree.cs" />
     <Compile Include="Assets\Code\SpacePartition\Grid\GridManager.cs" />
     <Compile Include="Assets\Code\SpacePartition\QuadTree\QuadMain.cs" />
     <Compile Include="Assets\Code\SpacePartition\QuadTree\QuadTree.cs" />
-    <Compile Include="Assets\Code\TestAndroid\TestAndroid.cs" />
-    <Compile Include="Assets\Code\UISceneAdapter\UISceneAdapter.cs" />
-    <Compile Include="Assets\Code\WorldPos2UIPos\WorldPos2UIPos.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Assetbundle\LoadAssetbundle\AssetLoadRequest.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Assetbundle\LoadAssetbundle\PrefabAutoDestory.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Assetbundle\LoadAssetbundle\ResourceManager.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Avatar\Avatar.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Avatar\AvatarMain.cs" />
+    <Compile Include="Assets\Code\UnityStudy\Avatar\AvatarManager.cs" />
+    <Compile Include="Assets\Code\UnityStudy\ClickEvent\ButtonClick.cs" />
+    <Compile Include="Assets\Code\UnityStudy\ClickEvent\SceneObjClick.cs" />
+    <Compile Include="Assets\Code\UnityStudy\GhostShadow\AnimationCallback.cs" />
+    <Compile Include="Assets\Code\UnityStudy\GhostShadow\GhostShadow.cs" />
+    <Compile Include="Assets\Code\UnityStudy\GhostShadow\GhostShadowCreator.cs" />
+    <Compile Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\LightMapConfig.cs" />
+    <Compile Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\LoadLightMap.cs" />
+    <Compile Include="Assets\Code\UnityStudy\TestAndroid\TestAndroid.cs" />
+    <Compile Include="Assets\Code\UnityStudy\UISceneAdapter\UISceneAdapter.cs" />
+    <Compile Include="Assets\Code\UnityStudy\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Shader\AverageBlur\AverageBlur.cs" />
     <Compile Include="Assets\Shader\Depth\DepthToWorldPos\DepthToWorldPos.cs" />
     <Compile Include="Assets\Shader\GodRays\GodRays1\GodRays1.cs" />
@@ -101,14 +106,14 @@
     <None Include="Assets\Shader\Depth\DepthToWorldPos\DepthToWorldPos.shader" />
     <None Include="Assets\Shader\Outline\Outline(3).shader" />
     <None Include="Assets\Shader\Outline\Outline(2).shader" />
-    <None Include="Assets\Code\LightMap\LoadLightmap\Shader\LightMap.shader" />
-    <None Include="Assets\Code\ClickEvent\说明.txt" />
+    <None Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\Shader\LightMap.shader" />
+    <None Include="Assets\Code\UnityStudy\ClickEvent\说明.txt" />
     <None Include="Assets\Shader\NormalTex\NormalTex.shader" />
     <None Include="Assets\Shader\Test\AlphaTest-Diffuse.shader" />
     <None Include="Assets\Shader\SSAO\SSAO.shader" />
     <None Include="Assets\Shader\AlphaBlend\AlphaBlend.shader" />
     <None Include="Assets\Shader\Shadow\PlanarShadow\PlanarShadow.shader" />
-    <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
+    <None Include="Assets\Code\UnityStudy\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Shader\Test\AlphaTest-VertexLit.shader" />
     <None Include="Assets\Shader\UVRotation\UVRotation.shader" />
     <None Include="Assets\Shader\Depth\Depth\Depth.shader" />
@@ -124,7 +129,7 @@
     <None Include="Assets\Shader\UNITY_UV_STARTS_AT_TOP\uv_start_at_top.shader" />
     <None Include="Assets\Shader\GodRays\GodRays1\GodRays1.shader" />
     <None Include="Assets\Shader\VertexAnimation\VA1\VA1.shader" />
-    <None Include="Assets\Code\LightMap\LoadLightmap\说明.txt" />
+    <None Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\说明.txt" />
     <None Include="Assets\Shader\GodRays\GodRays2\GodRays2.shader" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/Development/Unity3d/MyStudy/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

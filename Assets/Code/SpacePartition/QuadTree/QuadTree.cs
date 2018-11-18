@@ -77,6 +77,23 @@ public class QuadTreeNode<T> where T : Bound
         }
     }
 
+    private void GetNodeAllData(List<T> list, QuadTreeNode<T> node)
+    {
+        if(node != null)
+        {
+            list.AddRange(node.mDataList);
+        }
+        else
+        {
+            return;
+        }
+
+        for(int i = 0; i < 4; i++)
+        {
+            GetNodeAllData(list, node.mNodeList[i]);
+        }
+    }
+
     private void Split()
     {
         float midX = mRect.xMin + mRect.width / 2.0f;
@@ -110,6 +127,7 @@ public class QuadTreeNode<T> where T : Bound
                 if (node != null)
                 {
                     node.Insert(mDataList[i]);
+                    mDataList.RemoveAt(i);
                 }
                 else
                 {
@@ -119,11 +137,18 @@ public class QuadTreeNode<T> where T : Bound
         }
     }
 
-    public List<T> Retrieve(ref List<T> objList, Rect rect)
+    public void Retrieve(ref List<T> list, QuadTreeNode<T> node, Rect rect)
     {
-
-
-        return objList;
+        QuadTreeNode<T> nextNode = node.GetNode(rect);
+        if (nextNode != null)
+        {
+            list.AddRange(node.mDataList);
+            Retrieve(ref list, nextNode, mRect);
+        }
+        else
+        {
+            GetNodeAllData(list, node);
+        }
     }
 }
 

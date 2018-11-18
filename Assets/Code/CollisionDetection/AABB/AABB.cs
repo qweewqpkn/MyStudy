@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class AABB {
+public class AABB : MonoBehaviour {
     private Vector3 mMin = Vector3.zero;
     private Vector3 mMax = Vector3.zero;
-    private Vector3 mOrigionMeshMin;
-    private Vector3 mOrigionMeshMax;
-    private Transform mTransform;
+    private bool mIsCollision;
     private List<Vector3> m8PointList = new List<Vector3>();
 	
     public Vector3 Max
@@ -45,27 +43,16 @@ public class AABB {
         private set { }
     }
 
-    public static AABB CreateAABB(GameObject obj)
+    void Start()
     {
-        Mesh mesh = obj.GetComponent<MeshFilter>().mesh;
-        AABB aabb = new AABB();
-        aabb.mTransform = obj.transform;
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
         for (int i = 0; i < mesh.vertices.Length; i++)
         {
-            aabb.mOrigionMeshMin = Vector3.Min(mesh.vertices[i], aabb.mOrigionMeshMin);
-            aabb.mOrigionMeshMax = Vector3.Max(mesh.vertices[i], aabb.mOrigionMeshMax);
+            mMin = Vector3.Min(mesh.vertices[i], mMin);
+            mMax = Vector3.Max(mesh.vertices[i], mMax);
         }
-        aabb.UpdateAABB();
-        return aabb;
-    }
 
-    public void UpdateAABB()
-    {
-        mMin = mOrigionMeshMin;
-        mMax = mOrigionMeshMax;
-
-        m8PointList.Clear();
-        m8PointList.Add(mMin);
+        m8PointList.Add(new Vector3(mMin.x, mMin.y, mMin.z));
         m8PointList.Add(new Vector3(mMax.x, mMin.y, mMin.z));
         m8PointList.Add(new Vector3(mMax.x, mMin.y, mMax.z));
         m8PointList.Add(new Vector3(mMin.x, mMin.y, mMax.z));
@@ -73,19 +60,39 @@ public class AABB {
         m8PointList.Add(new Vector3(mMax.x, mMax.y, mMin.z));
         m8PointList.Add(new Vector3(mMax.x, mMax.y, mMax.z));
         m8PointList.Add(new Vector3(mMin.x, mMax.y, mMax.z));
+    }
 
+    void Update()
+    {
         for (int i = 0; i < m8PointList.Count; i++)
         {
-            m8PointList[i] = mTransform.localToWorldMatrix.MultiplyPoint(m8PointList[i]);
+            Vector3 temp = transform.localToWorldMatrix.MultiplyPoint(m8PointList[i]);
+            mMin = i == 0 ? temp : Vector3.Min(mMin, temp);
+            mMax = i == 0 ? temp : Vector3.Max(mMax, temp);
         }
 
-        mMin = m8PointList[0];
-        mMax = m8PointList[0];
-
-        for (int i = 0; i < m8PointList.Count; i++)
+        AABB aabb;
+        if(IsCollision(World.Instance.GetObj<AABB>(), out aabb))
         {
-            mMin = Vector3.Min(mMin, m8PointList[i]);
-            mMax = Vector3.Max(mMax, m8PointList[i]);
+            mIsCollision = true;
+        }
+        else
+        {
+            mIsCollision = false;
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if(mIsCollision)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(Center, Size);
+        }
+        else
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(Center, Size);
         }
     }
 
@@ -110,7 +117,7 @@ public class AABB {
     }
 
     //检测AABB和AABB的碰撞
-    public bool CollisionAABB(AABB aabb)
+    public bool IsCollision(AABB aabb)
     {
         if(mMax.x >= aabb.Min.x && Min.x <= aabb.mMax.x)
         {
@@ -118,6 +125,24 @@ public class AABB {
             {
                 if (mMax.z >= aabb.Min.z && Min.z <= aabb.mMax.z)
                 {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsCollision(List<AABB> aabbList, out AABB aabb)
+    {
+        aabb = null;
+        for(int i = 0; i < aabbList.Count; i++)
+        {
+            if(aabbList[i] != this)
+            {
+                if (IsCollision(aabbList[i]))
+                {
+                    aabb = aabbList[i];
                     return true;
                 }
             }
