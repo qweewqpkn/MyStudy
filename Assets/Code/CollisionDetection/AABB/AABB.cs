@@ -1,12 +1,21 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class AABB : MonoBehaviour {
+public class AABB : QuadTreeData
+{
     private Vector3 mMin = Vector3.zero;
     private Vector3 mMax = Vector3.zero;
     private bool mIsCollision;
     private List<Vector3> m8PointList = new List<Vector3>();
 	
+    public Rect Rect
+    {
+        get
+        {
+            return new Rect(mMin.x, mMin.z, Size.x, Size.z);
+        }
+    }
+
     public Vector3 Max
     {
         get

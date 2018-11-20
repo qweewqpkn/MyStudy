@@ -1,0 +1,10 @@
+9
+C:\Program Files\Unity2017.2.0f3\Editor\Unity.exe
+-quit
+-batchmode
+-projectPath
+E:\code\Unity\MyStudy
+-executeMethod
+BuildAPK.Build
+#log-true
+#network-false

@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-public class Tools
+public class BuildAB
 {
     [MenuItem("Tools/AssetBundle/打包资源")]
     static void Build()

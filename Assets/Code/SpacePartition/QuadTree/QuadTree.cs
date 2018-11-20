@@ -6,14 +6,14 @@ using UnityEngine;
 //1.使用四叉树来管理场景的节点
 //2.快速定位场景某个点指定距离内的所有物体
 
-public class QuadTreeData
+public class QuadTreeData : MonoBehaviour
 {
     public Rect mRect;
 }
 
 public class QuadTreeNode<T> where T : QuadTreeData
 {
-    private const int MAX_DATA = 1;
+    private const int MAX_DATA = 5;
     private const int MAX_LEVEL = 5;
 
     private int mLevel;
@@ -88,14 +88,14 @@ public class QuadTreeNode<T> where T : QuadTreeData
         }
     }
 
-    private void GetNodeAllData(ref List<T> list)
+    private void GetNodeAllData(List<T> list)
     {
         list.AddRange(mDataList);
         if(mNodeList != null)
         {
             for (int i = 0; i < mNodeList.Length; i++)
             {
-                mNodeList[i].GetNodeAllData(ref list);
+                mNodeList[i].GetNodeAllData(list);
             }
         }
     }
@@ -153,17 +153,35 @@ public class QuadTreeNode<T> where T : QuadTreeData
         }
     }
 
-    public void Retrieve(ref List<T> list, Rect rect)
+    //思路是：
+    //1.检测当前节点的区域和目标区域是否有重叠，如果有，那么继续判断节点下数据的区域与目标区域是否重叠. 如果没有，忽略这个区域。
+    //2.如果跟大区域有相交，遍历4个子区域，回到流程1.
+    public void Retrieve(List<T> list, Rect rect)
     {
-        QuadTreeNode<T> nextNode = GetNode(rect);
-        if (nextNode != null)
+        if(mRect.Overlaps(rect))
         {
-            list.AddRange(mDataList);
-            nextNode.Retrieve(ref list, mRect);
+            //检测数据所属区域，是否重叠
+            for(int i = 0; i < mDataList.Count; i++)
+            {
+                if(rect.Overlaps(mDataList[i].mRect))
+                {
+                    list.Add(mDataList[i]);
+                }
+            }
         }
         else
         {
-            GetNodeAllData(ref list);
+            //如果跟大区域没有相交，那么立即返回，不用检测子区域了
+            return;
+        }
+
+        //遍历所有子节点，检测是否重叠
+        if (mNodeList != null)
+        {
+            for (int i = 0; i < mNodeList.Length; i++)
+            {
+                mNodeList[i].Retrieve(list, rect);
+            }
         }
     }
 
@@ -192,7 +210,7 @@ public class QuadTreeNode<T> where T : QuadTreeData
         }
     }
 
-    private void DrawRegion(Rect rect)
+    public void DrawRegion(Rect rect)
     {
         Vector3 from = new Vector3(rect.x, 0.0f, rect.y);
         Vector3 to = new Vector3(rect.x + rect.width, 0.0f, rect.y);

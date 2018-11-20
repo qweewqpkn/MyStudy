@@ -5,26 +5,23 @@ using UnityEngine;
 
 public class World{
     public static World Instance = new World();
-    private List<GameObject> objList = new List<GameObject>();
+    private World()
+    {
+        
+    }
+
+    private QuadTreeNode<AABB> root = new QuadTreeNode<AABB>(0, new Rect(0, 0, 100, 100));
 
     public void CreateObj(GameObject obj)
     {
         GameObject newObj = GameObject.Instantiate(obj);
-        objList.Add(newObj);
+        AABB aabb = obj.AddComponent<AABB>();
+        root.Insert(aabb);
     }
 
     public List<T> GetObj<T>()
     {
-        List<T> list = new List<T>();
-        for(int i = 0; i < objList.Count; i++)
-        {
-            T cmp = objList[i].GetComponent<T>();
-            if (cmp != null)
-            {
-                list.Add(cmp);
-            }
-        }
-
-        return list;
+        return null;
+        //root.Retrieve(, )
     }
 }

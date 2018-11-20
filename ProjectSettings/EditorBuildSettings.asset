@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Code/AutoBuildAPK/AudioBuildAPK.unity
+    guid: eb2989d9a05fc8846b4dd60da74c1b9a

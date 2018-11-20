@@ -4,6 +4,7 @@ using UnityEngine;
 class QuadMain : MonoBehaviour
 {
     QuadTreeNode<QuadTreeData> root;
+    private List<QuadTreeData> mCollisionList = new List<QuadTreeData>();
 
     void Start()
     {
@@ -20,9 +21,8 @@ class QuadMain : MonoBehaviour
             root.Insert(data);
         }
 
-        List<QuadTreeData> list = new List<QuadTreeData>();
-        root.Retrieve(ref list, new Rect(0, 0, 5, 5));
-        Debug.Log(list.Count);
+        root.Retrieve(mCollisionList, new Rect(50, 50, 12.5f, 12.5f));
+        Debug.Log(mCollisionList.Count);
     }
 
     void OnDrawGizmos()
@@ -30,7 +30,13 @@ class QuadMain : MonoBehaviour
         if(root != null)
         {
             root.DrawAll();
-        }  
+        }
+
+        Gizmos.color = Color.red;
+        for(int i = 0; i < mCollisionList.Count; i++)
+        {
+            root.DrawRegion(mCollisionList[i].mRect);
+        }
     }
 }
 
