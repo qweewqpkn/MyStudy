@@ -11,15 +11,57 @@ public class BuildAPK {
 
     static void Build()
     {
-        //InitArg();
-        //InitPlayerSetting();
+        InitArg();
+        InitPlayerSetting();
         string[] level = GetBuildScene();
-        string apkPath = Application.dataPath + "/../APK/1.apk"; 
+        string apkPath = argDic["apk"].Replace("\\", "/");
         BuildPipeline.BuildPlayer(level, apkPath, BuildTarget.Android, BuildOptions.None);
     }
+
+    static void CopyTo()
+    {
+        string sourceDir = Application.dataPath + "/../../ClientRes/Android";
+        string targetDir = Application.dataPath + "/StreamingAssets/ClientRes/Android";
+        CopyTo(sourceDir, targetDir);
+    }
+
+    static void CopyTo(string sourceDir, string targetDir)
+    {
+        if(!Directory.Exists(sourceDir))
+        {
+            Debug.LogError("sourcePath is not exist");
+            return;
+        }
+
+        if(Directory.Exists(targetDir))
+        {
+            Directory.Delete(targetDir, true);
+        }
+        Directory.CreateDirectory(targetDir);
+        
+        string[] files = Directory.GetFiles(sourceDir);
+        if (files != null)
+        {
+            for (int i = 0; i < files.Length; i++)
+            {
+                File.Copy(files[i], targetDir + "/" + Path.GetFileName(files[i]));
+            }
+        }
+        
+        string[] curDirs = Directory.GetDirectories(sourceDir);
+        if(curDirs != null)
+        {
+            for(int i = 0; i < curDirs.Length; i++)
+            {
+                string path = curDirs[i].Substring(curDirs[i].LastIndexOf("\\") + 1);
+                CopyTo(curDirs[i], targetDir + "/" + path);
+            }
+        }
+    }
+
     static void InitPlayerSetting()
     {
-        PlayerSettings.productName = "斗地主";
+        PlayerSettings.productName = "xxx";
         StringBuilder defines = new StringBuilder();
         if (argDic["log"] == "true")
         {
@@ -61,15 +103,5 @@ public class BuildAPK {
                 }
             }
         }
-
-        //FileStream fs = File.Create(Application.dataPath + "/ArgLog.txt");
-        //StreamWriter sw = new StreamWriter(fs);
-        //sw.WriteLine(args.Length);
-        //for(int i = 0; i < args.Length; i++)
-        //{
-        //    sw.WriteLine(args[i]);
-        //}
-        //sw.Close();
-        //fs.Close();
     }
 }

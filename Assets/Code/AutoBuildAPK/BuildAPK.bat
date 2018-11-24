@@ -1,7 +1,13 @@
 @echo off
+::%1代码unity.exe的路径
+::%2工程路径
+::%3svn更新c#路径
+::%4svn更新lua路径
 echo "build apk start"
-set UNITY_PATH="C:\Program Files\Unity2017.2.0f3\Editor\Unity.exe"
-set PROJECT_PATH="E:\code\Unity\MyStudy"
-%UNITY_PATH% -quit -batchmode -logFile build.log -projectPath %PROJECT_PATH% -executeMethod BuildAPK.Build %*
+svn revert -R %3
+svn update %3
+svn revert -R %4
+svn update %4
+%1 -quit -batchmode -logFile build.log -projectPath %2 -executeMethod BuildAPK.Build %*
 echo "build apk over"
 pause   
