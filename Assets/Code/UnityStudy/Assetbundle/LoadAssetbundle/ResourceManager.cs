@@ -183,12 +183,17 @@ namespace AssetLoad
             return result.ToString();
         }
 
-        public void AddRefCount(string abName)
+        public void AddRefCount(string abName, bool isDependency)
         {
             AssetLoadedInfo info = null;
             if (mABLoadedMap.TryGetValue(abName, out info))
             {
                 info.mRefCount++;
+            }
+
+            if(isDependency)
+            {
+                return;
             }
 
             List<string> dependenciesList = null;
@@ -387,11 +392,16 @@ namespace AssetLoad
             return request;
         }
 
-        bool LoadAssetInternel(string abName, AssetType type, AssetLoadRequest request)
+        //加isDependency变量的原因：
+        //前提：A依赖B，B又依赖C
+        //这里有个潜在的问题，当缓存中已经有了B，那么自然也就有C。然后我们开始加载A，会先加载依赖也就是B，此时B已经存在了，就这走到这里
+        //AddRefCount会把B依赖的C引用也加1，然后A继续加载依赖的C，也有了，那么C的引用就会加1，这里总共就加了2次。问题就在这，因为
+        //A其实已经拿到了所有的依赖，包括直接依赖(这里的B)和间接依赖(这里的C)，所以不需要B再去增加C的引用计数了。
+        bool LoadAssetInternel(string abName, AssetType type, AssetLoadRequest request, bool isDependency = false)
         {
             if (mABLoadedMap.ContainsKey(abName))
             {
-                AddRefCount(abName);
+                AddRefCount(abName, isDependency);
                 return true;
             }
 
@@ -423,7 +433,7 @@ namespace AssetLoad
 
             for (int i = 0; i < dependenciesList.Count; i++)
             {
-                LoadAssetInternel(dependenciesList[i], AssetType.eAB, request);
+                LoadAssetInternel(dependenciesList[i], AssetType.eAB, request, true);
             }
         }
 
