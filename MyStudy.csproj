@@ -262,6 +262,7 @@
     <Compile Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\LightMapConfig.cs" />
     <Compile Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\LoadLightMap.cs" />
     <Compile Include="Assets\Code\UnityStudy\TestAndroid\TestAndroid.cs" />
+    <Compile Include="Assets\Code\UnityStudy\UI\UIComponentBind.cs" />
     <Compile Include="Assets\Code\UnityStudy\UISceneAdapter\UISceneAdapter.cs" />
     <Compile Include="Assets\Code\UnityStudy\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Shader\AverageBlur\AverageBlur.cs" />

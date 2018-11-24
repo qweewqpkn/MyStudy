@@ -300,6 +300,7 @@
   <ItemGroup>
     <Compile Include="Assets\Code\AutoBuildAPK\Editor\BuildAPK.cs" />
     <Compile Include="Assets\Code\Editor\BuildAB.cs" />
+    <Compile Include="Assets\Code\UnityStudy\UI\Editor\UIComponentBindEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ArgLog.txt" />
