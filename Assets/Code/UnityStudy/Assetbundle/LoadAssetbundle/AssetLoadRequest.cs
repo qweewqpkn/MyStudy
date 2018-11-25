@@ -1,192 +1,220 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AssetLoad
 {
-    public enum LoadType
+    public class AssetLoadRequest : IEnumerator
     {
-        eOneAsset,
-        eAllAsset,
-        eOnlyAB,
-    }
-
-    public abstract class AssetLoadRequest : IEnumerator
-    {
-        protected int mNeedLoadNum;
-        protected int mCurLoadNum;
-        protected string mABName;
-        protected string mAssetName;
-        protected LoadType mLoadType;
-
         public AssetLoadRequest()
         {
-            mNeedLoadNum = 0;
-            mCurLoadNum = 0;
-            mABName = "";
-            mAssetName = "";
-            mLoadType = LoadType.eOneAsset;
         }
 
-        public void AddNeedLoadNum()
+        public object Current { get { return null; } }
+        public void Reset() { }
+
+        public virtual bool MoveNext()
         {
-            mNeedLoadNum++;
-        }
-
-        public void AddCurLoadNum()
-        {
-            mCurLoadNum++;
-        }
-
-        public virtual bool IsLoadFinish()
-        {
-            //是否加载完主资源和依赖资源
-            return mCurLoadNum >= mNeedLoadNum;
-        }
-
-        public void Init(string abName, string assetName, LoadType loadType = LoadType.eOneAsset)
-        {
-            mABName = abName;
-            mAssetName = assetName;
-            mLoadType = loadType;
-        }
-
-        public virtual bool Update()
-        {
-            return true;
-        }
-
-        public abstract bool MoveNext();
-
-        public abstract void Reset();
-
-        public object Current
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-    }
-
-    public class NormalAssetLoadRequest : AssetLoadRequest
-    {
-        public AssetLoadedInfo mAssetLoadedInfo;
-
-        public NormalAssetLoadRequest()
-        {
-
-        }
-
-        public override bool Update()
-        {
-            if(IsLoadFinish())
-            {
-                ResourceManager.Instance.mABLoadedMap.TryGetValue(mAssetName, out mAssetLoadedInfo);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public override void Reset()
-        {
-
-        }
-
-
-        public override bool MoveNext()
-        {
-            if(IsLoadFinish())
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-    }
-
-    public class ABAssetLoadRequest : AssetLoadRequest
-    {
-        private AssetBundleRequest mABRequest;
-
-        public ABAssetLoadRequest()
-        {
-            mABRequest = null;
-        }
-
-        public override void Reset()
-        {
-            
-        }
-
-        public override bool Update()
-        {
-            if (IsLoadFinish())
-            {
-                AssetLoadedInfo loadedInfo = null;
-                if (ResourceManager.Instance.mABLoadedMap.TryGetValue(mABName, out loadedInfo))
-                {
-                    switch (mLoadType)
-                    {
-                        case LoadType.eOneAsset:
-                            {
-                                mABRequest = loadedInfo.mAB.LoadAssetAsync(mAssetName);
-                            }
-                            break;
-                        case LoadType.eAllAsset:
-                            {
-                                mABRequest = loadedInfo.mAB.LoadAllAssetsAsync();
-                            }
-                            break;
-                        case LoadType.eOnlyAB:
-                            {
-
-                            }
-                            break;
-                    }
-                    return true;
-                }
-            }
-
             return false;
         }
 
-        public T GetAsset<T>() where T : UnityEngine.Object
+        public virtual void ProcessABAsset<T>(Action<T> success, Action error) where T : UnityEngine.Object
         {
-            if (mABRequest != null && mABRequest.isDone)
+
+        }
+
+        public virtual void ProcessAsset<T>(Action<T> success, Action error)
+        {
+
+        }
+    }
+
+    public class TextLoadRequest : AssetLoadRequest
+    {
+        private string mAssetName;
+        private WWW mWWW;
+
+        public TextLoadRequest(string assetName)
+        {
+            mAssetName = assetName;
+            ResourceManager.Instance.StartCoroutine(StartLoad());
+        }
+
+        public IEnumerator StartLoad()
+        {
+            mWWW = new WWW(ResourceManager.Instance.URL(mAssetName, AssetType.eText));
+            yield return mWWW;
+        }
+
+        public override bool MoveNext()
+        {
+            if(mWWW != null && mWWW.isDone)
             {
-                return mABRequest.asset as T;
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override void ProcessAsset<T>(Action<T> success, Action error)
+        {
+            System.Object bytes = mWWW.bytes;
+            if(bytes != null)
+            {
+                if(success != null)
+                {
+                    success((T)bytes);
+                }
+            }
+            else
+            {
+                if(error != null)
+                {
+                    error();
+                }
+            }
+        }
+    }
+
+    public class ABLoadRequest : AssetLoadRequest
+    {
+        protected string mABName;
+        //当前加载的AB数量
+        private int mLoadABNum;
+        //需要加载的AB数量
+        private int mNeedABNum;
+        //加载列表
+        List<string> mABList = new List<string>();
+        //AB包含的资源名字
+        protected string mAssetName;
+        //资源请求
+        protected AssetBundleRequest mAssetRequest;
+
+        public ABLoadRequest(string abName, string assetName) 
+        {
+            List<string> dependencyList = ResourceManager.Instance.GetABDependency(abName);
+            if(dependencyList != null)
+            {
+                mABList.AddRange(dependencyList);
+            }
+            mABList.Add(abName);
+            mABName = abName;
+            mAssetName = assetName;
+            mNeedABNum = mABList.Count;
+            StartLoad();
+        }
+
+        private void StartLoad()
+        {
+            for (int i = 0; i < mABList.Count; i++)
+            {
+                AssetLoadedInfo loadedInfo = ResourceManager.Instance.GetLoadedAsset(mABList[i]);
+                if(loadedInfo == null)
+                {
+                    //AB不存在
+                    AssetLoadingInfo loadingInfo = ResourceManager.Instance.GetLoadingAsset(mABList[i]);
+                    if(loadingInfo == null)
+                    {
+                        //AB没有在加载
+                        ResourceManager.Instance.AddLoadingAsset(mABList[i]);
+                        ResourceManager.Instance.StartCoroutine(LoadAB(mABList[i]));
+                    }
+                    else
+                    {
+                        //AB正在加载中
+                        loadingInfo.AddLoadRequest(this);
+                    }
+                }
+                else
+                {
+                    //已经存在了这个AB
+                    AddLoadABNum();
+                    ResourceManager.Instance.AddRef(mABList[i]);
+                }
+            }
+        }
+
+        private IEnumerator LoadAB(string name)
+        {
+            AssetLoadingInfo loadingInfo = ResourceManager.Instance.GetLoadingAsset(name);
+            if (loadingInfo != null)
+            {
+                loadingInfo.AddLoadRequest(this);
+                string url = ResourceManager.Instance.URL(name, AssetType.eAB);
+                WWW www = new WWW(url);
+                yield return www;
+                loadingInfo.Completed();
+                ResourceManager.Instance.RemoveLoadingAsset(name);
+                ResourceManager.Instance.AddLoadedAsset(name, www.assetBundle, loadingInfo.mRequestList.Count);
+            }
+        }
+
+        public void AddLoadABNum()
+        {
+            mLoadABNum++;
+        }
+
+        protected bool IsABLoadComplete()
+        {
+            if (mLoadABNum >= mNeedABNum)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override bool MoveNext()
+        {
+            if (IsABLoadComplete())
+            {
+                if(!string.IsNullOrEmpty(mAssetName))
+                {
+                    if (mAssetRequest == null)
+                    {
+                        AssetLoadedInfo info = ResourceManager.Instance.GetLoadedAsset(mABName);
+                        mAssetRequest = info.mAB.LoadAllAssetsAsync();
+                    }
+
+                    if (mAssetRequest != null && mAssetRequest.isDone)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public virtual UnityEngine.Object[] GetAssets()
+        {
+            if (mAssetRequest != null && mAssetRequest.isDone)
+            {
+                return mAssetRequest.allAssets;
             }
 
             return null;
         }
 
-        public UnityEngine.Object[] GetAssets<T>() where T : UnityEngine.Object
+        public virtual T GetAssets<T>(string name) where T : UnityEngine.Object
         {
-            if (mABRequest != null && mABRequest.isDone)
+            if (mAssetRequest != null && mAssetRequest.isDone)
             {
-                return mABRequest.allAssets;
-            }
-
-            return null;
-        }
-
-        public T GetAssets<T>(string name) where T : UnityEngine.Object
-        {
-            if (mABRequest != null && mABRequest.isDone)
-            {
-                int length = mABRequest.allAssets.Length;
+                int length = mAssetRequest.allAssets.Length;
                 for (int i = 0; i < length; i++)
                 {
-                    if(mABRequest.allAssets[i].name == name)
+                    if (mAssetRequest.allAssets[i].name.ToLower() == name.ToLower())
                     {
-                        return mABRequest.allAssets[i] as T;
+                        return mAssetRequest.allAssets[i] as T;
                     }
                 }
             }
@@ -194,31 +222,110 @@ namespace AssetLoad
             return null;
         }
 
-        public override bool MoveNext()
+        public override void ProcessABAsset<T>(Action<T> success, Action error)
         {
-            if (mLoadType == LoadType.eOnlyAB)
+            if(!string.IsNullOrEmpty(mAssetName))
             {
-                if(IsLoadFinish())
+                //加载AB中的具体资源
+                T asset = GetAssets<T>(mAssetName);
+                if (asset != null)
                 {
-                    return false;
+                    if (success != null)
+                    {
+                        success(asset);
+                    }
                 }
                 else
                 {
-                    return true;
+                    if (error != null)
+                    {
+                        error();
+                    }
                 }
             }
             else
             {
-                if (mABRequest != null && mABRequest.isDone)
+                //加载AB自身
+                if(success != null)
                 {
-                    return false;
-                }
-                else
-                {
-                    return true;
+                    success(null);
                 }
             }
         }
     }
 
+    public class PrefabLoadRequest : ABLoadRequest
+    {
+        public PrefabLoadRequest(string abName, string assetName) : base(abName, assetName) { }
+
+        public override void ProcessABAsset<T>(Action<T> success, Action error)
+        {
+            T asset = GetAssets<T>(mAssetName);
+            if (asset != null)
+            {
+                T obj = GameObject.Instantiate(asset);
+                if (success != null)
+                {
+                    success(asset);
+                }
+            }
+            else
+            {
+                if (error != null)
+                {
+                    error();
+                }
+            }
+        }
+    }
+
+    public class ShaderLoadRequest : ABLoadRequest
+    {
+        public ShaderLoadRequest(string abName, string assetName) : base(abName, assetName) { }
+
+        public override void ProcessABAsset<T>(Action<T> success, Action error)
+        {
+            UnityEngine.Object[] objs = GetAssets();
+            ResourceManager.Instance.CacheAllShader(objs);
+            if (objs != null)
+            {
+                if (success != null)
+                {
+                    success(null);
+                }
+            }
+            else
+            {
+                if (error != null)
+                {
+                    error();
+                }
+            }
+        }
+    }
+
+    public class ManifestLoadRequest : ABLoadRequest
+    {
+        public ManifestLoadRequest(string abName, string assetName) : base(abName, assetName) { }
+
+        public override void ProcessABAsset<T>(Action<T> success, Action error)
+        {
+            AssetBundleManifest manifest = GetAssets<AssetBundleManifest>(mAssetName);
+            ResourceManager.Instance.SetABManifest(manifest);
+            if (manifest != null)
+            {
+                if (success != null)
+                {
+                    success(null);
+                }
+            }
+            else
+            {
+                if (error != null)
+                {
+                    error();
+                }
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public class BuildAB
@@ -6,7 +7,7 @@ public class BuildAB
     [MenuItem("Tools/AssetBundle/打包资源")]
     static void Build()
     {
-        string path = Application.dataPath +  "/../../ClientRes/";
+        string path = Application.dataPath +  "/../ClientRes/";
         switch(EditorUserBuildSettings.activeBuildTarget)
         {
             case BuildTarget.StandaloneWindows64:
@@ -21,6 +22,11 @@ public class BuildAB
                 break;
         }
         path += "/Assetbundle/";
+
+        if(!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
 
         BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
 

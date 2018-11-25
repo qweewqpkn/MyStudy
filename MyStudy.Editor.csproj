@@ -294,7 +294,6 @@
     <Compile Include="Assets\Code\UnityStudy\UI\Editor\UIComponentBindEditor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\ArgLog.txt" />
     <None Include="Assets\Code\UnityStudy\ClickEvent\说明.txt" />
     <None Include="Assets\Code\UnityStudy\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Code\UnityStudy\LightMap\LoadLightmap\Shader\LightMap.shader" />

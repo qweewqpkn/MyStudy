@@ -1,34 +1,29 @@
-﻿using System.Collections;
+﻿using AssetLoad;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A
-{
-    public virtual T GetObj<T>() where T : new()
-    {
-        Debug.Log("A CALL");
-        return new T();
-    }
-}
-
-public class B : A
-{
-    public override T GetObj<T>()
-    {
-        Debug.Log("B call");
-        return new T();
-    }
-}
 
 public class Test : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        A a = new B();
-        a.GetObj<Texture>();
+        ResourceManager.Instance.LoadABAsset<AssetBundleManifest>("Assetbundle", "AssetBundleManifest", (asset) =>
+        {
+            ResourceManager.Instance.LoadABAsset<GameObject>("material", "material", (asset1) =>
+            {
+                GameObject obj = asset1;
+            });
 
-        A a1 = new A();
-        a1.GetObj<AudioClip>();
+            ResourceManager.Instance.LoadABAsset<GameObject>("cube", "cube", (asset1) =>
+            {
+                GameObject obj = asset1;
+            });
+
+            ResourceManager.Instance.LoadAsset<byte[]>("mytext.txt", (asset3) => {
+                byte[] bytes = asset3;
+            });
+        });
 	}
 	
 	// Update is called once per frame
