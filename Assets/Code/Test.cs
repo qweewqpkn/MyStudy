@@ -10,12 +10,12 @@ public class Test : MonoBehaviour {
 	void Start () {
         ResourceManager.Instance.LoadABAsset<AssetBundleManifest>("Assetbundle", "AssetBundleManifest", (asset) =>
         {
-            ResourceManager.Instance.LoadABAsset<GameObject>("material", "material", (asset1) =>
+            ResourceManager.Instance.LoadABAsset<GameObject>("material", (asset1) =>
             {
                 GameObject obj = asset1;
             });
 
-            ResourceManager.Instance.LoadABAsset<GameObject>("cube", "cube", (asset1) =>
+            ResourceManager.Instance.LoadABAsset<GameObject>("cube", (asset1) =>
             {
                 GameObject obj = asset1;
             });

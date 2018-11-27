@@ -167,9 +167,16 @@ namespace AssetLoad
             mAssestBundleManifest = manifest;
         }
 
+        //加载AB中的资源
         public void LoadABAsset<T>(string abName, string assetName, Action<T> success, Action error = null) where T : UnityEngine.Object
         {
             StartCoroutine(LoadABAssetRequest<T>(abName, assetName, success, error));
+        }
+
+        //加载AB中的资源，AB和其中资源同名
+        public void LoadABAsset<T>(string name, Action<T> success, Action error = null) where T : UnityEngine.Object
+        {
+            StartCoroutine(LoadABAssetRequest<T>(name, name, success, error));
         }
 
         IEnumerator LoadABAssetRequest<T>(string abName, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
@@ -179,6 +186,7 @@ namespace AssetLoad
             request.ProcessABAsset<T>(success, error);
         }
 
+        //加载非AB中的资源，如：text
         public void LoadAsset<T>(string assetName, Action<T> success, Action error = null)
         {
             StartCoroutine(LoadAssetRequest<T>(assetName, success, error));
