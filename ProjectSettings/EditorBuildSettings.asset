@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Code/AutoBuildAPK/AudioBuildAPK.unity
+  - enabled: 0
+    path: 
     guid: eb2989d9a05fc8846b4dd60da74c1b9a
+  - enabled: 1
+    path: Assets/Code/BuildPC/BuildPC.unity
+    guid: f88baa3d252ec654abb3d9a747fa6a41

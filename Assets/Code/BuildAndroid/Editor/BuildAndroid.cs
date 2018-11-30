@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-public class BuildAPK {
+public class BuildAndroid {
 
     private static Dictionary<string, string> argDic = new Dictionary<string, string>();
 
@@ -14,8 +15,13 @@ public class BuildAPK {
         InitArg();
         InitPlayerSetting();
         string[] level = GetBuildScene();
-        string apkPath = argDic["apk"].Replace("\\", "/");
-        BuildPipeline.BuildPlayer(level, apkPath, BuildTarget.Android, BuildOptions.None);
+        string path = "";
+        if (argDic.ContainsKey("apk"))
+        {
+            path = argDic["apk"].Replace("\\", "/");
+            path = string.Format("{0}/{1}_{2}.apk", path, "test", string.Format("{0:yyyy-MM-dd HH-mm-ss-fff}", DateTime.Now));
+            BuildPipeline.BuildPlayer(level, path, BuildTarget.Android, BuildOptions.None);
+        }
     }
 
     static void CopyTo()
@@ -63,14 +69,22 @@ public class BuildAPK {
     {
         PlayerSettings.productName = "xxx";
         StringBuilder defines = new StringBuilder();
-        if (argDic["log"] == "true")
+        if (argDic.ContainsKey("log"))
         {
-            defines.Append("LOG_OPEN;");
+            if (argDic["log"] == "true")
+            {
+                defines.Append("LOG_OPEN;");
+            }
         }
-        if (argDic["network"] == "true")
+
+        if (argDic.ContainsKey("network"))
         {
-            defines.Append("INTERNET;");
+            if (argDic["network"] == "true")
+            {
+                defines.Append("INTERNET;");
+            }
         }
+        defines.Append(PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android));
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines.ToString());
     }
 
