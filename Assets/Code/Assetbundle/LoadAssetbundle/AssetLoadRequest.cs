@@ -146,9 +146,16 @@ namespace AssetLoad
                 string url = ResourceManager.Instance.URL(name, AssetType.eAB);
                 WWW www = new WWW(url);
                 yield return www;
-                loadingInfo.Completed();
-                ResourceManager.Instance.RemoveLoadingAsset(name);
-                ResourceManager.Instance.AddLoadedAsset(name, www.assetBundle, loadingInfo.mRequestList.Count);
+                if(!string.IsNullOrEmpty(www.error))
+                {
+                    Debug.LogError("xxxxxxxx www load is error : " + name + " " + www.error);
+                }
+                else
+                {
+                    loadingInfo.Completed();
+                    ResourceManager.Instance.RemoveLoadingAsset(name);
+                    ResourceManager.Instance.AddLoadedAsset(name, www.assetBundle, loadingInfo.mRequestList.Count);
+                }
             }
         }
 

@@ -158,7 +158,6 @@ namespace AssetLoad
             }
 
             result.Append(abName);
-
             return result.ToString();
         }
 
@@ -179,18 +178,18 @@ namespace AssetLoad
             StartCoroutine(LoadABAssetRequest<T>(name, name, success, error));
         }
 
-        IEnumerator LoadABAssetRequest<T>(string abName, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
-        {
-            AssetLoadRequest request = CreateLoadRequest(abName, assetName, typeof(T));
-            yield return request;
-            request.ProcessABAsset<T>(success, error);
-        }
-
         //加载非AB中的资源，如：text
         public void LoadAsset<T>(string assetName, Action<T> success, Action error = null)
         {
             StartCoroutine(LoadAssetRequest<T>(assetName, success, error));
 
+        }
+
+        IEnumerator LoadABAssetRequest<T>(string abName, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        {
+            AssetLoadRequest request = CreateLoadRequest(abName, assetName, typeof(T));
+            yield return request;
+            request.ProcessABAsset<T>(success, error);
         }
 
         IEnumerator LoadAssetRequest<T>(string assetName, Action<T> success, Action error)

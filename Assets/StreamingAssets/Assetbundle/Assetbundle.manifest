@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+CRC: 1902367141
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: allshader
+      Dependencies:
+        Dependency_0: texture
+    Info_1:
+      Name: lightmaptest
+      Dependencies: {}
+    Info_2:
+      Name: cube
+      Dependencies:
+        Dependency_0: allshader
+    Info_3:
+      Name: texture
+      Dependencies: {}
+    Info_4:
+      Name: ui_player
+      Dependencies: {}
+    Info_5:
+      Name: ui_player2
+      Dependencies: {}

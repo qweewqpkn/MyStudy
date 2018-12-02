@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BuildAB
 {
+    static string AB_ROOT_PATH = Application.dataPath + "/../ClientRes/";
+
     [MenuItem("Tools/AssetBundle/打包资源")]
     static void Build()
     {
@@ -22,15 +24,53 @@ public class BuildAB
                 break;
         }
         path += "/Assetbundle/";
-
-        if(!Directory.Exists(path))
-        {
-            Directory.CreateDirectory(path);
-        }
-
+        FileUtility.CreateDirectory(path);
+        RemoveUnUseAB(path);
         BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-
         Debug.Log("打包完成");
+    }
+
+    //移除无用的AB
+    static void RemoveUnUseAB(string path)
+    {
+        string[] curABNameList = AssetDatabase.GetAllAssetBundleNames();
+        string[] unuseABNameList = AssetDatabase.GetUnusedAssetBundleNames();
+        for(int i = 0; i < unuseABNameList.Length; i++)
+        {
+            ArrayUtility.Remove(ref curABNameList, unuseABNameList[i]);
+        }
+        string[] buildABList = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+        for(int i = 0; i < buildABList.Length; i++)
+        {
+            string name = Path.GetFileNameWithoutExtension(buildABList[i]);
+            bool isHave = ArrayUtility.Contains(curABNameList, name);
+            if(!isHave)
+            {
+                File.Delete(buildABList[i]);
+                Debug.Log("delete unuse ab : " + name);
+            }
+        }
+    }
+
+    [MenuItem("Tools/AssetBundle/拷贝AB到StreamingAssets")]
+    static void CopyAB2StreamingAssets()
+    {
+        string sourceDir = Application.dataPath + "/../ClientRes/";
+        switch (EditorUserBuildSettings.activeBuildTarget)
+        {
+            case BuildTarget.StandaloneWindows64:
+                {
+                    sourceDir += "Windows";
+                }
+                break;
+            case BuildTarget.Android:
+                {
+                    sourceDir += "Android";
+                }
+                break;
+        }
+        string targetDir = Application.dataPath + "/StreamingAssets/";
+        FileUtility.CopyTo(sourceDir, targetDir);
     }
 
     [MenuItem("Tools/AssetBundle/设置AB Name")]
