@@ -242,9 +242,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Code\ActionManager\ActionManager.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\AssetLoadRequest.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\PrefabAutoDestory.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\ResourceManager.cs" />
+    <Compile Include="Assets\Code\AudioManager\AudioManager.cs" />
     <Compile Include="Assets\Code\Avatar\Avatar.cs" />
     <Compile Include="Assets\Code\Avatar\AvatarMain.cs" />
     <Compile Include="Assets\Code\Avatar\AvatarManager.cs" />
