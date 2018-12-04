@@ -95,6 +95,11 @@ namespace AssetLoad
             HRes res = new HAsset<T>(abName, assetName, success, error);
         }
 
+        public void LoadAsset<T>(string name, Action<T> success, Action error = null) where T : UnityEngine.Object
+        {
+            LoadAsset<T>(name, success, error);
+        }
+
         public Shader GetShader(string name)
         {
             Shader shader = null;
