@@ -9,9 +9,9 @@ public class ShaderMultiCompile : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        ResourceManager.Instance.LoadABAsset<AssetBundleManifest>("Assetbundle", "AssetBundleManifest", (manifest) =>
+        ResourceManager.Instance.LoadAsset<AssetBundleManifest>("Assetbundle", "AssetBundleManifest", (manifest) =>
         {
-            ResourceManager.Instance.LoadABAsset<Shader>("allshader", (shader) =>
+            ResourceManager.Instance.LoadAsset<Shader>("allshader", "allshader", (shader) =>
             {
                 Shader item = ResourceManager.Instance.GetShader("Unlit/NewUnlitShader");
                 Material material = new Material(item);
