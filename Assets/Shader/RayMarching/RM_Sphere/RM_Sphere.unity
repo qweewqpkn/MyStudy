@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mMaterial: {fileID: 2100000, guid: 17ae96505c247184bbe6106d75b07ca8, type: 2}
+  mCamera: {fileID: 775105143}
 --- !u!1 &1241605982
 GameObject:
   m_ObjectHideFlags: 0
