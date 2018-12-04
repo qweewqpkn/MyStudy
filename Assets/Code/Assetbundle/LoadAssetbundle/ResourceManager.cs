@@ -21,25 +21,11 @@ namespace AssetLoad
         public class AssetLoadedInfo
         {
             public AssetBundle mAB;
-            public Texture mTexture;
-            public byte[] mBytes;
             public int mRefCount;
 
             public AssetLoadedInfo(AssetBundle ab, int refCount)
             {
                 mAB = ab;
-                mRefCount = refCount;
-            }
-
-            public AssetLoadedInfo(Texture texture, int refCount)
-            {
-                mTexture = texture;
-                mRefCount = refCount;
-            }
-
-            public AssetLoadedInfo(byte[] bytes, int refCount)
-            {
-                mBytes = bytes;
                 mRefCount = refCount;
             }
         }
@@ -101,7 +87,7 @@ namespace AssetLoad
 
         public void LoadText(string assetName, Action<byte[]> success, Action error = null)
         {
-            HRes res1 = new HText(assetName, success, error);
+            HRes res = new HText(assetName, success, error);
         }
 
         public void LoadAsset<T>(string abName, string assetName, Action<T> success, Action error = null) where T : UnityEngine.Object
@@ -209,10 +195,16 @@ namespace AssetLoad
 
         private void Init()
         {
-            LoadManifest("Assetbundle", "AssetBundleManifest", () =>
+            LoadAsset<AssetBundleManifest>("Assetbundle", "AssetBundleManifest", (manifest) =>
             {
-                LoadShader("allshader", () =>
+                mAssestBundleManifest = manifest;
+                LoadShader("allshader", (shaders) =>
                 {
+                    for (int i = 0; i < shaders.Length; i++)
+                    {
+                        mShaderMap[shaders[i].name] = shaders[i];
+                    }
+
                     if (mInitComplete != null)
                     {
                         mInitComplete();
@@ -221,17 +213,7 @@ namespace AssetLoad
             });
         }
 
-        private void SetABManifest(AssetBundleManifest manifest)
-        {
-            mAssestBundleManifest = manifest;
-        }
-
-        private void LoadManifest(string abName, string assetName, Action success, Action error = null)
-        {
-            HRes res = new HManifest(abName, assetName, success, error);
-        }
-
-        private void LoadShader(string abName, Action success, Action error = null)
+        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
         {
             HRes res = new HShader(abName, success, error);
         }
@@ -309,14 +291,6 @@ namespace AssetLoad
             if (mABLoadedMap.TryGetValue(name, out info))
             {
                 info.mRefCount++;
-            }
-        }
-
-        private void CacheAllShader(UnityEngine.Object[] shaders)
-        {
-            for (int i = 0; i < shaders.Length; i++)
-            {
-                mShaderMap[shaders[i].name] = shaders[i] as Shader;
             }
         }
         #endregion

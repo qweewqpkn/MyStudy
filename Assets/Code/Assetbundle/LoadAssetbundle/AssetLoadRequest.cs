@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 namespace AssetLoad
@@ -46,7 +47,7 @@ namespace AssetLoad
 
         public class ABLoadRequest : IEnumerator
         {
-            protected string mABName;
+            private string mABName;
             //当前加载的AB数量
             private int mLoadABNum;
             //需要加载的AB数量
@@ -110,6 +111,7 @@ namespace AssetLoad
                     loadingInfo.AddLoadRequest(this);
                     string url = ResourceManager.Instance.URL(name, AssetType.eAB);
                     WWW www = new WWW(url);
+                    //AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
                     yield return www;
                     if (!string.IsNullOrEmpty(www.error))
                     {

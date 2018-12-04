@@ -12,11 +12,11 @@ namespace AssetLoad
         class HShader : HRes
         {
             private string mABName;
-            private Action mSuccess;
+            private Action<Shader[]> mSuccess;
             private Action mError;
             private ABLoadRequest mRequest;
 
-            public HShader(string abName, Action success, Action error)
+            public HShader(string abName, Action<Shader[]> success, Action error)
             {
                 mABName = abName;
                 mSuccess = success;
@@ -29,12 +29,11 @@ namespace AssetLoad
             {
                 yield return mRequest;
                 UnityEngine.Object[] objs = mRequest.GetAssets();
-                ResourceManager.Instance.CacheAllShader(objs);
                 if (objs != null)
                 {
                     if (mSuccess != null)
                     {
-                        mSuccess();
+                        mSuccess(objs.Cast<Shader>().ToArray());
                     }
                 }
                 else

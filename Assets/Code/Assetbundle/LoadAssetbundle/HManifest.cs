@@ -13,11 +13,11 @@ namespace AssetLoad
         {
             private string mABName;
             private string mAssetName;
-            private Action mSuccess;
+            private Action<AssetBundleManifest> mSuccess;
             private Action mError;
             private ABLoadRequest mRequest;
 
-            public HManifest(string abName, string assetName, Action success, Action error)
+            public HManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
             {
                 mABName = abName;
                 mAssetName = assetName;
@@ -31,12 +31,11 @@ namespace AssetLoad
             {
                 yield return mRequest;
                 AssetBundleManifest mainfest = mRequest.GetAssets<AssetBundleManifest>(mAssetName);
-                ResourceManager.Instance.SetABManifest(mainfest);
                 if (mainfest != null)
                 {
                     if (mSuccess != null)
                     {
-                        mSuccess();
+                        mSuccess(mainfest);
                     }
                 }
                 else
