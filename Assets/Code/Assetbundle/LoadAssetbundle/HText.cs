@@ -17,7 +17,7 @@ namespace AssetLoad
 
             public HText(string assetName, Action<byte[]> success, Action error)
             {
-                mAssetName = assetName
+                mAssetName = assetName;
                 mRequest = new AssetLoadRequest(assetName);
                 mSuccess = success;
                 mError = error;
