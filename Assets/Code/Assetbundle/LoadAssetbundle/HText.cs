@@ -13,12 +13,11 @@ namespace AssetLoad
             private AssetLoadRequest mRequest;
             private Action<byte[]> mSuccess;
             private Action mError;
-            private String mAssetName;
 
             public HText(string assetName, Action<byte[]> success, Action error)
             {
                 mAssetName = assetName;
-                mRequest = new AssetLoadRequest(assetName);
+                mRequest = new AssetLoadRequest(this);
                 mSuccess = success;
                 mError = error;
                 ResourceManager.Instance.StartCoroutine(Load());

@@ -11,11 +11,8 @@ namespace AssetLoad
     {
         class HManifest : HRes
         {
-            private string mABName;
-            private string mAssetName;
             private Action<AssetBundleManifest> mSuccess;
             private Action mError;
-            private ABLoadRequest mRequest;
 
             public HManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
             {
@@ -23,14 +20,13 @@ namespace AssetLoad
                 mAssetName = assetName;
                 mSuccess = success;
                 mError = error;
-                mRequest = new ABLoadRequest(abName, assetName);
-                ResourceManager.Instance.StartCoroutine(Load());
+                ResourceManager.Instance.StartCoroutine(Load(new ABAssetLoadRequest(this)));
             }
 
-            IEnumerator Load()
+            IEnumerator Load(ABAssetLoadRequest request)
             {
-                yield return mRequest;
-                AssetBundleManifest mainfest = mRequest.GetAssets<AssetBundleManifest>(mAssetName);
+                yield return request;
+                AssetBundleManifest mainfest = request.GetAssets<AssetBundleManifest>(mAssetName);
                 if (mainfest != null)
                 {
                     if (mSuccess != null)

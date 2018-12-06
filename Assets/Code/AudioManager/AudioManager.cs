@@ -355,7 +355,7 @@ public class AudioManager : MonoBehaviour
     //释放指定名字的音频资源
     private void Dispose(string name)
     {
-        ResourceManager.Instance.ReleaseAB(name.ToLower());
+        ResourceManager.Instance.Release(name.ToLower());
     }
 
     //释放特定类型的所有音频资源
@@ -474,7 +474,7 @@ public class AudioManager : MonoBehaviour
     {
         GetAudioClip(name, (audioClip) =>
         {
-            ResourceManager.Instance.ReleaseAB(name.ToLower());
+            ResourceManager.Instance.Release(name.ToLower());
             float length = 0;
             if (audioClip != null)
             {

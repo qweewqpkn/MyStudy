@@ -20,25 +20,48 @@ namespace AssetLoad
     {
         public class AssetLoadedInfo
         {
-            public AssetBundle mAB;
-            public int mRefCount;
+            private AssetBundle mAB;
+            private int mRef;
 
+            public int Ref
+            {
+                get
+                {
+                    return mRef;
+                }
+                
+                set { mRef = value; }
+            }
+
+            public AssetBundle AB
+            {
+                get
+                {
+                    return mAB;
+                }
+
+                set
+                {
+                    mAB = value;
+                }
+            }
+            
             public AssetLoadedInfo(AssetBundle ab, int refCount)
             {
                 mAB = ab;
-                mRefCount = refCount;
+                mRef = refCount;
             }
         }
 
         public class AssetLoadingInfo
         {
-            public List<ABLoadRequest> mRequestList = new List<ABLoadRequest>();
+            public List<ABAssetLoadRequest> mRequestList = new List<ABAssetLoadRequest>();
 
             public AssetLoadingInfo()
             {
             }
 
-            public void AddLoadRequest(ABLoadRequest request)
+            public void AddLoadRequest(ABAssetLoadRequest request)
             {
                 mRequestList.Add(request);
             }
@@ -55,10 +78,10 @@ namespace AssetLoad
 
     public partial class ResourceManager : MonoBehaviour
     {
-        private AssetBundleManifest mAssestBundleManifest;
-        private Dictionary<string, AssetLoadedInfo> mABLoadedMap = new Dictionary<string, AssetLoadedInfo>();
+        public AssetBundleManifest mAssestBundleManifest;
+        public Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
+        public Dictionary<string, AssetLoadedInfo> mABLoadedMap = new Dictionary<string, AssetLoadedInfo>();
         private Dictionary<string, AssetLoadingInfo> mABLoadingMap = new Dictionary<string, AssetLoadingInfo>();
-        private Dictionary<string, List<string>> mABDependencies = new Dictionary<string, List<string>>();
         private Dictionary<string, Shader> mShaderMap = new Dictionary<string, Shader>();
         public Action mInitComplete = null;
 
@@ -83,22 +106,32 @@ namespace AssetLoad
         public void LoadAB(string abName, Action success, Action error = null)
         {
             HRes res = new HAssetBundle(abName, success, error);
+            mResMap.Add(abName, res);
         }
 
         public void LoadText(string assetName, Action<byte[]> success, Action error = null)
         {
             HRes res = new HText(assetName, success, error);
+            mResMap.Add(assetName, res);
+        }
+
+        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
+        {
+            HRes res = new HShader(abName, success, error);
+            mResMap.Add(abName, res);
         }
 
         public void LoadAsset<T>(string abName, string assetName, Action<T> success, Action error = null) where T : UnityEngine.Object
         {
             HRes res = new HAsset<T>(abName, assetName, success, error);
+            mResMap.Add(abName, res);
         }
 
         public void LoadAsset<T>(string name, Action<T> success, Action error = null) where T : UnityEngine.Object
         {
-            LoadAsset<T>(name, success, error);
+            LoadAsset<T>(name, name, success, error);
         }
+
 
         public Shader GetShader(string name)
         {
@@ -107,40 +140,15 @@ namespace AssetLoad
             return shader;
         }
 
-        public void ReleaseAB(string abName)
+        public void Release(string name)
         {
-            AssetLoadedInfo info;
-            if (mABLoadedMap.TryGetValue(abName, out info))
+            HRes res;
+            if (mResMap.TryGetValue(name, out res))
             {
-                info.mRefCount--;
-                if (info.mRefCount == 0)
-                {
-                    info.mAB.Unload(true);
-                    mABLoadedMap.Remove(abName);
-                }
-            }
-
-            //卸载它依赖的AB
-            List<string> dependenciesList;
-            if (mABDependencies.TryGetValue(abName, out dependenciesList))
-            {
-                for (int i = 0; i < dependenciesList.Count; i++)
-                {
-                    if (mABLoadedMap.TryGetValue(dependenciesList[i], out info))
-                    {
-                        info.mRefCount--;
-                        if (info.mRefCount == 0)
-                        {
-                            info.mAB.Unload(true);
-                            mABLoadedMap.Remove(abName);
-                        }
-                    }
-                }
-
+                res.Release();
             }
         }
 
-        #region private
         private string URL(string abName, AssetType type)
         {
             StringBuilder result = new StringBuilder();
@@ -218,41 +226,6 @@ namespace AssetLoad
             });
         }
 
-        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
-        {
-            HRes res = new HShader(abName, success, error);
-        }
-
-        private List<string> GetABDependency(string abName)
-        {
-            if(mAssestBundleManifest == null)
-            {
-                return null;
-            }
-
-            List<string> dependencyList = null;
-            if (!mABDependencies.TryGetValue(abName, out dependencyList))
-            {
-                dependencyList = new List<string>();
-                string[] dependencies = mAssestBundleManifest.GetAllDependencies(abName);
-                dependencyList.AddRange(dependencies);
-
-                mABDependencies[abName] = dependencyList;
-            }
-
-            return dependencyList;
-        }
-
-        private void AddLoadedAsset(string name, AssetBundle ab, int refNum)
-        {
-            AssetLoadedInfo info;
-            if(!mABLoadedMap.TryGetValue(name, out info))
-            {
-                info = new AssetLoadedInfo(ab, refNum);
-                mABLoadedMap[name] = info;
-            }
-        }
-
         private void AddLoadingAsset(string name)
         {
             AssetLoadingInfo info;
@@ -268,17 +241,6 @@ namespace AssetLoad
             mABLoadingMap.Remove(name);
         }
 
-        private AssetLoadedInfo GetLoadedAsset(string name)
-        {
-            AssetLoadedInfo info;
-            if(mABLoadedMap.TryGetValue(name, out info))
-            {
-                return info;
-            }
-
-            return null;
-        }
-
         private AssetLoadingInfo GetLoadingAsset(string name)
         {
             AssetLoadingInfo info;
@@ -289,15 +251,5 @@ namespace AssetLoad
 
             return null;
         }
-
-        private void AddRef(string name)
-        {
-            AssetLoadedInfo info;
-            if (mABLoadedMap.TryGetValue(name, out info))
-            {
-                info.mRefCount++;
-            }
-        }
-        #endregion
     }
 }

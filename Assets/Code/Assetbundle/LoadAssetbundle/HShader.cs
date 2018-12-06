@@ -11,24 +11,21 @@ namespace AssetLoad
     {
         class HShader : HRes
         {
-            private string mABName;
             private Action<Shader[]> mSuccess;
             private Action mError;
-            private ABLoadRequest mRequest;
 
             public HShader(string abName, Action<Shader[]> success, Action error)
             {
                 mABName = abName;
                 mSuccess = success;
                 mError = error;
-                mRequest = new ABLoadRequest(abName, abName);
-                ResourceManager.Instance.StartCoroutine(Load());
+                ResourceManager.Instance.StartCoroutine(Load(new ABAssetLoadRequest(this)));
             }
 
-            IEnumerator Load()
+            IEnumerator Load(ABAssetLoadRequest request)
             {
-                yield return mRequest;
-                UnityEngine.Object[] objs = mRequest.GetAssets();
+                yield return request;
+                UnityEngine.Object[] objs = request.GetAssets();
                 if (objs != null)
                 {
                     if (mSuccess != null)

@@ -10,66 +10,60 @@ namespace AssetLoad
     {
         public class AssetLoadRequest : IEnumerator
         {
-            private string mAssetName;
+            //资源名字
+            HRes mRes;
+            //请求信息
             private WWW mWWW;
+
             public object Current { get { return null; } }
             public void Reset() { }
 
-            public AssetLoadRequest(string assetName)
+            public AssetLoadRequest(HRes res)
             {
-                mAssetName = assetName;
-                ResourceManager.Instance.StartCoroutine(StartLoad());
+                mRes = res;
+                mWWW = new WWW(ResourceManager.Instance.URL(res.mAssetName, AssetType.eText));
             }
 
-            public IEnumerator StartLoad()
+            public bool MoveNext()
             {
-                mWWW = new WWW(ResourceManager.Instance.URL(mAssetName, AssetType.eText));
-                yield return mWWW;
+                if(mWWW != null && mWWW.isDone)
+                {
+                    return false;
+                }
+
+                return true;
             }
 
             public byte[] GetText()
             {
                 return mWWW.bytes;
             }
-
-            public bool MoveNext()
-            {
-                if (mWWW != null && mWWW.isDone)
-                {
-                    return false;
-                }
-                else
-                {
-                    return false;
-                }
-            }
         }
 
-        public class ABLoadRequest : IEnumerator
+        public class ABAssetLoadRequest : IEnumerator
         {
-            private string mABName;
             //当前加载的AB数量
             private int mLoadABNum;
             //需要加载的AB数量
             private int mNeedABNum;
             //加载列表
             List<string> mABList = new List<string>();
-            //AB包含的资源名字
-            protected string mAssetName;
             //资源请求
-            protected AssetBundleRequest mAssetRequest;
+            private AssetBundleRequest mAssetRequest;
+            //资源类
+            private HRes mRes;
+            //ab
+            private AssetBundle mAssetBundle;
 
-            public ABLoadRequest(string abName, string assetName)
+            public object Current { get { return null; } }
+            public void Reset() { }
+
+            public ABAssetLoadRequest(HRes res)
             {
-                List<string> dependencyList = ResourceManager.Instance.GetABDependency(abName);
-                if (dependencyList != null)
-                {
-                    mABList.AddRange(dependencyList);
-                }
-                mABList.Add(abName);
-                mABName = abName;
-                mAssetName = assetName;
+                mABList.Add(res.mABName);
+                mABList.AddRange(res.mABDepList);
                 mNeedABNum = mABList.Count;
+                mRes = res;
                 StartLoad();
             }
 
@@ -77,7 +71,8 @@ namespace AssetLoad
             {
                 for (int i = 0; i < mABList.Count; i++)
                 {
-                    AssetLoadedInfo loadedInfo = ResourceManager.Instance.GetLoadedAsset(mABList[i]);
+                    AssetLoadedInfo loadedInfo;
+                    ResourceManager.Instance.mABLoadedMap.TryGetValue(mABList[i], out loadedInfo);
                     if (loadedInfo == null)
                     {
                         //AB不存在
@@ -98,7 +93,7 @@ namespace AssetLoad
                     {
                         //已经存在了这个AB
                         AddLoadABNum();
-                        ResourceManager.Instance.AddRef(mABList[i]);
+                        loadedInfo.Ref++;
                     }
                 }
             }
@@ -111,7 +106,6 @@ namespace AssetLoad
                     loadingInfo.AddLoadRequest(this);
                     string url = ResourceManager.Instance.URL(name, AssetType.eAB);
                     WWW www = new WWW(url);
-                    //AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
                     yield return www;
                     if (!string.IsNullOrEmpty(www.error))
                     {
@@ -119,9 +113,10 @@ namespace AssetLoad
                     }
                     else
                     {
+                        mAssetBundle = www.assetBundle;
+                        ResourceManager.Instance.mABLoadedMap.Add(name, new AssetLoadedInfo(mAssetBundle, loadingInfo.mRequestList.Count));
                         loadingInfo.Completed();
                         ResourceManager.Instance.RemoveLoadingAsset(name);
-                        ResourceManager.Instance.AddLoadedAsset(name, www.assetBundle, loadingInfo.mRequestList.Count);
                     }
                 }
             }
@@ -143,26 +138,16 @@ namespace AssetLoad
                 }
             }
 
-            public object Current { get { return null; } }
-            public void Reset() { }
             public bool MoveNext()
             {
                 if (IsABLoadComplete())
                 {
-                    if (!string.IsNullOrEmpty(mAssetName))
+                    if (mAssetBundle != null && mAssetRequest == null)
                     {
-                        if (mAssetRequest == null)
-                        {
-                            AssetLoadedInfo info = ResourceManager.Instance.GetLoadedAsset(mABName);
-                            mAssetRequest = info.mAB.LoadAllAssetsAsync();
-                        }
-
-                        if (mAssetRequest != null && mAssetRequest.isDone)
-                        {
-                            return false;
-                        }
+                        mAssetRequest = mAssetBundle.LoadAllAssetsAsync();
                     }
-                    else
+
+                    if (mAssetRequest != null && mAssetRequest.isDone)
                     {
                         return false;
                     }

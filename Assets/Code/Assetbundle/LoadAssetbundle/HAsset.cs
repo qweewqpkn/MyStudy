@@ -8,11 +8,8 @@ namespace AssetLoad
     {
         class HAsset<T> : HRes where T : UnityEngine.Object
         {
-            private string mABName;
-            private string mAssetName;
             private Action<T> mSuccess;
             private Action mError;
-            private ABLoadRequest mRequest;
 
             public HAsset(string abName, string assetName, Action<T> success, Action error)
             {
@@ -20,14 +17,13 @@ namespace AssetLoad
                 mAssetName = assetName;
                 mSuccess = success;
                 mError = error;
-                mRequest = new ABLoadRequest(abName, assetName);
-                ResourceManager.Instance.StartCoroutine(Load());
+                ResourceManager.Instance.StartCoroutine(Load(new ABAssetLoadRequest(this)));
             }
 
-            IEnumerator Load()
+            IEnumerator Load(ABAssetLoadRequest request)
             {
-                yield return mRequest;
-                T asset = mRequest.GetAssets<T>(mAssetName);
+                yield return request;
+                T asset = request.GetAssets<T>(mAssetName);
                 if (typeof(T) == typeof(GameObject))
                 {
                     asset = GameObject.Instantiate(asset);
