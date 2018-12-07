@@ -246,7 +246,6 @@
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\AssetLoadRequest.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\HAsset.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\HAssetBundle.cs" />
-    <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\HManifest.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\HRes.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\HShader.cs" />
     <Compile Include="Assets\Code\Assetbundle\LoadAssetbundle\HText.cs" />

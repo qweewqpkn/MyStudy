@@ -8,7 +8,14 @@ public class Test : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	}
+        ResourceManager.Instance.mInitComplete = () =>
+        {
+            ResourceManager.Instance.LoadAsset<GameObject>("cube", (obj) =>
+            {
+
+            });
+        };
+    }
 	
 	// Update is called once per frame
 	void Update () {

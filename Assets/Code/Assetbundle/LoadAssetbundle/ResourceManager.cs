@@ -103,28 +103,26 @@ namespace AssetLoad
             }
         }
 
+        //单独加载AB(比如:Loading界面做预加载)
         public void LoadAB(string abName, Action success, Action error = null)
         {
-            HRes res = new HAssetBundle(abName, success, error);
-            mResMap.Add(abName, res);
+            HRes res = null;
+            if (mResMap.TryGetValue(name, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HAssetBundle(abName, success, error);
+                mResMap.Add(abName, res);
+            }
         }
 
+        //加载text
         public void LoadText(string assetName, Action<byte[]> success, Action error = null)
         {
             HRes res = new HText(assetName, success, error);
             mResMap.Add(assetName, res);
-        }
-
-        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
-        {
-            HRes res = new HShader(abName, success, error);
-            mResMap.Add(abName, res);
-        }
-
-        public void LoadAsset<T>(string abName, string assetName, Action<T> success, Action error = null) where T : UnityEngine.Object
-        {
-            HRes res = new HAsset<T>(abName, assetName, success, error);
-            mResMap.Add(abName, res);
         }
 
         public void LoadAsset<T>(string name, Action<T> success, Action error = null) where T : UnityEngine.Object
@@ -132,6 +130,20 @@ namespace AssetLoad
             LoadAsset<T>(name, name, success, error);
         }
 
+        //通用接口，加载matrial,texture,audioclip,sprite,prefab
+        public void LoadAsset<T>(string abName, string assetName, Action<T> success, Action error = null) where T : UnityEngine.Object
+        {
+            HRes res = null;
+            if (mResMap.TryGetValue(name, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HAsset<T>(abName, assetName, success, error);
+                mResMap.Add(abName, res);
+            }
+        }
 
         public Shader GetShader(string name)
         {
@@ -146,6 +158,7 @@ namespace AssetLoad
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Release();
+                mResMap.Remove(name);
             }
         }
 
@@ -224,6 +237,12 @@ namespace AssetLoad
                     }
                 });
             });
+        }
+
+        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
+        {
+            HRes res = new HShader(abName, success, error);
+            mResMap.Add(abName, res);
         }
 
         private void AddLoadingAsset(string name)
