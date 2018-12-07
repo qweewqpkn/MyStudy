@@ -306,7 +306,7 @@
     <Compile Include="Assets\Code\UI\Editor\UIComponentBindEditor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Art\Export\Shader\NewUnlitShader.shader" />
+    <None Include="Assets\Code\Assetbundle\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Code\ClickEvent\说明.txt" />
     <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Code\LightMap\LoadLightmap\Shader\LightMap.shader" />
@@ -316,15 +316,13 @@
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
-    <None Include="Assets\Shader\AlphaBlend\AlphaBlend.shader" />
-    <None Include="Assets\Shader\AnisotropicSpecular\AnisotropicSpecular.shader" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />
-    <None Include="Assets\Shader\Cartoon\Cartoon.shader" />
     <None Include="Assets\Shader\Depth\Depth\Depth.shader" />
     <None Include="Assets\Shader\Depth\DepthToWorldPos\DepthToWorldPos.shader" />
     <None Include="Assets\Shader\GodRays\GodRays1\GodRays1.shader" />
     <None Include="Assets\Shader\GodRays\GodRays2\GodRays2.shader" />
+    <None Include="Assets\Shader\Hair\Hair.shader" />
     <None Include="Assets\Shader\Light\FwdLight\FwdLight.shader" />
     <None Include="Assets\Shader\NormalTex\NormalTex.shader" />
     <None Include="Assets\Shader\Outline\Outline(1).shader" />
@@ -333,6 +331,7 @@
     <None Include="Assets\Shader\Outline\说明.txt" />
     <None Include="Assets\Shader\RadialBlur\RadialBlur.shader" />
     <None Include="Assets\Shader\RayMarching\RM_Sphere\RM_Sphere.shader" />
+    <None Include="Assets\Shader\Role\Cartoon_QP\Role.shader" />
     <None Include="Assets\Shader\SSAO\SSAO.shader" />
     <None Include="Assets\Shader\ScreenPos\ScreenPos.shader" />
     <None Include="Assets\Shader\Shadow\PlanarShadow\Planar.shader" />
@@ -343,7 +342,7 @@
     <None Include="Assets\Shader\UNITY_UV_STARTS_AT_TOP\uv_start_at_top.shader" />
     <None Include="Assets\Shader\UV\Distortion\Distortion.shader" />
     <None Include="Assets\Shader\UV\UVMove\UVMove.shader" />
-    <None Include="Assets\Shader\UVRotation\UVRotation.shader" />
+    <None Include="Assets\Shader\UV\UVRotation\UVRotation.shader" />
     <None Include="Assets\Shader\VertexAnimation\VA1\VA1.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
