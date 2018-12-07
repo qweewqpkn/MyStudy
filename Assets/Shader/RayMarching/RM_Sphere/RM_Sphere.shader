@@ -40,29 +40,34 @@
 			sampler2D _MainTex;
 			float4x4 _FrustumCornerRay;
 
-			float Sphere(float3 p)
+			float Sphere(float3 p, float3 s, float r)
 			{
-				float R = 0.5;
-				return length(p) - R;
+				return length(p - s) - r;
 			}
 
-			float sdTorus(float3 p, float2 t)
+			float Torus(float3 p, float2 t)
 			{
   				float2 q = float2(length(p.xz)-t.x,p.y);
   				return length(q)-t.y;
 			}
 
-            float sdCube( float3 p, float3 b, float r )
+            float Cube( float3 p, float3 b, float r )
             {
               return length(max(abs(p)-b,0.0))-r;
             }
 
+            float sdEllipsoid(float3 p, float3 r )
+			{
+    			float k0 = length(p/r);
+    			float k1 = length(p/(r*r));
+    			return k0*(k0-1.0)/k1;
+			}
+
 			//返回点p到目标物体的距离
 			float Map(float3 p)
 			{
-				return sdCube(p, float3(0.0, 2.0, 0.0), 1);
-				//return Sphere(p);
-				//return sdTorus(p, float2(0.5, 1));
+				//return sdEllipsoid(p, float3(2.0f, 4.0f, 1.0f));
+				return min(Sphere(p, float3(0.0f, 2.0f, 2.0f), 2), min(Sphere(p, float3(1.0f, 0.0f, 2.0f), 2), Sphere(p, float3(-1.0f, 0.0f, 2.0f), 2)));
 			}
 
 			float3 calcNorm(float3 p)
