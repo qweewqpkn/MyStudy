@@ -282,6 +282,7 @@
     <Compile Include="Assets\Code\Utility\Singleton.cs" />
     <Compile Include="Assets\Code\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Shader\AverageBlur\AverageBlur.cs" />
+    <Compile Include="Assets\Shader\BillBoard\BillBoard2.cs" />
     <Compile Include="Assets\Shader\Depth\DepthToWorldPos\DepthToWorldPos.cs" />
     <Compile Include="Assets\Shader\GodRays\GodRays1\GodRays1.cs" />
     <Compile Include="Assets\Shader\GodRays\GodRays2\GodRays2.cs" />
@@ -307,6 +308,8 @@
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />
+    <None Include="Assets\Shader\BillBoard\BillBoard1.shader" />
+    <None Include="Assets\Shader\BillBoard\BillBoard2.shader" />
     <None Include="Assets\Shader\Depth\Depth\Depth.shader" />
     <None Include="Assets\Shader\Depth\DepthToWorldPos\DepthToWorldPos.shader" />
     <None Include="Assets\Shader\GodRays\GodRays1\GodRays1.shader" />
