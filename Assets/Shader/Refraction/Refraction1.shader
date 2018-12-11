@@ -2,7 +2,6 @@
 {
 	Properties
 	{
-		_MainTex("_MainTex", 2D) = "white"
 		_NoiseTex("_NoiseTex", 2D) = "white"
 		_NoiseScale("_NoiseScale", Float) = 1
 
@@ -37,7 +36,6 @@
 				float4 vertex : SV_POSITION; 
 			};
 
-			sampler2D _MainTex;
 			sampler2D _NoiseTex;
 			float4 _NoiseTex_ST;
 			sampler2D _GrabTex;
@@ -54,10 +52,11 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 noiseColor = tex2D(_NoiseTex, i.uv);
-				fixed4 grabColor = tex2D(_GrabTex, i.screenPos.xy / i.screenPos.w);
+				fixed4 noiseColor = tex2D(_NoiseTex, i.uv + _Time.y);
+				float2 uv = i.screenPos.xy / i.screenPos.w;
+				fixed4 grabColor = tex2D(_GrabTex, uv + noiseColor.r * 0.1);
 
-				return fixed4(grabColor.rgb, 1.0f);
+				return grabColor;
 			}
 			ENDCG
 		}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AssetLoad;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -79,7 +80,7 @@ public class AudioManager : MonoBehaviour
         //该播放跟随的对象(3D播放器才会有跟随对象)
         public GameObject mFollowObj;
         //计时器id
-        public long mTimerID;
+        public int mTimerID;
         //循环与否
         public bool mLoop;
         //最大距离
@@ -150,7 +151,7 @@ public class AudioManager : MonoBehaviour
                         //延时的播放要停止掉
                         if (mAudioDataList[i].mTimerID != 0)
                         {
-                            TimeInfoManager.instance.StopTimer(mAudioDataList[i].mTimerID);
+                            TimerManager.Instance.StopTimer(mAudioDataList[i].mTimerID);
                             mAudioDataList[i].mTimerID = 0;
                         }
 
@@ -296,8 +297,6 @@ public class AudioManager : MonoBehaviour
             }
             else if(createType == AudioCreateType.eNew)
             {
-                //没有播放并且不是延时使用且不是同一帧(因为同一帧isPlaying判断不了)
-                //并且各个参数相同，表明可以复用
                 if (!data.mAudioDataList[i].mAudioSource.isPlaying &&
                     data.mAudioDataList[i].mAudioState == AudioSourceState.eIdel &&
                     data.mAudioDataList[i].mSpaceType == spaceType &&
@@ -332,13 +331,12 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        ResourceManager.instance.ReqResource(name.ToLower(), ResType.SOUND,
+        ResourceManager.Instance.LoadAsset<AudioClip>(name.ToLower(),
         (res) =>
         {
-            HSound sound = res as HSound;
-            onComplete(sound.m_AudioClip);
+            onComplete(res);
         },
-        (res) =>
+        () =>
         {
             onComplete(null);
         });
@@ -349,7 +347,7 @@ public class AudioManager : MonoBehaviour
     {
         //if (mAudioClipDict.ContainsKey(name))
         {
-            ResourceManager.instance.DestoryRes(name.ToLower(), ResType.SOUND);
+            ResourceManager.Instance.Release(name.ToLower());
             //mAudioClipDict.Remove(name);
         }
     }
@@ -480,7 +478,7 @@ public class AudioManager : MonoBehaviour
     {
         GetAudioClip(name, (audioClip) =>
         {
-            ResourceManager.instance.DestoryRes(name.ToLower(), ResType.SOUND);
+            ResourceManager.Instance.Release(name.ToLower());
             float length = 0;
             if (audioClip != null)
             {
@@ -581,7 +579,7 @@ public class AudioManager : MonoBehaviour
             }
             else
             {
-                audioData.mTimerID = TimeInfoManager.instance.AddTimer(delayTime, () =>
+                audioData.mTimerID = TimerManager.Instance.AddTimer(delayTime, -1, () =>
                 {
                     if (audioTypeData != null && audioTypeData.IsStop)
                     {
@@ -591,7 +589,7 @@ public class AudioManager : MonoBehaviour
                     audioData.mAudioSource.Play();
                     audioData.mAudioState = AudioSourceState.ePlay;
                     audioData.mTimerID = 0;
-                }, 1);
+                });
             }
         });
 
