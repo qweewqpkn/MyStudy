@@ -310,6 +310,8 @@
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />
+    <None Include="Assets\Shader\BillBoard\BillBoard1.shader" />
+    <None Include="Assets\Shader\BillBoard\BillBoard2.shader" />
     <None Include="Assets\Shader\Depth\Depth\Depth.shader" />
     <None Include="Assets\Shader\Depth\DepthToWorldPos\DepthToWorldPos.shader" />
     <None Include="Assets\Shader\GodRays\GodRays1\GodRays1.shader" />
