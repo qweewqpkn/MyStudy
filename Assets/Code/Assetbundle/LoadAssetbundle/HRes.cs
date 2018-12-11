@@ -11,28 +11,43 @@ namespace AssetLoad
     {
         public class HRes
         {
-            public string mABName;
-            public string mAssetName;
-            public List<string> mABDepList;
+            protected string mABName;
+            protected string mAssetName;
+            protected List<string> mAllABList;
 
-            public HRes()
+            public HRes(string abName, string AssetName)
             {
+                mABName = abName;
+                mAssetName = AssetName;
+
                 if(!string.IsNullOrEmpty(mABName))
                 {
-                    mABDepList = new List<string>();
-                    string[] depList = ResourceManager.Instance.mAssestBundleManifest.GetAllDependencies(mABName);
-                    mABDepList.AddRange(depList);
+                    mAllABList = new List<string>();
+                    mAllABList.Add(mABName);
+                    if(ResourceManager.Instance.mAssestBundleManifest != null)
+                    {
+                        string[] depList = ResourceManager.Instance.mAssestBundleManifest.GetAllDependencies(mABName);
+                        mAllABList.AddRange(depList);
+                    }
                 }
+            }
+
+            public virtual IEnumerator Load<T>(Action<T> success, Action error) where T : UnityEngine.Object
+            {
+                yield return null;
+            }
+
+            public virtual IEnumerator Load(Action success, Action error)
+            {
+                yield return null;
             }
 
             public virtual void Release()
             {
-                //卸载自身
-                ReleaseAB(mABName);
-                //卸载它依赖的AB
-                for (int i = 0; i < mABDepList.Count; i++)
+                //卸载AB
+                for (int i = 0; i < mAllABList.Count; i++)
                 {
-                    ReleaseAB(mABDepList[i]);
+                    ReleaseAB(mAllABList[i]);
                 }
             }
 

@@ -13,24 +13,36 @@ namespace AssetLoad
         {
             private Action<Shader[]> mSuccess;
             private Action mError;
+            private ABAssetLoadRequest mRequest;
 
-            public HShader(string abName, Action<Shader[]> success, Action error)
+            public HShader(string abName, Action<Shader[]> success, Action error) : base(abName, "")
             {
                 mABName = abName;
                 mSuccess = success;
                 mError = error;
-                ResourceManager.Instance.StartCoroutine(Load(new ABAssetLoadRequest(this)));
+                mRequest = new ABAssetLoadRequest(abName, abName, mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load(mRequest));
             }
 
             IEnumerator Load(ABAssetLoadRequest request)
             {
                 yield return request;
                 UnityEngine.Object[] objs = request.GetAssets();
+                List<Shader> shaderList = new List<Shader>();
+                for(int i = 0; i < objs.Length; i++)
+                {
+                    Shader shader = objs[i] as Shader;
+                    if(shader != null)
+                    {
+                        shaderList.Add(shader);
+                    }
+                }
+
                 if (objs != null)
                 {
                     if (mSuccess != null)
                     {
-                        mSuccess(objs.Cast<Shader>().ToArray());
+                        mSuccess(shaderList.ToArray());
                     }
                 }
                 else

@@ -57,9 +57,9 @@
 				col = fixed4(0.0f, 1.0f, 0.0f, 1.0f);
 
 
-				#ifdef ENABLE_COLOR
-					col = fixed4(1.0f, 0.0f, 0.0f, 1.0f);
-				#endif 
+				//#ifdef ENABLE_COLOR
+					col = fixed4(1.0f, 0.0f, 0.0f, 1.0f); 
+				//#endif 
 
 				return col;
 			}

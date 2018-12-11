@@ -8,39 +8,35 @@ namespace AssetLoad
     {
         class HAsset<T> : HRes where T : UnityEngine.Object
         {
-            private Action<T> mSuccess;
-            private Action mError;
+            private ABAssetLoadRequest mRequest;
 
-            public HAsset(string abName, string assetName, Action<T> success, Action error)
+            public HAsset(string abName, string assetName, Action<T> success, Action error) : base(abName, assetName)
             {
-                mABName = abName;
-                mAssetName = assetName;
-                mSuccess = success;
-                mError = error;
-                ResourceManager.Instance.StartCoroutine(Load(new ABAssetLoadRequest(this)));
+                mRequest = new ABAssetLoadRequest(abName, mAssetName, mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load<T>(success, error));
             }
 
-            IEnumerator Load(ABAssetLoadRequest request)
+            public override IEnumerator Load<T1>(Action<T1> success, Action error)
             {
-                yield return request;
-                T asset = request.GetAssets<T>(mAssetName);
-                if (typeof(T) == typeof(GameObject))
+                yield return mRequest;
+                T1 asset = mRequest.GetAssets<T1>(mAssetName);
+                if (typeof(T1) == typeof(GameObject))
                 {
                     asset = GameObject.Instantiate(asset);
                 }
 
                 if (asset != null)
                 {
-                    if (mSuccess != null)
+                    if (success != null)
                     {
-                        mSuccess(asset);
+                        success(asset);
                     }
                 }
                 else
                 {
-                    if (mError != null)
+                    if (error != null)
                     {
-                        mError();
+                        error();
                     }
                 }
             }

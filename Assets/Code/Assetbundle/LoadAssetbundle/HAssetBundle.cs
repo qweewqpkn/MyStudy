@@ -7,23 +7,21 @@ namespace AssetLoad
     {
         class HAssetBundle : HRes
         {
-            private Action mSuccess;
-            private Action mError;
+            private ABAssetLoadRequest mRequest;
 
-            public HAssetBundle(string abName, Action success, Action error)
+            public HAssetBundle(string abName, Action success, Action error) : base(abName, "")
             {
                 mABName = abName;
-                mSuccess = success;
-                mError = error;
-                ResourceManager.Instance.StartCoroutine(Load(new ABAssetLoadRequest(this)));
+                mRequest = new ABAssetLoadRequest(abName, "", mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load(success, error));
             }
 
-            IEnumerator Load(ABAssetLoadRequest request)
+            public override IEnumerator Load(Action success, Action error)
             {
-                yield return request;
-                if (mSuccess != null)
+                yield return mRequest;
+                if (success != null)
                 {
-                    mSuccess();
+                    success();
                 }
             }
         }
