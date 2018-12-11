@@ -332,6 +332,7 @@
     <None Include="Assets\Shader\Outline\说明.txt" />
     <None Include="Assets\Shader\RadialBlur\RadialBlur.shader" />
     <None Include="Assets\Shader\RayMarching\RM_Sphere\RM_Sphere.shader" />
+    <None Include="Assets\Shader\Refraction\Refraction1.shader" />
     <None Include="Assets\Shader\Role\Cartoon_QP\Role.shader" />
     <None Include="Assets\Shader\SSAO\SSAO.shader" />
     <None Include="Assets\Shader\ScreenPos\ScreenPos.shader" />
