@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Refraction1
-  m_Shader: {fileID: 4800000, guid: 3cf5bda0f1b34af4cb17ec97b2e5e13c, type: 3}
+  m_Name: New Material 1
+  m_Shader: {fileID: 4800000, guid: 811545eac8002e542a4a89a4a593204d, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -39,7 +39,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: fc2446c701d3c124a964e4708784e9e6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -47,7 +47,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 25f4115abc0ed554abf3f7eb9448fdd9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 77f89cfce609217499390f8450a0e370, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -63,12 +63,14 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _ForceX: 0.345
+    - _ForceY: 0.338
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _HeatTime: 0.022
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseScale: 0.1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
@@ -79,3 +81,4 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _TintColor: {r: 0.4038711, g: 0.5439439, b: 0.6102941, a: 0.20784314}

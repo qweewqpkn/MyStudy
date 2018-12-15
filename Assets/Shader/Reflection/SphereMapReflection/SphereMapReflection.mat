@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Refraction1
-  m_Shader: {fileID: 4800000, guid: 3cf5bda0f1b34af4cb17ec97b2e5e13c, type: 3}
+  m_Name: SphereMapReflection
+  m_Shader: {fileID: 4800000, guid: 0c998b0642d11c2419838cbdd802ac6a, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -39,15 +39,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 44605ea6db5d0d14a8d03d806df66b54, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: 25f4115abc0ed554abf3f7eb9448fdd9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -58,21 +58,30 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ReflectTex:
+        m_Texture: {fileID: 2800000, guid: 3a33d3a6f8b96ac48beb4c9cc7a0438a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _FinalStrength: 1
+    - _Gloss: 8
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _LMStrength: 1
+    - _LerpRange: 1
     - _Metallic: 0
     - _Mode: 0
-    - _NoiseScale: 0.1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _ReflectStrength: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpecularStrength: 0
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
