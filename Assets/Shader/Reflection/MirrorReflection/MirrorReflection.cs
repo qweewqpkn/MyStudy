@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//思路：选定一个反射平面后，生成对称的摄像机，然后这个摄像机会看见需要反射的物体(使用cullingmask来决定),看见的物体被渲染到rendertexture中，
+//然后我们将会把这张rendertexture设置到反射平面的材质中，然后反射平面的材质shader会使用屏幕坐标来采样这张rendertexture,显示反射图像。
 public class MirrorReflection : MonoBehaviour {
 
     //原摄像机
     public Camera mCamera;
-    //材质
-    public List<Material> mReflectMaterialList = new List<Material>();
+    //反射面的render列表(列表中的render的材质将会被设置反射贴图，将会显示反射图)
+    public List<Renderer> mReflectList = new List<Renderer>();
     //投影平面的偏移
     public float mPlaneOffset = 0.0f;
-    //投影平面trans
+    //投影平面trans(用于指定投影平面的位置)
     public Transform mPlaneTrans;
-    //RT的宽和高
+    //RT的宽和高(它的大小将决定反射的清晰度)
     public int mRTWidth = 256;
     public int mRTHeight = 256;
-    //反射显示的摄像机层
+    //反射摄像机的显示层设置，用于设置那些物体是需要显示在反射投影中的
     public LayerMask mLayerMask;
     //灯光位置（用于调整高光的位置,和反射无关）
     public Transform mLightPos;
@@ -90,12 +92,18 @@ public class MirrorReflection : MonoBehaviour {
 
         mReflectCamera.targetTexture = reflectRT;
 
-        for(int i = 0; i < mReflectMaterialList.Count; i++)
+        for(int i = 0; i < mReflectList.Count; i++)
         {
-            if(mReflectMaterialList[i] != null)
+            if(mReflectList[i] != null)
             {
-                mReflectMaterialList[i].SetTexture("_ReflectTex", reflectRT);
-                mReflectMaterialList[i].SetVector("_LightPos", mLightPos.transform.forward);
+                for(int j = 0; j < mReflectList[i].materials.Length; j++)
+                {
+                    if(mReflectList[i].materials[j] != null)
+                    {
+                        mReflectList[i].materials[j].SetTexture("_ReflectTex", reflectRT);
+                        mReflectList[i].materials[j].SetVector("_LightPos", mLightPos.transform.forward);
+                    }
+                }
             }
         }
     }
