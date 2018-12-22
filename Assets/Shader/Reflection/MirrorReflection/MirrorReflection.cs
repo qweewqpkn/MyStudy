@@ -7,7 +7,7 @@ public class MirrorReflection : MonoBehaviour {
     //原摄像机
     public Camera mCamera;
     //材质
-    public List<Material> mReflectMaterialList = new List<Material>();
+    public List<Renderer> mReflectMaterialList = new List<Renderer>();
     //投影平面的偏移
     public float mPlaneOffset = 0.0f;
     //投影平面trans
@@ -23,6 +23,7 @@ public class MirrorReflection : MonoBehaviour {
     private Vector3 mPlaneNormal = new Vector3(0.0f, 1.0f, 0.0f);
     private RenderTexture mReflectRT;
     private Camera mReflectCamera;
+
 
     private void OnWillRenderObject()
     {
@@ -94,8 +95,11 @@ public class MirrorReflection : MonoBehaviour {
         {
             if(mReflectMaterialList[i] != null)
             {
-                mReflectMaterialList[i].SetTexture("_ReflectTex", reflectRT);
-                mReflectMaterialList[i].SetVector("_LightPos", mLightPos.transform.forward);
+                for (int j = 0; j < mReflectMaterialList[i].materials.Length; j++)
+                {
+                    mReflectMaterialList[i].materials[j].SetTexture("_ReflectTex", reflectRT);
+                    mReflectMaterialList[i].materials[j].SetVector("_LightPos", mLightPos.transform.forward);
+                }
             }
         }
     }

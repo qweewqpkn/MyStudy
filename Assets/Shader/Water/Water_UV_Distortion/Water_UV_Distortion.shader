@@ -5,20 +5,19 @@ Shader "LH/Water_UV_Distortion"
 	Properties
 	{
 		_TintColor ("Tint Color", Color) = (0.5,0.5,0.5,0.5)
-		_NoiseTex ("Distort Texture (RG)", 2D) = "white" {}
+		_NoiseTex ("_NoiseTex", 2D) = "white" {}
 		_MainTex ("_MainTex", 2D) = "white" {}
-		_ReflectTex("_ReflectTex", Cube) = "white"{}
-		_HeatTime  ("Heat Time", range (-1,1)) = 0
-		_ForceX  ("Strength X", range (0,1)) = 0.1
-		_ForceY  ("Strength Y", range (0,1)) = 0.1
+		_ReflectTex("_ReflectTex", 2D) = "white"{}
+		_HeatTime  ("_HeatTime", range (-1,1)) = 0
+		_ForceX  ("_ForceX", range (0,0.1)) = 0.1
+		_ForceY  ("_ForceY", range (0,0.1)) = 0.1
 		_ReflectRadio("_ReflectRadio", range(0,1)) = 1
-		_FinalStrength("_FinalStrength", Float) = 1
 	}
 
 	SubShader 
 	{
-		Tags { "Queue"="Transparent+400" "RenderType"="Transparent" }
-		Blend SrcAlpha One
+		Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+		Blend SrcAlpha OneMinusSrcAlpha
 		Cull Off 
 	
 		Lighting Off 
@@ -36,14 +35,12 @@ Shader "LH/Water_UV_Distortion"
 			struct appdata_t {
 				float4 vertex : POSITION;
 				float2 texcoord: TEXCOORD0;
-				float3 normal : NORMAL;
 			};			
 
 			struct v2f {
 				float4 vertex : POSITION;
 				float2 uv : TEXCOORD1;
-				float4 worldPos : TEXCOORD2;
-				float3 normal : TEXCOORD3;
+				float4 screenPos : TEXCOORD2;
 			};			
 
 			fixed4 _TintColor;
@@ -52,35 +49,30 @@ Shader "LH/Water_UV_Distortion"
 			fixed _HeatTime;
 			float4 _MainTex_ST;
 			sampler2D _NoiseTex;
-			samplerCUBE _ReflectTex;
+			sampler2D _ReflectTex;
 			sampler2D _MainTex;		
 			float _ReflectRadio;	
-			float _FinalStrength;
 
 			v2f vert (appdata_t v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = TRANSFORM_TEX( v.texcoord, _MainTex );
-				o.worldPos = mul(unity_ObjectToWorld, v.vertex);
-				o.normal = UnityObjectToWorldNormal(v.normal);
+				o.screenPos = ComputeScreenPos(o.vertex);
 				return o;
 			}			
-
+ 
 			fixed4 frag( v2f i ) : COLOR
 			{
-				fixed3 normal = normalize(i.normal);
-				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
-				fixed3 reflectDir = reflect(-viewDir, normal);
-				fixed4 offsetColor1 = tex2D(_NoiseTex, frac(i.uv + _Time.xz*_HeatTime));
+				fixed4 offsetColor1 = tex2D(_NoiseTex, frac(i.uv + _Time.xy*_HeatTime));
 			    fixed4 offsetColor2 = tex2D(_NoiseTex, frac(i.uv + _Time.yx*_HeatTime));
-				fixed offsetX= ((offsetColor1.r + offsetColor2.r) - 1) * _ForceX;
-				fixed offsetY= ((offsetColor1.r + offsetColor2.r) - 1) * _ForceY;
+				fixed offsetX= ((offsetColor1.r + offsetColor2.r)) * _ForceX;
+				fixed offsetY= ((offsetColor1.r + offsetColor2.r)) * _ForceY;
 
-
-				fixed4 reflectColor = texCUBE(_ReflectTex, reflectDir + fixed3(offsetX, offsetY, 0.0));
+				fixed4 reflectColor = tex2D(_ReflectTex, saturate(i.screenPos.xy / i.screenPos.w + fixed2(offsetX, offsetY))); 
 				fixed4 texColor = tex2D(_MainTex, i.uv + fixed2(offsetX, offsetY));
-				return  _TintColor * texColor * _FinalStrength;
+				fixed4 finalColor = lerp(texColor, reflectColor, _ReflectRadio);
+				return  fixed4(_TintColor.rgb * finalColor.rgb, _TintColor.a);
 			}
 			ENDCG
 		}

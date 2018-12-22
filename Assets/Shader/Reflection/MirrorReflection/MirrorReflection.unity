@@ -210,7 +210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mCamera: {fileID: 1445149044}
-  mReflectMaterial: {fileID: 2100000, guid: 20cc048452dd19d4ebfec64e8c3eb3b9, type: 2}
+  mReflectMaterialList:
+  - {fileID: 895288993}
   mPlaneOffset: 0
   mPlaneTrans: {fileID: 895288996}
   mRTWidth: 256
@@ -233,7 +234,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 20cc048452dd19d4ebfec64e8c3eb3b9, type: 2}
+  - {fileID: 2100000, guid: c055823780f22ac4b82dd32ea3f280e2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -365,7 +366,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1223638577}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.74, y: 0.82, z: -3.01}
+  m_LocalPosition: {x: 2.74, y: 4.33, z: -3.01}
   m_LocalScale: {x: 1, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

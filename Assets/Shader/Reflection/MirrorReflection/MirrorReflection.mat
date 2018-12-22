@@ -39,9 +39,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 44605ea6db5d0d14a8d03d806df66b54, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Texture: {fileID: 10305, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 0.5, y: -3.02}
+        m_Offset: {x: -1.12, y: 0}
     - _MaskTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -73,7 +73,7 @@ Material:
     - _Glossiness: 1
     - _GlossyReflections: 1
     - _LerpRange: 0.577
-    - _LerpReflect: 1
+    - _LerpReflect: 0.174
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -85,6 +85,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.52205884, g: 0.52205884, b: 0.52205884, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LightPos: {r: 0, g: 0, b: 1, a: 0}
