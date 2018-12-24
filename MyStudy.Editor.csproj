@@ -353,7 +353,6 @@
     <None Include="Assets\Shader\Shadow\PlanarShadow\PlanarShadow.shader" />
     <None Include="Assets\Shader\ShowRT2UI\ShowRT2UI.shader" />
     <None Include="Assets\Shader\Test\Test.shader" />
-    <None Include="Assets\Shader\Texture\Texture.shader" />
     <None Include="Assets\Shader\UNITY_UV_STARTS_AT_TOP\uv_start_at_top.shader" />
     <None Include="Assets\Shader\UV\Distortion\Distortion.shader" />
     <None Include="Assets\Shader\UV\UVMove\UVMove.shader" />
