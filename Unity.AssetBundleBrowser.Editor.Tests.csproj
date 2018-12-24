@@ -352,7 +352,6 @@
     <None Include="Assets\Shader\UV\UVRotation\UVRotation.shader" />
     <None Include="Assets\Shader\VertexAnimation\VA1\VA1.shader" />
     <None Include="Assets\Shader\Water\Water_UV_Distortion\Water_UV_Distortion.shader" />
-    <None Include="Assets\Shader\Water\Water_UV_Distortion\xft_distort_blend_1000.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
