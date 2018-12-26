@@ -2,22 +2,44 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 
-public class OptmizeAnimationClip : MonoBehaviour {
+public class OptmizeAnimationClip : EditorWindow {
+
+    private static Dictionary<AnimatorState, string> animatorStateDict = new Dictionary<AnimatorState, string>();
+
+    private static Object mFBX;
+    private static AnimatorController mController; 
+
     [MenuItem("ArtTools/优化动画", false, 10)]
-    public static void optmizeAnimation()
+    public static void OpenWindow()
     {
-        UnityEngine.Object[] SelectionAsset = Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Unfiltered);
-        for (int i = 0; i < SelectionAsset.Length; i++)
+        EditorWindow.GetWindow<OptmizeAnimationClip>();
+    }
+
+    private void OnGUI()
+    {
+        mController = (AnimatorController)EditorGUILayout.ObjectField(new GUIContent("动画控制器"), mController, typeof(AnimatorController), true);
+        mFBX = EditorGUILayout.ObjectField(new GUIContent("FBX"), mFBX, typeof(Object), true);
+
+        if(GUILayout.Button(new GUIContent("开始优化")))
         {
-            AnimationClip[] clips = CopyAnimationFromFBX(SelectionAsset[i]);
-            for(int j = 0; j < clips.Length; j++)
-            {
-                EditorUtility.DisplayProgressBar("优化动画", string.Format("{0}/{1}", j + 1, clips.Length), (j + 1) * 1.0f / clips.Length);
-                OptmizeAnimationScaleCurve(clips[j]);
-                OptmizeAnimationFloat(clips[j]);
-            }
+            OptmizeAnimation();
+        }
+    }
+
+
+    public static void OptmizeAnimation()
+    {
+        UpdateAnimationController(mController);
+        AnimationClip[] clips = CopyAnimationFromFBX(mFBX);
+        for(int j = 0; j < clips.Length; j++)
+        {
+            EditorUtility.DisplayProgressBar("优化动画", string.Format("{0}/{1}", j + 1, clips.Length), (j + 1) * 1.0f / clips.Length);
+            OptmizeAnimationScaleCurve(clips[j]);
+            OptmizeAnimationFloat(clips[j]);
+            ReplaceOptmizeClip(clips[j]);
         }
 
 
@@ -26,6 +48,48 @@ public class OptmizeAnimationClip : MonoBehaviour {
         AssetDatabase.SaveAssets();
         EditorUtility.DisplayProgressBar("刷新本地资源", "", 1.0f);
         EditorUtility.ClearProgressBar();
+    }
+
+
+
+    static void UpdateAnimationController(AnimatorController controller)
+    {
+        AnimatorControllerLayer layer = controller.layers[0];
+        UpdateAnimationController(layer.stateMachine);
+    }
+
+    static void UpdateAnimationController(AnimatorStateMachine machine)
+    {
+        animatorStateDict.Clear();
+        for (int i = 0; i < machine.states.Length; i++)
+        {
+            AnimationClip clip = machine.states[i].state.motion as AnimationClip;
+            if(clip == null)
+            {
+                Debug.LogError(string.Format("state {0} clip is null", machine.states[i].state.name));
+            }
+            else
+            {
+                animatorStateDict.Add(machine.states[i].state, clip.name);
+            }
+        }
+
+        for(int i = 0; i < machine.stateMachines.Length; i++)
+        {
+            UpdateAnimationController(machine.stateMachines[i].stateMachine);
+        }
+    }
+
+    //替换优化动画
+    static void ReplaceOptmizeClip(AnimationClip clip)
+    {
+        foreach(var item in animatorStateDict)
+        {
+            if(item.Value == clip.name)
+            {
+                item.Key.motion = clip;
+            }
+        }
     }
 
     static AnimationClip[] CopyAnimationFromFBX(Object FBX)
@@ -64,21 +128,6 @@ public class OptmizeAnimationClip : MonoBehaviour {
             EditorUtility.CopySerialized(FBXClipList[i], newClip);
             AssetDatabase.CreateAsset(newClip, animationPath + newClip.name + ".anim");
             clipList.Add(newClip);
-
-            if (clipList.Count > 13)
-            {
-                break;
-            }
-            //不使用遍历拷贝值的方法,太慢了
-            //AnimationClipSettings srcSetting = AnimationUtility.GetAnimationClipSettings(srcClip);
-            //AnimationUtility.SetAnimationClipSettings(newClip, srcSetting);
-            //
-            //EditorCurveBinding[] binds = AnimationUtility.GetCurveBindings(srcClip);
-            //for (int j = 0; j < binds.Length; j++)
-            //{
-            //    AnimationCurve curve = AnimationUtility.GetEditorCurve(srcClip, binds[j]);
-            //    AnimationUtility.SetEditorCurve(newClip, binds[j], curve);
-            //}
         }
 
         return clipList.ToArray();
@@ -108,6 +157,7 @@ public class OptmizeAnimationClip : MonoBehaviour {
                 curve.keys = keyFrames;
             }
 
+            //不能调用AnimationUtility.SetEditorCurve 会导致本地文件变大很多倍
             clip.SetCurve(binds[i].path, binds[i].type, binds[i].propertyName, curve);
         }
 
