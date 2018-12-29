@@ -1,4 +1,4 @@
-﻿Shader "Custom/Role"
+Shader "Custom/Role"
 {
 	Properties
 	{
@@ -37,7 +37,7 @@
 
 			struct a2v
 			{
-				float4 pos : POSITION;
+				float4 vertex : POSITION;
 				float3 normal : NORMAL;
 				float2 uv : TEXCOORD0;
 			};
@@ -61,14 +61,14 @@
 			float _FresnelStrength;
 			float _FresnelDir;
 
-			v2f vert(a2v i)
+			v2f vert(a2v v)
 			{
 				v2f o = (v2f)0;
-				o.pos = UnityObjectToClipPos(i.pos);
-				o.normal = UnityObjectToWorldNormal(normalize(i.normal));
-				o.uv = i.uv;
-				o.worldPos = mul(unity_ObjectToWorld, i.pos);
-				TRANSFER_SHADOW(o)
+				o.pos = UnityObjectToClipPos(v.vertex);
+				o.normal = UnityObjectToWorldNormal(v.normal);
+				o.uv = v.uv;
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+				TRANSFER_SHADOW(o) 
 				return o;
 			}
 
@@ -85,8 +85,8 @@
 				fixed3 specular = maskColor.r * _LightColor0.rgb *_SpecularStrength * pow(saturate(dot(H, N)), _SpecularGloss);
 
 				fixed3 fresnelDir = cross(viewDir, fixed3(0.0, 1.0, 0.0)) * _FresnelDir;
-				fixed3 fresnelColor = saturate(dot(fresnelDir, N) - 0.5f) * _FresnelStrength * _FresnelColor.rgb * pow(1 - saturate(dot(viewDir, N)), _FresnelGloss);				
-				fixed3 finalColor = texColor * ((diffuse + specular) * SHADOW_ATTENUATION(i)  + UNITY_LIGHTMODEL_AMBIENT) + fresnelColor ;
+				fixed3 fresnelColor = smoothstep(0.65, 1, dot(fresnelDir, N)) * _FresnelStrength * _FresnelColor.rgb ;//* pow(1 - saturate(dot(viewDir, N)), _FresnelGloss);				
+				fixed3 finalColor = texColor * ((diffuse + specular) * SHADOW_ATTENUATION(i)  + UNITY_LIGHTMODEL_AMBIENT) + fresnelColor;
 				return fixed4(finalColor, 1.0f);
 			}
 
