@@ -26,6 +26,8 @@ public class MirrorReflection : MonoBehaviour {
     private RenderTexture mReflectRT;
     private Camera mReflectCamera;
 
+    //1.一定要在OnWillRenderObject中调用GL.invertCulling 而不能再update中调用，否则不能正确反转剔除
+    //2.OnWillRenderObject 需要物体在摄像机视野范围内才能被调用，所以这个脚本挂载的物体要在视野范围内
     private void OnWillRenderObject()
     {
         //生成反射camera
