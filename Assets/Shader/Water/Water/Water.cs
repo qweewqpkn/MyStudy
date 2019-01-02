@@ -56,7 +56,7 @@ public class Water : MonoBehaviour
             cameraObj.name = "Render Camera";
             mRenderCamera = cameraObj.AddComponent<Camera>();
             mRenderCamera.clearFlags = CameraClearFlags.SolidColor;
-            mRenderCamera.backgroundColor = Color.white;
+            mRenderCamera.backgroundColor = Color.black;
             mRenderCamera.depth = 0;
             mRenderCamera.fieldOfView = mCamera.fieldOfView;
             mRenderCamera.aspect = mCamera.aspect;

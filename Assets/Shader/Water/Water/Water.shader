@@ -117,17 +117,35 @@
 				float phase = waveSpeed * w;
 				float partialX = waveAmplitude * waveDirection.x * w * cos(dot(waveDirection.xz, vertex.xz) * w + _Time.x * phase);
 				float partialZ = waveAmplitude * waveDirection.z * w * cos(dot(waveDirection.xz, vertex.xz) * w + _Time.x * phase);
-				return float3(-partialX, 0, -partialZ);
+				return float3(partialX, 0, partialZ);
 			}
 
 			float3 SinWaveNormal(float4 vertex)
 			{
-				float3 normal = float3(0, 1, 0);
+				float3 normal = float3(0, -1, 0);
 				normal += SinWaveNormalOne(vertex, _WaveLength.x, _WaveSpeed.x, _WaveAmplitude.x, _WaveDirection1);
 				normal += SinWaveNormalOne(vertex, _WaveLength.y, _WaveSpeed.y, _WaveAmplitude.y, _WaveDirection2);
 				normal += SinWaveNormalOne(vertex, _WaveLength.z, _WaveSpeed.z, _WaveAmplitude.z, _WaveDirection3);
 				normal += SinWaveNormalOne(vertex, _WaveLength.w, _WaveSpeed.w, _WaveAmplitude.w, _WaveDirection4);
 				return normal;
+			}
+
+			float3 SinWaveTangentOne(float4 vertex, float waveLength, float waveSpeed, float waveAmplitude, float4 waveDirection)
+			{
+				float w = 2 * 3.14 / waveLength;
+				float phase = waveSpeed * w;
+				float partialZ = waveAmplitude * waveDirection.z * w * cos(dot(waveDirection.xz, vertex.xz) * w + _Time.x * phase);
+				return float3(0, partialZ, 0);
+			}
+
+			float3 SinWaveTangent(float4 vertex)
+			{
+				float3 tangent = float3(0, 0, 1);
+				tangent += SinWaveTangentOne(vertex, _WaveLength.x, _WaveSpeed.x, _WaveAmplitude.x, _WaveDirection1);
+				tangent += SinWaveTangentOne(vertex, _WaveLength.y, _WaveSpeed.y, _WaveAmplitude.y, _WaveDirection2);
+				tangent += SinWaveTangentOne(vertex, _WaveLength.z, _WaveSpeed.z, _WaveAmplitude.z, _WaveDirection3);
+				tangent += SinWaveTangentOne(vertex, _WaveLength.w, _WaveSpeed.w, _WaveAmplitude.w, _WaveDirection4);
+				return tangent;
 			}
 
 			v2f vert (appdata v)
@@ -142,12 +160,12 @@
 				o.screenPos = ComputeScreenPos(o.vertex);
 				float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
 				float3 normal = UnityObjectToWorldNormal(SinWaveNormal(v.vertex));
-				float3 tangent = UnityObjectToWorldDir(v.tangent);
-				float3 binormal = cross(normal, tangent) * v.tangent.w;
+				float3 tangent = UnityObjectToWorldDir(SinWaveTangent(v.vertex));
+				float3 binormal = cross(normal, tangent);
 
-				o.Tangent2World1 = float4(binormal.x, tangent.x, normal.x, worldPos.x);
-				o.Tangent2World2 = float4(binormal.y, tangent.y, normal.y, worldPos.y);
-				o.Tangent2World3 = float4(binormal.z, tangent.z, normal.z, worldPos.z);
+				o.Tangent2World1 = float4(binormal.x, normal.x, tangent.x, worldPos.x);
+				o.Tangent2World2 = float4(binormal.y, normal.y, tangent.y, worldPos.y);
+				o.Tangent2World3 = float4(binormal.z, normal.z, tangent.z, worldPos.z);
 				return o;
 			}
 			
@@ -162,7 +180,7 @@
 				float3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
 
 				//计算diffuse
-				fixed3 diffuse = _LightColor0.rgb * (dot(normal, lightDir) * 0.5 + 0.5);
+				fixed3 diffuse = _LightColor0.rgb * saturate(dot(normal, lightDir));
 
 				//计算高光
 				fixed3 maskColor = tex2D(_MaskTex, i.uv0.zw);
@@ -184,8 +202,8 @@
 				//fresnel
 				fixed fresnel = saturate(pow(1 - saturate(dot(viewDir, normal)), _FresnelStrength));
 				//插值
-				fixed3 finalColor =lerp(refractColor, reflectColor, fresnel) * texColor * _Color;
-				return fixed4(finalColor, _Color.a);
+				fixed3 finalColor =(lerp(refractColor, reflectColor, fresnel) +  specular + diffuse) * texColor * _Color;
+				return fixed4(normal, _Color.a);
 			}
 			ENDCG
 		}
