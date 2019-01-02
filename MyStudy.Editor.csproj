@@ -312,11 +312,14 @@
     <Compile Include="Assets\Code\Assetbundle\Editor\BuildAB.cs" />
     <Compile Include="Assets\Code\BuildAndroid\Editor\BuildAndroid.cs" />
     <Compile Include="Assets\Code\BuildPC\Editor\BuildPC.cs" />
+    <Compile Include="Assets\Code\Editor\ArtTools\AnimationSplit.cs" />
+    <Compile Include="Assets\Code\Editor\ArtTools\OptmizeAnimationClip.cs" />
     <Compile Include="Assets\Code\UI\Editor\UIComponentBindEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Code\Assetbundle\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Code\ClickEvent\说明.txt" />
+    <None Include="Assets\Code\Editor\ArtTools\动画分割模版.txt" />
     <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Code\LightMap\LoadLightmap\Shader\LightMap.shader" />
     <None Include="Assets\Code\LightMap\LoadLightmap\说明.txt" />

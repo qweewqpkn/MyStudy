@@ -57,6 +57,7 @@
 			float4 _Color;
 			float _LerpRange;
 			float4 _ForwardDir;
+			float4 _ViewDir;
 
 			v2f vert (appdata v)
 			{
@@ -75,7 +76,8 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float3 normal = normalize(i.normal);
-				float3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
+				float3 viewDir = normalize(_ViewDir.xyz - i.worldPos.xyz);
+				//float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
 				float3 lightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 				float3 H = normalize(viewDir + lightDir);
 				fixed3 specular = _LightColor0 * pow(saturate(dot(H, normal)), _Gloss);

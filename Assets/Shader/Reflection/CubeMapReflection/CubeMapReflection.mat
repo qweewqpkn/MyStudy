@@ -59,7 +59,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ReflectTex:
-        m_Texture: {fileID: 8900000, guid: 33bee3dac06085f4bbbc7418b590eb2d, type: 2}
+        m_Texture: {fileID: 8900000, guid: 74fe7ef3f80ad9444b16319a38001b55, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:

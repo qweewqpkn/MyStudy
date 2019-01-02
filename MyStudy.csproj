@@ -295,6 +295,7 @@
     <Compile Include="Assets\Shader\Light\FwdLight\FwdLight.cs" />
     <Compile Include="Assets\Shader\RadialBlur\RadialBlur.cs" />
     <Compile Include="Assets\Shader\RayMarching\RM_Sphere\RM_Sphere.cs" />
+    <Compile Include="Assets\Shader\Reflection\CubeMapReflection\CubeMapReflection.cs" />
     <Compile Include="Assets\Shader\Reflection\MirrorReflection\MirrorReflection.cs" />
     <Compile Include="Assets\Shader\Shadow\PlanarShadow\PlanarShadow.cs" />
     <Compile Include="Assets\Shader\SSAO\SSAO.cs" />
@@ -304,6 +305,7 @@
   <ItemGroup>
     <None Include="Assets\Code\Assetbundle\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Code\ClickEvent\说明.txt" />
+    <None Include="Assets\Code\Editor\ArtTools\动画分割模版.txt" />
     <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Code\LightMap\LoadLightmap\Shader\LightMap.shader" />
     <None Include="Assets\Code\LightMap\LoadLightmap\说明.txt" />

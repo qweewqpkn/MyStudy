@@ -3,7 +3,8 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_LerpY("_LerpY", Float) = 0
+		_MoveDir("_MoveDir", vector) = (0, 0, 0, 0)
+		_MoveSpeed("_MoveSpeed", float) = 1
 	}
 	SubShader
 	{
@@ -12,6 +13,8 @@
 
 		Pass
 		{
+			cull off
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -32,21 +35,20 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			float _LerpY;
+			float4 _MoveDir;
+			float _MoveSpeed;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
-				float3 cameraPos = mul(unity_WorldToObject, _WorldSpaceCameraPos); 
-				float3 forward = float3(0.0f, 0.0f, 0.0f) -  cameraPos;
-				forward.y = lerp(0.0f, forward.y, _LerpY);
-				forward = normalize(forward);
-				float3 up = abs(forward.y) > 0.99 ? float3(0.0f, 0.0f, 1.0f) : float3(0.0f, 1.0f, 0.0f);
-				float3 right = normalize(cross(up, forward));
-				up = normalize(cross(forward, right));
-				v.vertex.xyz = v.vertex.x * right + v.vertex.y * up + v.vertex.z * forward;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
+				if(v.uv.y > 0.9)
+				{	
+					worldPos = worldPos + abs(sin(_Time.x * _MoveSpeed)) * _MoveDir;
+				}
+
+				o.vertex = mul(UNITY_MATRIX_VP, worldPos);
+				o.uv = v.uv;
 				return o;
 			}
 			
