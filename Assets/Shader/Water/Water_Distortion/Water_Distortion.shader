@@ -1,6 +1,6 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-Shader "LH/Water_UV_Distortion"
+Shader "LH/Water_Distortion"
 {
 	Properties
 	{
@@ -66,25 +66,16 @@ Shader "LH/Water_UV_Distortion"
 			{
 				fixed4 offsetColor1 = tex2D(_NoiseTex, frac(i.uv + _Time.xy*_HeatTime));
 			    fixed4 offsetColor2 = tex2D(_NoiseTex, frac(i.uv + _Time.yx*_HeatTime));
-				fixed offsetX= ((offsetColor1.r + offsetColor2.r)) * _ForceX;
-				fixed offsetY= ((offsetColor1.r + offsetColor2.r)) * _ForceY;
+				fixed offsetX= (offsetColor1.r + offsetColor2.r) * _ForceX;
+				fixed offsetY= (offsetColor1.r + offsetColor2.r) * _ForceY;
 
 				fixed4 reflectColor = tex2D(_ReflectTex, saturate(i.screenPos.xy / i.screenPos.w + fixed2(offsetX, offsetY))); 
+				//reflectColor *= tex2D(_ReflectTex, saturate(i.screenPos.xy / i.screenPos.w + 2 * fixed2(offsetX, offsetY))); 
 				fixed4 texColor = tex2D(_MainTex, i.uv + fixed2(offsetX, offsetY));
 				fixed4 finalColor = lerp(texColor, reflectColor, _ReflectRadio);
 				return  fixed4(_TintColor.rgb * finalColor.rgb, _TintColor.a);
 			}
 			ENDCG
-		}
-	}
-	// ------------------------------------------------------------------
-	// Fallback for older cards and Unity non-Pro
-	
-	SubShader {
-		Blend DstColor Zero
-		Pass {
-			Name "BASE"
-			SetTexture [_MainTex] {	combine texture }
 		}
 	}
 }
