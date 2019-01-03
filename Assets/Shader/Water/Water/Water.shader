@@ -9,7 +9,8 @@
 		_Color("_Color", Color) = (1,1,1,1)
 		_Gloss("_Gloss", Float) = 8
 		_SpecularStrength("_SpecularStrength", Float) = 1
-		_FresnelStrength("_FresnelStrength", Float) = 8
+		_FresnelStrength("_FresnelStrength", Range(0, 1)) = 1
+		_FresnelGloss("_FresnelGloss", Float) = 1
 
 		[Header(distortion)]
 		_DistTime("_DistTime", Range(-0.1, 0.1)) = 0.1
@@ -25,6 +26,7 @@
 		_WaveDirection3("_WaveDirection3", Vector) = (1, 0, 0, 0)
 		_WaveDirection4("_WaveDirection4", Vector) = (1, 0, 0, 0)
 	}
+
 	SubShader
 	{
 		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
@@ -78,6 +80,7 @@
 			float _Gloss;
 			float _SpecularStrength;
 			float _FresnelStrength;
+			float _FresnelGloss;
 			float4 _Color;
 			float _OffsetScaleX;
 			float _OffsetScaleY;
@@ -110,19 +113,20 @@
 				return height;
 			}
 
-			//求sin波的法线
+			//求单个波法线
 			float3 SinWaveNormalOne(float4 vertex, float waveLength, float waveSpeed, float waveAmplitude, float4 waveDirection)
 			{
 				float w = 2 * 3.14 / waveLength;
 				float phase = waveSpeed * w;
 				float partialX = waveAmplitude * waveDirection.x * w * cos(dot(waveDirection.xz, vertex.xz) * w + _Time.x * phase);
 				float partialZ = waveAmplitude * waveDirection.z * w * cos(dot(waveDirection.xz, vertex.xz) * w + _Time.x * phase);
-				return float3(partialX, 0, partialZ);
+				return float3(-partialX, -partialZ, 0);
 			}
 
+			//求所有波形叠加后的法线
 			float3 SinWaveNormal(float4 vertex)
 			{
-				float3 normal = float3(0, -1, 0);
+				float3 normal = float3(0, 0, 1);
 				normal += SinWaveNormalOne(vertex, _WaveLength.x, _WaveSpeed.x, _WaveAmplitude.x, _WaveDirection1);
 				normal += SinWaveNormalOne(vertex, _WaveLength.y, _WaveSpeed.y, _WaveAmplitude.y, _WaveDirection2);
 				normal += SinWaveNormalOne(vertex, _WaveLength.z, _WaveSpeed.z, _WaveAmplitude.z, _WaveDirection3);
@@ -130,17 +134,19 @@
 				return normal;
 			}
 
+			//求单个波切线
 			float3 SinWaveTangentOne(float4 vertex, float waveLength, float waveSpeed, float waveAmplitude, float4 waveDirection)
 			{
 				float w = 2 * 3.14 / waveLength;
 				float phase = waveSpeed * w;
 				float partialZ = waveAmplitude * waveDirection.z * w * cos(dot(waveDirection.xz, vertex.xz) * w + _Time.x * phase);
-				return float3(0, partialZ, 0);
+				return float3(0, 0, partialZ);
 			}
 
+			//求所有波形叠加后的切线
 			float3 SinWaveTangent(float4 vertex)
 			{
-				float3 tangent = float3(0, 0, 1);
+				float3 tangent = float3(0, 1, 0);
 				tangent += SinWaveTangentOne(vertex, _WaveLength.x, _WaveSpeed.x, _WaveAmplitude.x, _WaveDirection1);
 				tangent += SinWaveTangentOne(vertex, _WaveLength.y, _WaveSpeed.y, _WaveAmplitude.y, _WaveDirection2);
 				tangent += SinWaveTangentOne(vertex, _WaveLength.z, _WaveSpeed.z, _WaveAmplitude.z, _WaveDirection3);
@@ -163,9 +169,9 @@
 				float3 tangent = UnityObjectToWorldDir(SinWaveTangent(v.vertex));
 				float3 binormal = cross(normal, tangent);
 
-				o.Tangent2World1 = float4(binormal.x, normal.x, tangent.x, worldPos.x);
-				o.Tangent2World2 = float4(binormal.y, normal.y, tangent.y, worldPos.y);
-				o.Tangent2World3 = float4(binormal.z, normal.z, tangent.z, worldPos.z);
+				o.Tangent2World1 = float4(binormal.x, tangent.x, normal.x, worldPos.x);
+				o.Tangent2World2 = float4(binormal.y, tangent.y, normal.y, worldPos.y);
+				o.Tangent2World3 = float4(binormal.z, tangent.z, normal.z, worldPos.z);
 				return o;
 			}
 			
@@ -191,8 +197,8 @@
 				//扰动
 				fixed3 noiseColor1 = tex2D(_NoiseTex, i.uv0.xy + frac(_Time.xy * _DistTime));
 				fixed3 noiseColor2 = tex2D(_NoiseTex, i.uv0.xy + frac(_Time.yx * _DistTime));
-				float offsetX = (noiseColor1.r + noiseColor2.r) * _OffsetScaleX;
-				float offsetY = (noiseColor1.r + noiseColor2.r) * _OffsetScaleY;
+				float offsetX = (noiseColor1.r + noiseColor2.r - 1) * _OffsetScaleX;
+				float offsetY = (noiseColor1.r + noiseColor2.r - 1) * _OffsetScaleY;
 				//纹理
 				fixed3 texColor = tex2D(_MainTex, i.uv0.xy).rgb;
 				//反射
@@ -200,10 +206,10 @@
 				//折射
 				fixed3 refractColor = tex2D(_RefractTex, i.screenPos.xy / i.screenPos.w).rgb;
 				//fresnel
-				fixed fresnel = saturate(pow(1 - saturate(dot(viewDir, normal)), _FresnelStrength));
+				fixed fresnel = saturate(_FresnelStrength * pow(1 - saturate(dot(viewDir, normal)), _FresnelGloss));
 				//插值
-				fixed3 finalColor =(lerp(refractColor, reflectColor, fresnel) +  specular + diffuse) * texColor * _Color;
-				return fixed4(normal, _Color.a);
+				fixed3 finalColor = lerp(refractColor, reflectColor, fresnel) * texColor * _Color * (diffuse + UNITY_LIGHTMODEL_AMBIENT + specular);
+				return fixed4(finalColor, _Color.a);
 			}
 			ENDCG
 		}

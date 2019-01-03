@@ -45,7 +45,6 @@ public class Water : MonoBehaviour
     public void Start()
     {
         InitCamera();
-        InitRT();
     }
 
     private void InitCamera()
@@ -55,8 +54,8 @@ public class Water : MonoBehaviour
             GameObject cameraObj = new GameObject();
             cameraObj.name = "Render Camera";
             mRenderCamera = cameraObj.AddComponent<Camera>();
-            mRenderCamera.clearFlags = CameraClearFlags.SolidColor;
-            mRenderCamera.backgroundColor = Color.black;
+            mRenderCamera.clearFlags = CameraClearFlags.Skybox;
+            mRenderCamera.backgroundColor = Color.white;
             mRenderCamera.depth = 0;
             mRenderCamera.fieldOfView = mCamera.fieldOfView;
             mRenderCamera.aspect = mCamera.aspect;
@@ -98,6 +97,8 @@ public class Water : MonoBehaviour
 
     private void OnWillRenderObject()
     {
+        InitRT();
+
         //更新平面
         UpdatePlane();
 
