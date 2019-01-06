@@ -7,10 +7,14 @@
 		_NoiseTex("_NoiseTex", 2D) = "white"{}
 		_BumpTex("_BumpTex", 2D) = "white"{}
 		_Color("_Color", Color) = (1,1,1,1)
+		_DepthColor1("_DepthColor1", Color) = (1, 1, 1, 1)
+		_DepthColor2("_DepthColor2", Color) = (1, 1, 1, 1)
 		_Gloss("_Gloss", Float) = 8
 		_SpecularStrength("_SpecularStrength", Float) = 1
 		_FresnelStrength("_FresnelStrength", Range(0, 1)) = 1
-		_FresnelGloss("_FresnelGloss", Float) = 1
+		_NormalSpeed("_NormalSpeed", Float) = 1
+		_NormalOffset("_NormalOffset", Range(0, 1)) = 0.5
+		_Range("_Range(r:深度范围, g:海岸范围)", Float) = 8
 
 		[Header(distortion)]
 		_DistTime("_DistTime", Range(-0.1, 0.1)) = 0.1
@@ -65,6 +69,7 @@
 				float4 Tangent2World1 : TEXCOORD4;
 				float4 Tangent2World2 : TEXCOORD5;
 				float4 Tangent2World3 : TEXCOORD6;
+				float3 normal : TEXCOORD7;
 			};
 
 			sampler2D _MainTex;
@@ -73,18 +78,24 @@
 			sampler2D _ReflectTex;
 			sampler2D _RefractTex;
 			sampler2D _BumpTex;
+			sampler2D _CameraDepthTexture;
 			float4 _MaskTex_ST;
 			float4 _MainTex_ST;
 			float4 _BumpTex_ST;
+			float4x4 _InverViewProjMatrix;
 
 			float _Gloss;
 			float _SpecularStrength;
 			float _FresnelStrength;
-			float _FresnelGloss;
 			float4 _Color;
+			float4 _DepthColor1;
+			float4 _DepthColor2;
 			float _OffsetScaleX;
 			float _OffsetScaleY;
 			float _DistTime;
+			float _NormalOffset;
+			float _Range;
+			float _NormalSpeed;
 
 			float4 _WaveAmplitude;
 			float4 _WaveSpeed;
@@ -154,6 +165,24 @@
 				return tangent;
 			}
 
+			float4 GetWorldPosFromDepth(float4x4 InverVP, float depth, float2 screenPos)
+			{
+				float4 ndcPos = float4(screenPos.x * 2 - 1, screenPos.y * 2 - 1, 2 *(1 - depth) - 1, 1);
+				//#if defined(UNITY_REVERSED_Z)
+				//	//D3d with reversed Z
+				//	ndcPos.z = 1.0f - ndcPos.z;
+				//#elif UNITY_UV_STARTS_AT_TOP
+				//	//D3d without reversed z
+				//#else
+				//	//opengl, map to -1,1
+				//	ndcPos.z = ndcPos.z * 2.0f - 1.0f;
+				//#endif
+
+				float4 worldPos = mul(InverVP, ndcPos);
+				worldPos = worldPos / worldPos.w;
+				return worldPos;
+			}
+
 			v2f vert (appdata v)
 			{
 				v2f o;
@@ -164,6 +193,7 @@
 				o.uv0.zw = TRANSFORM_TEX(v.uv, _MaskTex);
 				o.uv1.xy = TRANSFORM_TEX(v.uv, _BumpTex);
 				o.screenPos = ComputeScreenPos(o.vertex);
+				o.normal = UnityObjectToWorldNormal(v.normal);
 				float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
 				float3 normal = UnityObjectToWorldNormal(SinWaveNormal(v.vertex));
 				float3 tangent = UnityObjectToWorldDir(SinWaveTangent(v.vertex));
@@ -177,16 +207,27 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
+				float2 screenPos =  i.screenPos.xy / i.screenPos.w;
+				float depth =  SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, screenPos);
+				//根据深度获取世界坐标
+				float4 worldPosFromDepth = GetWorldPosFromDepth(_InverViewProjMatrix, depth, screenPos);
+
 				//世界坐标
-				float4 worldPos = float4(i.Tangent2World1.w, i.Tangent2World2.w, i.Tangent2World3.z, 1.0);
+				float4 worldPos = float4(i.Tangent2World1.w, i.Tangent2World2.w, i.Tangent2World3.w, 1.0);
+
+				//扰动
+				fixed3 noiseColor1 = tex2D(_NoiseTex, i.uv0.xy + frac(_Time.xy * _DistTime));
+				fixed3 noiseColor2 = tex2D(_NoiseTex, i.uv0.xy + frac(_Time.yx * _DistTime));
+				float offsetX = (noiseColor1.r + noiseColor2.r - 1) * _OffsetScaleX;
+				float offsetY = (noiseColor1.r + noiseColor2.r - 1) * _OffsetScaleY;
+				float2 offset = float2(offsetX, offsetY);
 
 				//获取法线
-				fixed3 normal = UnpackNormal(tex2D(_BumpTex, i.uv1.xy));
+				float2 normalOffset = _WaveDirection1.xz * _NormalSpeed * _Time.x;
+				fixed3 normal = UnpackNormal((tex2D(_BumpTex, i.uv1.xy + normalOffset)));
 				normal = normalize(float3(dot(i.Tangent2World1, normal), dot(i.Tangent2World2, normal), dot(i.Tangent2World3, normal)));
+				normal = lerp(i.normal, normal, _NormalOffset);
 				float3 lightDir = normalize(UnityWorldSpaceLightDir(worldPos));
-
-				//计算diffuse
-				fixed3 diffuse = _LightColor0.rgb * saturate(dot(normal, lightDir));
 
 				//计算高光
 				fixed3 maskColor = tex2D(_MaskTex, i.uv0.zw);
@@ -194,22 +235,20 @@
 				fixed3 H = normalize(lightDir + viewDir);
 				fixed3 specular = _SpecularStrength * _LightColor0.rgb * pow(saturate(dot(H, normal)), _Gloss) * maskColor.r;
 
-				//扰动
-				fixed3 noiseColor1 = tex2D(_NoiseTex, i.uv0.xy + frac(_Time.xy * _DistTime));
-				fixed3 noiseColor2 = tex2D(_NoiseTex, i.uv0.xy + frac(_Time.yx * _DistTime));
-				float offsetX = (noiseColor1.r + noiseColor2.r - 1) * _OffsetScaleX;
-				float offsetY = (noiseColor1.r + noiseColor2.r - 1) * _OffsetScaleY;
 				//纹理
 				fixed3 texColor = tex2D(_MainTex, i.uv0.xy).rgb;
+				//渐变
+				fixed3 gradientColor = lerp(_DepthColor1, _DepthColor2, (worldPos.y - worldPosFromDepth.y) / _Range.r);
 				//反射
-				fixed3 reflectColor = tex2D(_ReflectTex, i.screenPos.xy / i.screenPos.w + float2(offsetX, offsetY)).rgb;
+				fixed3 reflectColor = tex2D(_ReflectTex, screenPos + offset).rgb;
 				//折射
-				fixed3 refractColor = tex2D(_RefractTex, i.screenPos.xy / i.screenPos.w).rgb;
+				fixed3 refractColor = tex2D(_RefractTex, screenPos + offset).rgb;
 				//fresnel
-				fixed fresnel = saturate(_FresnelStrength * pow(1 - saturate(dot(viewDir, normal)), _FresnelGloss));
+				fixed fresnel = _FresnelStrength + (1 -_FresnelStrength) * pow(1 - saturate(dot(viewDir, normal)), 5);
 				//插值
-				fixed3 finalColor = lerp(refractColor, reflectColor, fresnel) * texColor * _Color * (diffuse + UNITY_LIGHTMODEL_AMBIENT + specular);
-				return fixed4(finalColor, _Color.a);
+				fixed3 finalColor = lerp(refractColor, reflectColor, fresnel);
+				finalColor = finalColor * gradientColor + specular;
+				return fixed4(specular,_Color.a);
 			}
 			ENDCG
 		}
