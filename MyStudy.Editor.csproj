@@ -314,6 +314,7 @@
     <Compile Include="Assets\Code\BuildPC\Editor\BuildPC.cs" />
     <Compile Include="Assets\Code\Editor\ArtTools\AnimationSplit.cs" />
     <Compile Include="Assets\Code\Editor\ArtTools\OptmizeAnimationClip.cs" />
+    <Compile Include="Assets\Code\Editor\ArtTools\RenderCubeMap.cs" />
     <Compile Include="Assets\Code\UI\Editor\UIComponentBindEditor.cs" />
   </ItemGroup>
   <ItemGroup>

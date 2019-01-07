@@ -10,7 +10,21 @@ public class OptmizeAnimationClip : EditorWindow {
     private static Dictionary<AnimatorState, string> animatorStateDict = new Dictionary<AnimatorState, string>();
 
     private static Object mFBX;
-    private static AnimatorController mController; 
+    private static AnimatorController mController;
+    private static PrecisionType mPrecisionType = PrecisionType.e4; //使用e3会导致模型抖动,优化的太狠了
+    private enum PrecisionType
+    {
+        e1 = 1,
+        e2 = 2,
+        e3 = 3,
+        e4 = 4,
+        e5 = 5,
+        e6 = 6,
+        e7 = 7,
+        e8 = 8,
+    }
+    private static bool mIsOptmizeScale = true;
+
 
     [MenuItem("ArtTools/优化动画", false, 10)]
     public static void OpenWindow()
@@ -22,8 +36,10 @@ public class OptmizeAnimationClip : EditorWindow {
     {
         mController = (AnimatorController)EditorGUILayout.ObjectField(new GUIContent("动画控制器"), mController, typeof(AnimatorController), true);
         mFBX = EditorGUILayout.ObjectField(new GUIContent("FBX"), mFBX, typeof(Object), true);
+        mPrecisionType = (PrecisionType)EditorGUILayout.EnumPopup(new GUIContent("精度"), mPrecisionType);
+        mIsOptmizeScale = EditorGUILayout.Toggle(new GUIContent("是否优化scale"), mIsOptmizeScale);
 
-        if(GUILayout.Button(new GUIContent("开始优化")))
+        if (GUILayout.Button(new GUIContent("开始优化")))
         {
             OptmizeAnimation();
         }
@@ -37,7 +53,10 @@ public class OptmizeAnimationClip : EditorWindow {
         for(int j = 0; j < clips.Length; j++)
         {
             EditorUtility.DisplayProgressBar("优化动画", string.Format("{0}/{1}", j + 1, clips.Length), (j + 1) * 1.0f / clips.Length);
-            OptmizeAnimationScaleCurve(clips[j]);
+            if(mIsOptmizeScale)
+            {
+                OptmizeAnimationScaleCurve(clips[j]);
+            }
             OptmizeAnimationFloat(clips[j]);
             ReplaceOptmizeClip(clips[j]);
         }
@@ -117,6 +136,11 @@ public class OptmizeAnimationClip : EditorWindow {
             {
                 FBXClipList.Add(srcClip);
             }
+
+            //if(FBXClipList.Count > 2)
+            //{
+            //    break;
+            //}
         }
 
         List<AnimationClip> clipList = new List<AnimationClip>();
@@ -138,6 +162,7 @@ public class OptmizeAnimationClip : EditorWindow {
     /// </summary>
     static void OptmizeAnimationFloat(AnimationClip clip)
     {
+        string precision = ((int)mPrecisionType).ToString();
         EditorCurveBinding[] binds =  AnimationUtility.GetCurveBindings(clip);
         Keyframe[] keyFrames;
         for (int i = 0; i < binds.Length; i++)
@@ -149,9 +174,9 @@ public class OptmizeAnimationClip : EditorWindow {
                 for (int j = 0; j < keyFrames.Length; j++)
                 {
                     Keyframe key = keyFrames[j];
-                    key.value = float.Parse(key.value.ToString("f3"));
-                    key.inTangent = float.Parse(key.inTangent.ToString("f3"));
-                    key.outTangent = float.Parse(key.outTangent.ToString("f3"));
+                    key.value = float.Parse(key.value.ToString("f" + precision));
+                    key.inTangent = float.Parse(key.inTangent.ToString("f" + precision));
+                    key.outTangent = float.Parse(key.outTangent.ToString("f" + precision));
                     keyFrames[j] = key;
                 }
                 curve.keys = keyFrames;
