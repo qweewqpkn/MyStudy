@@ -44,6 +44,7 @@ public class Water : MonoBehaviour
 
     public void Start()
     {
+        mCamera.depthTextureMode = DepthTextureMode.Depth;
         InitCamera();
     }
 
@@ -54,11 +55,13 @@ public class Water : MonoBehaviour
             GameObject cameraObj = new GameObject();
             cameraObj.name = "Render Camera";
             mRenderCamera = cameraObj.AddComponent<Camera>();
-            mRenderCamera.clearFlags = CameraClearFlags.Skybox;
+            mRenderCamera.clearFlags = CameraClearFlags.SolidColor;
             mRenderCamera.backgroundColor = Color.white;
             mRenderCamera.depth = 0;
             mRenderCamera.fieldOfView = mCamera.fieldOfView;
             mRenderCamera.aspect = mCamera.aspect;
+            mRenderCamera.allowHDR = false;
+            mRenderCamera.allowMSAA = false;
         }
     }
 
@@ -88,6 +91,7 @@ public class Water : MonoBehaviour
                     {
                         mReflectList[i].sharedMaterials[j].SetTexture("_ReflectTex", mReflectRT);
                         mReflectList[i].sharedMaterials[j].SetTexture("_RefractTex", mRefractRT);
+                        mReflectList[i].sharedMaterials[j].SetMatrix("_InverViewProjMatrix", (mCamera.projectionMatrix * mCamera.worldToCameraMatrix).inverse);
                         //mReflectList[i].materials[j].SetVector("_LightPos", mLightPos.transform.forward);
                     }
                 }
