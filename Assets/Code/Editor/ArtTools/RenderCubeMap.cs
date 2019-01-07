@@ -42,7 +42,7 @@ public class RenderCubeMap : EditorWindow {
                 RenderTexture.active = texture;
                 Texture2D texture2D = new Texture2D(mWidth, mHeight, TextureFormat.ARGB32, false);
                 texture2D.ReadPixels(new Rect(0, 0, mWidth, mHeight), 0, 0);
-
+            
                 //图像进行翻转
                 Color[] colors = new Color[mWidth * mHeight];
                 int index = 0;
@@ -59,6 +59,8 @@ public class RenderCubeMap : EditorWindow {
                 RenderTexture.ReleaseTemporary(texture);
                 camera.transform.localEulerAngles = cacheEulerAngles;
             }
+            
+            mCubeMap.Apply();
         }
         AssetDatabase.Refresh();
         AssetDatabase.SaveAssets();
