@@ -77,16 +77,28 @@ Shader "Custom/Role"
 				fixed3 texColor = tex2D(_MainTex, i.uv).rgb;
 				fixed4 maskColor = tex2D(_MaskTex, i.uv);
 
+				//计算第一盏光照
 				fixed3 lightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
 				fixed3 N = normalize(i.normal);
-				fixed3 diffuse = _DiffuseStrength * _LightColor0.rgb * saturate(dot(i.normal, lightDir));
+				fixed3 diffuse = _DiffuseStrength * _LightColor0.rgb * saturate(dot(N, lightDir));
 				fixed3 H = normalize(lightDir + viewDir);
 				fixed3 specular = maskColor.r * _LightColor0.rgb *_SpecularStrength * pow(saturate(dot(H, N)), _SpecularGloss);
 
+				//计算第二盏光照
+				float3 lightDir1 = float4(unity_4LightPosX0.x, unity_4LightPosY0.x, unity_4LightPosZ0.x, 1) - i.worldPos;
+				fixed3 lightDir1Normalize = normalize(lightDir);
+				fixed3 viewDir1 = normalize(UnityWorldSpaceViewDir(i.worldPos));
+				//float attenuation = 1.0 / (1.0 + unity_4LightAtten0.x * dot(lightDir1, lightDir1));
+				diffuse +=  _DiffuseStrength * unity_LightColor[0].rgb * saturate(dot(N, lightDir1Normalize));
+				fixed3 H1 = normalize(lightDir1Normalize + viewDir1);
+				specular += maskColor.r * unity_LightColor[0].rgb *_SpecularStrength * pow(saturate(dot(H1, N)), _SpecularGloss);
+
+				//计算阴影和衰减
+				UNITY_LIGHT_ATTENUATION(atten, i, i.worldPos.xyz);
 				fixed3 fresnelDir = cross(viewDir, fixed3(0.0, 1.0, 0.0)) * _FresnelDir;
 				fixed3 fresnelColor = smoothstep(0.65, 1, dot(fresnelDir, N)) * _FresnelStrength * _FresnelColor.rgb ;//* pow(1 - saturate(dot(viewDir, N)), _FresnelGloss);				
-				fixed3 finalColor = texColor * ((diffuse + specular) * SHADOW_ATTENUATION(i)  + UNITY_LIGHTMODEL_AMBIENT) + fresnelColor;
+				fixed3 finalColor = texColor * ((diffuse + specular) * atten  + UNITY_LIGHTMODEL_AMBIENT) + fresnelColor;
 				return fixed4(finalColor, 1.0f);
 			}
 
