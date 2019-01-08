@@ -18,6 +18,10 @@
 
 		Pass
 		{
+			Tags
+			{
+				"LightMode" = "ForwardBase"
+			}
 
 			Blend SrcAlpha OneMinusSrcAlpha
 
@@ -27,6 +31,7 @@
 			#pragma multi_compile __ LIGHTMAP_ON
 			#include "UnityCG.cginc"
 			#include "Lighting.cginc"
+			#pragma multi_compile_fwdbase
 
 			struct appdata
 			{

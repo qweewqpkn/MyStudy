@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Material
-  m_Shader: {fileID: 4800000, guid: 2ef1e5d99f987224e9c242ce5e50a36a, type: 3}
+  m_Shader: {fileID: 4800000, guid: 2a8d62ca13a4a1c46b8a138d6e628379, type: 3}
   m_ShaderKeywords: ENABLE_COLOR
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -35,6 +35,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FlashTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -67,8 +71,11 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _ScalePos: 0.1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpeedX: 1
+    - _SpeedY: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1

@@ -185,7 +185,7 @@ namespace AssetLoad
                     break;
                 case RuntimePlatform.WindowsEditor:
                     {
-                        result.Append("file://" + Application.dataPath + "/../ClientRes/Android/");
+                        result.Append("file://" + Application.dataPath + "/../ClientRes/Windows/");
                     }
                     break;
                 default:
