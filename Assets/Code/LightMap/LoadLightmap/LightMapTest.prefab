@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!1 &1191531540437868
 GameObject:
@@ -45,7 +45,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!1 &1535906949303948
 GameObject:
@@ -95,7 +95,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!4 &4027274346046374
 Transform:
@@ -160,7 +160,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1191531540437868}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.02, y: 1.04, z: 0}
+  m_LocalPosition: {x: -2.03, y: 1.04, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4411645026958480}
@@ -324,7 +324,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.89705884, g: 0.09234428, b: 0.6084716, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -364,18 +364,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererInfo:
   - renderer: {fileID: 23145021376589518}
-    lightmapIndex: 0
-    lightmapOffsetScale: {x: 0.23808943, y: 0.23808943, z: -0.0009656351, w: 0.7841906}
+    lightmapIndex: 1
+    lightmapOffsetScale: {x: 0.47617885, y: 0.47617885, z: -0.0019312702, w: -0.0019312702}
   - renderer: {fileID: 23966994023310206}
-    lightmapIndex: 0
-    lightmapOffsetScale: {x: 0.16992182, y: 0.16992182, z: 0.78515625, w: 0}
+    lightmapIndex: 1
+    lightmapOffsetScale: {x: 0.33984363, y: 0.33984363, z: 0.48046875, w: 0}
   - renderer: {fileID: 23798818266186348}
     lightmapIndex: 0
-    lightmapOffsetScale: {x: 0.78125, y: 0.78125, z: 0, w: 0}
+    lightmapOffsetScale: {x: 1, y: 1, z: 0, w: 0}
   lightmapColor:
-  - {fileID: 2800000, guid: 114ee0acd6ebfce4d9637f6c9e0b123f, type: 3}
+  - {fileID: 2800000, guid: e1cb1bbc069271c4e83c960e00795bf6, type: 3}
+  - {fileID: 2800000, guid: c35c1b60fb5ae264a85e7d8ef0d88a68, type: 3}
   lightmapDir:
-  - {fileID: 2800000, guid: c6ed25a408d0f6a48983afb534a69ec3, type: 3}
+  - {fileID: 2800000, guid: a0dddfe07829eb149839a3bebb156548, type: 3}
+  - {fileID: 2800000, guid: d32af1c0486e60548ac9db82d645f13d, type: 3}
   lightmapsMode: 1
   terrain: {fileID: 0}
   terrainRendererInfo:

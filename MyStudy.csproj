@@ -282,6 +282,8 @@
     <Compile Include="Assets\Code\Test.cs" />
     <Compile Include="Assets\Code\TestAndroid\TestAndroid.cs" />
     <Compile Include="Assets\Code\TextureDestroy\TextureDestroy.cs" />
+    <Compile Include="Assets\Code\UI\MirrorSprite.cs" />
+    <Compile Include="Assets\Code\UI\TextColorGradient.cs" />
     <Compile Include="Assets\Code\UI\UIComponentBind.cs" />
     <Compile Include="Assets\Code\UISceneAdapter\UISceneAdapter.cs" />
     <Compile Include="Assets\Code\Utility\FileUtility.cs" />
