@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlanarShadow : MonoBehaviour {
 
+    public Material mPlanarMaterial;
+    public Transform mLightTrans;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -11,6 +14,7 @@ public class PlanarShadow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        mPlanarMaterial.SetVector("_LightPos", mLightTrans.position);
+
+    }
 }

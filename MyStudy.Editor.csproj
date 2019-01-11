@@ -318,6 +318,18 @@
     <Compile Include="Assets\Code\UI\Editor\UIComponentBindEditor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eyelash_blend.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada_blend.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair.shader" />
+    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
+    <None Include="Assets\Art\UnityChan\Stage\Shader\AlphaMask.shader" />
+    <None Include="Assets\Art\UnityChan\license.txt" />
     <None Include="Assets\Code\Assetbundle\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Code\ClickEvent\说明.txt" />
     <None Include="Assets\Code\Editor\ArtTools\动画分割模版.txt" />
