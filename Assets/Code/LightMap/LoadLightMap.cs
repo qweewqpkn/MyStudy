@@ -13,8 +13,6 @@ public class LoadLightMap : MonoBehaviour
         {
             ResourceManager.Instance.LoadAsset<GameObject>("lightmaptest", (obj) =>
             {
-                LightMapConfig config = obj.GetComponent<LightMapConfig>();
-                config.SetUp();
             });
         };
     }
