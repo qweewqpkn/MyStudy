@@ -334,8 +334,8 @@
     <None Include="Assets\Code\ClickEvent\说明.txt" />
     <None Include="Assets\Code\Editor\ArtTools\动画分割模版.txt" />
     <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
-    <None Include="Assets\Code\LightMap\LoadLightmap\Shader\LightMap.shader" />
-    <None Include="Assets\Code\LightMap\LoadLightmap\说明.txt" />
+    <None Include="Assets\Code\LightMap\LightMap.shader" />
+    <None Include="Assets\Code\LightMap\说明.txt" />
     <None Include="Assets\Code\UI\UniGif\说明.txt" />
     <None Include="Assets\Editor\AssetBundles-Browser-master\Editor\Unity.AssetBundleBrowser.Editor.asmdef" />
     <None Include="Assets\Editor\AssetBundles-Browser-master\Tests\Editor\Unity.AssetBundleBrowser.Editor.Tests.asmdef" />
