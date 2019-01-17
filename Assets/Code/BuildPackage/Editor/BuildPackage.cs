@@ -7,52 +7,69 @@ using UnityEditor;
 using UnityEngine;
 
 //自动打包
-public class BuildPackage {
+public class BuildPackage : EditorWindow{
 
     private static Dictionary<string, string> argDic = new Dictionary<string, string>();
+    private static string mOutputPath = "";
+    private static string mPlatform = "PC";
+    private static string mLogOpen = "";
+    private static string mResPath = "";
 
-    static void Build()
+    [MenuItem("Tools/打包版本")]
+    static void OpenWindow()
+    {
+        BuildPackage window = EditorWindow.GetWindow<BuildPackage>();
+        window.Show();
+    }
+
+    private void OnGUI()
+    {
+        //EditorGUILayout.TextField(new GUIContent(""))
+    }
+
+    static void BuildManual()
+    {
+
+    }
+
+    //jenkins将会调用该函数
+    static void BuildAuto()
     {
         InitArg();
-        InitPlayerSetting();
-        AndroidSign();
+        InitPlayerSetting(argDic["platform"]);
+        CopyRes(mResPath);
+        StartBuild(argDic["output"], argDic["platform"]);
+    }
 
+    static void CopyRes(string sourcePath)
+    {
+        FileUtility.CopyTo(sourcePath, Application.dataPath + "/StreamingAssets/ClientRes/Android");
+    }
+
+    static void StartBuild(string outputPath, string platform)
+    {
         string[] level = GetBuildScene();
         string path = "";
-        if (argDic.ContainsKey("output"))
+        if (platform == "PC")
         {
-            if(argDic.ContainsKey("type"))
-            {
-                string type = argDic["type"];
-                if(type == "PC")
-                {
-                    path = argDic["output"].Replace("\\", "/");
-                    path = string.Format("{0}/{1}_{2}.exe", path, "test", string.Format("{0:yyyy-MM-dd HH-mm-ss-fff}", DateTime.Now));
-                    BuildPipeline.BuildPlayer(level, path, BuildTarget.StandaloneWindows64, BuildOptions.None);
-                }
-                else if(type == "ANDROID")
-                {
-                    path = argDic["output"].Replace("\\", "/");
-                    path = string.Format("{0}/{1}_{2}.apk", path, "test", string.Format("{0:yyyy-MM-dd HH-mm-ss-fff}", DateTime.Now));
-                    BuildPipeline.BuildPlayer(level, path, BuildTarget.Android, BuildOptions.None);
-                }
-            }
+            path = argDic["output"].Replace("\\", "/");
+            path = string.Format("{0}/{1}_{2}.exe", path, "test", string.Format("{0:yyyy-MM-dd HH-mm-ss-fff}", DateTime.Now));
+            BuildPipeline.BuildPlayer(level, path, BuildTarget.StandaloneWindows64, BuildOptions.None);
+        }
+        else if (platform == "ANDROID")
+        {
+            path = argDic["output"].Replace("\\", "/");
+            path = string.Format("{0}/{1}_{2}.apk", path, "test", string.Format("{0:yyyy-MM-dd HH-mm-ss-fff}", DateTime.Now));
+            BuildPipeline.BuildPlayer(level, path, BuildTarget.Android, BuildOptions.None);
         }
     }
 
-    static void CopyTo()
-    {
-        string sourceDir = Application.dataPath + "/../../ClientRes/Android";
-        string targetDir = Application.dataPath + "/StreamingAssets/ClientRes/Android";
-        FileUtility.CopyTo(sourceDir, targetDir);
-    }
-
-    static void InitPlayerSetting()
+    static void InitPlayerSetting(string platform)
     {
         PlayerSettings.productName = "xxx";
         PlayerSettings.applicationIdentifier = "com.test.game";
 
-        //加上所有的宏
+        //加上自定义的宏
         StringBuilder defines = new StringBuilder();
         if (argDic.ContainsKey("log"))
         {
@@ -62,24 +79,19 @@ public class BuildPackage {
             }
         }
 
-        if (argDic.ContainsKey("network"))
+        if (platform == "PC")
         {
-            if (argDic["network"] == "true")
-            {
-                defines.Append("INTERNET;");
-            }
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToString());
         }
-        //defines.Append(PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android));
-        PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines.ToString());
-    }
-
-    [MenuItem("Tools/AndroidSign")]
-    static void AndroidSign()
-    {
-        //PlayerSettings.Android.keystoreName = Application.dataPath + "/Editor/AndroidKeyStore/game";
-        //PlayerSettings.Android.keystorePass = "123456";
-        //PlayerSettings.Android.keyaliasName = "game";
-        //PlayerSettings.Android.keyaliasPass = "123456";
+        else if(platform == "ANDROID")
+        {
+            //签名
+            //PlayerSettings.Android.keystoreName = Application.dataPath + "/Editor/AndroidKeyStore/game";
+            //PlayerSettings.Android.keystorePass = "123456";
+            //PlayerSettings.Android.keyaliasName = "game";
+            //PlayerSettings.Android.keyaliasPass = "123456";
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines.ToString());
+        }
     }
 
     //获取打包场景
