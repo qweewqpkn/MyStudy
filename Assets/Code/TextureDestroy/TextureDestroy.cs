@@ -30,7 +30,7 @@ public class TextureDestroy : MonoBehaviour {
 
             button1.onClick.AddListener(() =>
             {
-                ResourceManager.Instance.LoadAsset<Texture>("texture", "texture", (tex) =>
+                ResourceManager.Instance.LoadTexture("texture", "texture", (tex) =>
                 {
                     texture = tex;
                     image.texture = tex;

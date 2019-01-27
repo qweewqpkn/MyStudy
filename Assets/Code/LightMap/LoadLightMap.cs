@@ -11,7 +11,7 @@ public class LoadLightMap : MonoBehaviour
     {
         ResourceManager.Instance.mInitComplete = () =>
         {
-            ResourceManager.Instance.LoadAsset<GameObject>("lightmaptest", (obj) =>
+            ResourceManager.Instance.LoadPrefab("lightmaptest", "lightmaptest", (obj) =>
             {
             });
         };

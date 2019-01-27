@@ -55,13 +55,13 @@ namespace AssetLoad
 
         public class AssetLoadingInfo
         {
-            public List<ABAssetLoadRequest> mRequestList = new List<ABAssetLoadRequest>();
+            public List<ABRequest> mRequestList = new List<ABRequest>();
 
             public AssetLoadingInfo()
             {
             }
 
-            public void AddLoadRequest(ABAssetLoadRequest request)
+            public void AddLoadRequest(ABRequest request)
             {
                 mRequestList.Add(request);
             }
@@ -83,6 +83,7 @@ namespace AssetLoad
         public Dictionary<string, AssetLoadedInfo> mABLoadedMap = new Dictionary<string, AssetLoadedInfo>();
         private Dictionary<string, AssetLoadingInfo> mABLoadingMap = new Dictionary<string, AssetLoadingInfo>();
         private Dictionary<string, Shader> mShaderMap = new Dictionary<string, Shader>();
+        private Dictionary<string, List<byte[]>> mLuaBytesMap = new Dictionary<string, List<byte[]>>();
         public Action mInitComplete = null;
 
         private static ResourceManager mInstance;
@@ -104,34 +105,132 @@ namespace AssetLoad
         }
 
         //单独加载AB(比如:Loading界面做预加载)
-        public void LoadAB(string abName, Action success, Action error = null)
+        public void LoadAB(string abName, Action<AssetBundle> success, Action error = null)
         {
             HRes res = null;
+            string name = string.Format("{AB}/{1}", "TEXT", abName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
             }
             else
             {
-                res = new HAssetBundle(abName, success, error);
-                mResMap.Add(abName, res);
+                res = new HAssetBundle(abName);
+                res.Load(success, error);
+                mResMap.Add(name, res);
             }
         }
 
         //加载text
         public void LoadText(string assetName, Action<byte[]> success, Action error = null)
         {
-            HRes res = new HText(assetName, success, error);
-            mResMap.Add(assetName, res);
+            HRes res = null;
+            string name = string.Format("{0}/{1}", "TEXT", assetName);
+            if (mResMap.TryGetValue(name, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HText(assetName);
+                res.Load(success, error);
+                mResMap.Add(name, res);
+            }
         }
 
-        public void LoadAsset<T>(string name, Action<T> success, Action error = null) where T : UnityEngine.Object
+        //加载prefab
+        public void LoadPrefab(string abName, string assetName, Action<GameObject> success, Action error = null)
         {
-            LoadAsset<T>(name, name, success, error);
+            HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
+            if (mResMap.TryGetValue(name, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HPrefab(abName, assetName);
+                res.Load(success, error);
+                mResMap.Add(name, res);
+            }
         }
 
-        //通用接口，加载matrial,texture,audioclip,sprite,prefab
-        public void LoadAsset<T>(string abName, string assetName, Action<T> success, Action error = null) where T : UnityEngine.Object
+        //加载图集
+        public void LoadSprite(string abName, string assetName, Action<Texture> success, Action error = null)
+        {
+            HRes res = null;
+            if (mResMap.TryGetValue(abName, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HSprite(abName, assetName);
+                res.Load(success, error);
+                mResMap.Add(abName, res);
+            }
+        }
+
+        //记载texture
+        //todo
+        //1.连续调用两次该函数该如何解决？想清楚
+        //2.如何贴图已经加载出来了，是否就不用走加载ab和ab其中贴图的流程了，直接拿缓存的texture就可以了？
+        public void LoadTexture(string abName, string assetName, Action<Texture> success, Action error = null)
+        {
+            HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
+            if (mResMap.TryGetValue(name, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HTexture(abName, assetName);
+                res.Load(success, error);
+                mResMap.Add(name, res);
+            }
+        }
+
+        //加载音频
+        public void LoadAudioClip(string abName, string assetName, Action<AudioClip> success, Action error = null)
+        {
+            HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
+            if (mResMap.TryGetValue(name, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HAudioCilp(abName, assetName);
+                res.Load(success, error);
+                mResMap.Add(name, res);
+            }
+        }
+
+        //加载材质
+        public void LoadMaterial(string abName, string assetName, Action<Material> success, Action error = null)
+        {
+            HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
+            if (mResMap.TryGetValue(name, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HAudioCilp(abName, assetName);
+                res.Load(success, error);
+                mResMap.Add(name, res);
+            }
+        }
+
+        public void LoadLua()
+        {
+
+        }
+
+        public void LoadManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
         {
             HRes res = null;
             if (mResMap.TryGetValue(name, out res))
@@ -140,7 +239,23 @@ namespace AssetLoad
             }
             else
             {
-                res = new HAsset<T>(abName, assetName, success, error);
+                res = new HManifest(abName, assetName);
+                res.Load(success, error);
+                mResMap.Add(abName, res);
+            }
+        }
+
+        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
+        {
+            HRes res = null;
+            if (mResMap.TryGetValue(abName, out res))
+            {
+                res.Load(success, error);
+            }
+            else
+            {
+                res = new HShader(abName);
+                res.Load(success, error);
                 mResMap.Add(abName, res);
             }
         }
@@ -162,7 +277,7 @@ namespace AssetLoad
             }
         }
 
-        private string URL(string abName, AssetType type)
+        public string URL(string abName, AssetType type)
         {
             StringBuilder result = new StringBuilder();
             switch (Application.platform)
@@ -185,7 +300,7 @@ namespace AssetLoad
                     break;
                 case RuntimePlatform.WindowsEditor:
                     {
-                        result.Append("file://" + Application.dataPath + "/../ClientRes/Windows/");
+                        result.Append(Application.dataPath + "/../ClientRes/Windows/");
                     }
                     break;
                 default:
@@ -205,12 +320,12 @@ namespace AssetLoad
                 case AssetType.eSprite:
                 case AssetType.eTexture:
                     {
-                        result.Append("/Assetbundle/");
+                        result.Append("Assetbundle/");
                     }
                     break;
                 case AssetType.eText:
                     {
-                        result.Append("/Config/");
+                        result.Append("Config/");
                     }
                     break;
             }
@@ -221,7 +336,7 @@ namespace AssetLoad
 
         private void Init()
         {
-            LoadAsset<AssetBundleManifest>("Assetbundle", "AssetBundleManifest", (manifest) =>
+            LoadManifest("Assetbundle", "AssetBundleManifest", (manifest) =>
             {
                 mAssestBundleManifest = manifest;
                 LoadShader("allshader", (shaders) =>
@@ -236,13 +351,7 @@ namespace AssetLoad
                         mInitComplete();
                     }
                 });
-            });
-        }
-
-        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
-        {
-            HRes res = new HShader(abName, success, error);
-            mResMap.Add(abName, res);
+            }, null);
         }
 
         private void AddLoadingAsset(string name)

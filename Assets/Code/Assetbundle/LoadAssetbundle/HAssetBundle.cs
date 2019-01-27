@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using UnityEngine;
 
 namespace AssetLoad
 {
@@ -7,22 +8,43 @@ namespace AssetLoad
     {
         class HAssetBundle : HRes
         {
-            private ABAssetLoadRequest mRequest;
+            private ABRequest mRequest;
+            private Action<AssetBundle> mSuccess;
+            private Action mError;
 
-            public HAssetBundle(string abName, Action success, Action error) : base(abName, "")
+            public HAssetBundle(string abName) : base(abName, "")
             {
-                mABName = abName;
-                mRequest = new ABAssetLoadRequest(abName, "", mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(success, error));
             }
 
-            public override IEnumerator Load(Action success, Action error)
+            public override void Load(Action<AssetBundle> success, Action error)
+            {
+                mRequest = new ABRequest(mAllABList);
+                mSuccess += success;
+                mError += error;
+                ResourceManager.Instance.StartCoroutine(Load());
+            }
+
+            private IEnumerator Load()
             {
                 yield return mRequest;
-                if (success != null)
+                AssetBundle ab = mRequest.GetAB();
+                if (ab != null)
                 {
-                    success();
+                    if (mSuccess != null)
+                    {
+                        mSuccess(ab);
+                    }
                 }
+                else
+                {
+                    if (mError != null)
+                    {
+                        mError();
+                    }
+                }
+
+                mSuccess = null;
+                mError = null;
             }
         }
     }

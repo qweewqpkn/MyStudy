@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace AssetLoad
 {
@@ -10,28 +11,37 @@ namespace AssetLoad
     {
         class HText : HRes
         {
-            private AssetLoadRequest mRequest;
             private Action<byte[]> mSuccess;
             private Action mError;
+            private byte[] mBytes;
 
-            public HText(string assetName, Action<byte[]> success, Action error) : base("", assetName)
+            public HText(string assetName) : base(assetName, assetName)
             {
-                mAssetName = assetName;
-                mRequest = new AssetLoadRequest(assetName);
-                mSuccess = success;
-                mError = error;
+
+            }
+
+            public override void Load(Action<byte[]> success, Action error)
+            {
+                mSuccess += success;
+                mError += error;
                 ResourceManager.Instance.StartCoroutine(Load());
             }
 
-            IEnumerator Load()
+            private IEnumerator Load()
             {
-                yield return mRequest;
-                byte[] bytes = mRequest.GetText();
-                if (bytes != null)
+                WWW www = new WWW(ResourceManager.Instance.URL(mAssetName, AssetType.eText));
+                yield return www;
+
+                if(mBytes == null)
+                {
+                    mBytes = www.bytes;
+                }
+
+                if (string.IsNullOrEmpty(www.error))
                 {
                     if (mSuccess != null)
                     {
-                        mSuccess(bytes);
+                        mSuccess(mBytes);
                     }
                 }
                 else
@@ -41,6 +51,9 @@ namespace AssetLoad
                         mError();
                     }
                 }
+
+                mSuccess = null;
+                mError = null;
             }
         }
     }

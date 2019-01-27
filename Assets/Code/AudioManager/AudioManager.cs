@@ -331,7 +331,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        ResourceManager.Instance.LoadAsset<AudioClip>(name.ToLower(),
+        ResourceManager.Instance.LoadAudioClip(name.ToLower(), name.ToLower(),
         (res) =>
         {
             onComplete(res);

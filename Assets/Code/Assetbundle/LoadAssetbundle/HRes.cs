@@ -37,9 +37,42 @@ namespace AssetLoad
                 yield return null;
             }
 
-            public virtual IEnumerator Load(Action success, Action error)
+            public virtual void Load(Action<byte[]> success, Action error)
             {
-                yield return null;
+            }
+
+            public virtual void Load(Action<AssetBundle> success, Action error)
+            {
+
+            }
+
+            public virtual void Load(Action<Shader[]> success, Action error)
+            {
+            }
+
+            public virtual void Load(Action<GameObject> success, Action error)
+            {
+            }
+
+            public virtual void Load(Action<Texture> success, Action error)
+            {
+            }
+
+            public virtual void Load(Action<AssetBundleManifest> success, Action error)
+            {
+            }
+
+            public virtual void Load(Action<AudioClip> success, Action error)
+            {
+            }
+
+            public virtual void Load(Action<Material> success, Action error)
+            {
+            }
+
+            public virtual void Load(Action<Sprite> success, Action error)
+            {
+
             }
 
             public virtual void Release()

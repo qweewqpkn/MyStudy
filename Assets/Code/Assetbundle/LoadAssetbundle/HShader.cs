@@ -11,23 +11,30 @@ namespace AssetLoad
     {
         class HShader : HRes
         {
+            private ABRequest mABRequest;
+            private AssetRequest mAssetRequest;
             private Action<Shader[]> mSuccess;
             private Action mError;
-            private ABAssetLoadRequest mRequest;
 
-            public HShader(string abName, Action<Shader[]> success, Action error) : base(abName, "")
+            public HShader(string abName) : base(abName, "")
             {
-                mABName = abName;
-                mSuccess = success;
-                mError = error;
-                mRequest = new ABAssetLoadRequest(abName, abName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(mRequest));
             }
 
-            IEnumerator Load(ABAssetLoadRequest request)
+            public override void Load(Action<Shader[]> success, Action error)
             {
-                yield return request;
-                UnityEngine.Object[] objs = request.GetAssets();
+                mABRequest = new ABRequest(mAllABList);
+                mSuccess += success;
+                mError += error;
+                ResourceManager.Instance.StartCoroutine(Load());
+            }
+
+            private IEnumerator Load()
+            {
+                yield return mABRequest;          
+                AssetBundle ab = mABRequest.GetAB();
+                mAssetRequest = new AssetRequest(ab, "", true);
+                yield return mAssetRequest;
+                UnityEngine.Object[] objs = mAssetRequest.GetAssets();
                 List<Shader> shaderList = new List<Shader>();
                 for(int i = 0; i < objs.Length; i++)
                 {
@@ -52,6 +59,9 @@ namespace AssetLoad
                         mError();
                     }
                 }
+
+                mSuccess = null;
+                mError = null;
             }
         }
     }
