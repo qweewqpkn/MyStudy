@@ -1,2 +1,0 @@
-自动打包工具
-要配合jenkins使用，让jenkens执行BuildPackage.bat来打包

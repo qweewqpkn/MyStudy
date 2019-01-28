@@ -7,7 +7,7 @@ public class BuildAB
     static string AB_ROOT_PATH = Application.dataPath + "/../ClientRes/";
 
     [MenuItem("Tools/AssetBundle/打包资源")]
-    static void Build()
+    public static void Build()
     {
         string path = Application.dataPath +  "/../ClientRes/";
         switch(EditorUserBuildSettings.activeBuildTarget)
