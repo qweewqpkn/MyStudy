@@ -15,19 +15,6 @@ public class Test : MonoBehaviour {
                 obj.name = "testTest";
             });
         };
-
-        AssetBundle ab = AssetBundle.LoadFromFile(ResourceManager.Instance.URL("texture", AssetType.eTexture));
-        Texture obj1 = (Texture)ab.LoadAsset("texture");
-        Texture obj2 = (Texture)ab.LoadAsset("texture");
-        if(obj1 == obj2)
-        {
-            Debug.Log("fuck ==");
-        }
-        else
-        {
-            Debug.Log("fuck !=");
-        }
-
     }
 	
 	// Update is called once per frame

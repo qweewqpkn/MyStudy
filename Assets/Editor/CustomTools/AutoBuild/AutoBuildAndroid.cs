@@ -14,7 +14,7 @@ public class AutoBuildAndroid {
         InitArg();
         InitPlayerSetting();
         //将你打包的资源拷贝到StreamingAssets中
-        //FileUtility.CopyTo(Application.dataPath + "/../../ClientRes/Android", Application.dataPath + "/StreamingAssets/ClientRes/Android");
+        FileUtility.CopyTo(PathManager.RES_PATH_ANDROID, PathManager.RES_PATH_ANDROID_PHONE);
         string[] level = GetBuildScene();
         string path = argDic["output_path"].Replace("\\", "/");
         path = string.Format("{0}/{1}_{2}.apk", path, "doudizhu", string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));

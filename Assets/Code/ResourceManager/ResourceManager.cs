@@ -285,27 +285,27 @@ namespace AssetLoad
                 //这里除了android 其余的平台都要加file://才能使用www进行加载
                 case RuntimePlatform.Android:
                     {
-                        result.Append(Application.streamingAssetsPath);
+                        result.Append(PathManager.RES_PATH_ANDROID_PHONE);
                     }
                     break;
                 case RuntimePlatform.IPhonePlayer:
                     {
-                        result.Append("file://" + Application.streamingAssetsPath);
+                        result.Append("file://" + PathManager.RES_PATH_IOS_PHONE);
                     }
                     break;
                 case RuntimePlatform.OSXEditor:
                     {
-                        result.Append("file://" + Application.dataPath + "/../ClientRes/IOS/");
+                        result.Append("file://" + PathManager.RES_PATH_IOS);
                     }
                     break;
                 case RuntimePlatform.WindowsEditor:
                     {
-                        result.Append(Application.dataPath + "/../ClientRes/Windows/");
+                        result.Append("file://" + PathManager.RES_PATH_WINDOWS);
                     }
                     break;
                 default:
                     {
-                        result.Append("file://" + Application.dataPath + "/../ClientRes/");
+                        result.Append("file://" + PathManager.RES_PATH_WINDOWS);
                     }
                     break;
             }
@@ -320,12 +320,12 @@ namespace AssetLoad
                 case AssetType.eSprite:
                 case AssetType.eTexture:
                     {
-                        result.Append("Assetbundle/");
+                        result.Append("/Assetbundle/");
                     }
                     break;
                 case AssetType.eText:
                     {
-                        result.Append("Config/");
+                        result.Append("/Config/");
                     }
                     break;
             }

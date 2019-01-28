@@ -19,9 +19,8 @@ public class AutoBuildIOS {
     {
         InitArg();
         InitPlayerSetting();
-        BuildAB.
-        //将你打包的资源拷贝到StreamingAssets中
-        //FileUtility.CopyTo(Application.dataPath + "/../../ClientRes/IOS", Application.dataPath + "/StreamingAssets/ClientRes/IOS");
+        BuildAB.Build();
+        FileUtility.CopyTo(PathManager.RES_PATH_IOS, PathManager.RES_PATH_IOS_PHONE);
         string[] level = GetBuildScene();
         string outputPath = argDic["output_path"].Replace("\\", "/");
         //生成唯一名字xcode工程,方便后面xcode自动化编译

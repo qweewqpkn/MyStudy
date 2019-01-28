@@ -4,26 +4,29 @@ using UnityEngine;
 
 public class BuildAB
 {
-    static string AB_ROOT_PATH = Application.dataPath + "/../ClientRes/";
-
     [MenuItem("Tools/AssetBundle/打包资源")]
     public static void Build()
     {
-        string path = Application.dataPath +  "/../ClientRes/";
+        string path = "";
         switch(EditorUserBuildSettings.activeBuildTarget)
         {
             case BuildTarget.StandaloneWindows64:
                 {
-                    path += "Windows";
+                    path = PathManager.RES_PATH_WINDOWS + "/Assetbundle";
                 }
                 break;
             case BuildTarget.Android:
                 {
-                    path += "Android";
+                    path = PathManager.RES_PATH_ANDROID + "/Assetbundle";
+                }
+                break;
+            case BuildTarget.iOS:
+            case BuildTarget.StandaloneOSX:   
+                {
+                    path = PathManager.RES_PATH_IOS + "/Assetbundle";
                 }
                 break;
         }
-        path += "/Assetbundle/";
         FileUtility.CreateDirectory(path);
         RemoveUnUseAB(path);
         BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
@@ -55,21 +58,21 @@ public class BuildAB
     [MenuItem("Tools/AssetBundle/拷贝AB到StreamingAssets")]
     static void CopyAB2StreamingAssets()
     {
-        string sourceDir = Application.dataPath + "/../ClientRes/";
+        string sourceDir = Application.dataPath + "/../ClientRes";
         switch (EditorUserBuildSettings.activeBuildTarget)
         {
-            case BuildTarget.StandaloneWindows64:
+            case BuildTarget.iOS:
                 {
-                    sourceDir += "Windows";
+                    sourceDir += "/IOS";
                 }
                 break;
             case BuildTarget.Android:
                 {
-                    sourceDir += "Android";
+                    sourceDir += "/Android";
                 }
                 break;
         }
-        string targetDir = Application.dataPath + "/StreamingAssets/";
+        string targetDir = Application.dataPath + "/StreamingAssets";
         FileUtility.CopyTo(sourceDir, targetDir);
     }
 
@@ -104,7 +107,4 @@ public class BuildAB
             }
         }
     }
-
-
-
 }

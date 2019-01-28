@@ -5,7 +5,6 @@ using UnityEngine.Rendering;
 
 public class SceneConfig : MonoBehaviour
 {
-
     //LightMap信息  
     [System.Serializable]
     public class RendererInfo

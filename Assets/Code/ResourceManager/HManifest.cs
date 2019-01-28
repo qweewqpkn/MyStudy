@@ -19,7 +19,7 @@ namespace AssetLoad
 
             public HManifest(string abName, string assestName) : base(abName, assestName)
             {
-
+                
             }
 
             //对于反复加载同一个资源，不论ab是否已经存在，我们都要走ab请求的逻辑，为了在内部能正常进行ab的引用计数，这样才能正确释放资源。

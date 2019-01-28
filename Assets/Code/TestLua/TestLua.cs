@@ -15,10 +15,9 @@ public class TestLua : MonoBehaviour {
 
         ResourceManager.Instance.mInitComplete = () =>
         {
-            ResourceManager.Instance.LoadAB("cube", (ab) =>
+            ResourceManager.Instance.LoadPrefab("lobby/test", "testCube", (ab) =>
             {
-                Object[] obj = ab.LoadAllAssets();
-                int i = 1;
+                
             });
         };
 	}

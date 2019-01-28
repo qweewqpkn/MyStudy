@@ -20,7 +20,7 @@ public class AutoBuildPC {
         path = string.Format("{0}/{1}.exe", path, name);
         BuildPipeline.BuildPlayer(level, path, BuildTarget.StandaloneWindows, BuildOptions.Development);
         //将你打包的资源拷贝到读取的路径下
-        //FileUtility.CopyTo(Application.dataPath + "/../../ClientRes/StandaloneWindows", path + name + "_Data" + "/ClientRes/StandaloneWindows");
+        FileUtility.CopyTo(PathManager.RES_PATH_WINDOWS, path + name + "_Data" + "/ClientRes/StandaloneWindows");
     }
 
     protected static string[] GetBuildScene()
@@ -57,10 +57,6 @@ public class AutoBuildPC {
 
     static void InitPlayerSetting()
     {
-        PlayerSettings.productName = "名字";
-        PlayerSettings.companyName = "公司名";
-        PlayerSettings.applicationIdentifier = "com.monk.game";
-
         StringBuilder defines = new StringBuilder();
         //根据外部传入参数添加指定宏
         if (argDic["log"] == "true")
