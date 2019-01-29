@@ -15,10 +15,10 @@ namespace AssetLoad
             protected string mAssetName;
             protected List<string> mAllABList;
 
-            public HRes(string abName, string AssetName)
+            public HRes(string abName, string assetName)
             {
                 mABName = abName;
-                mAssetName = AssetName;
+                mAssetName = assetName;
 
                 if(!string.IsNullOrEmpty(mABName))
                 {
@@ -30,6 +30,9 @@ namespace AssetLoad
                         mAllABList.AddRange(depList);
                     }
                 }
+
+                string name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
+                ResourceManager.Instance.mResMap.Add(name, this);
             }
 
             public virtual IEnumerator Load<T>(Action<T> success, Action error) where T : UnityEngine.Object
@@ -80,20 +83,22 @@ namespace AssetLoad
                 //卸载AB
                 for (int i = 0; i < mAllABList.Count; i++)
                 {
-                    ReleaseAB(mAllABList[i]);
-                }
-            }
-
-            private void ReleaseAB(string name)
-            {
-                AssetLoadedInfo info;
-                if (ResourceManager.Instance.mABLoadedMap.TryGetValue(mABName, out info))
-                {
-                    info.Ref--;
-                    if (info.Ref == 0)
+                    string name = mAllABList[i];
+                    if (ResourceManager.Instance.mResMap.ContainsKey(name))
                     {
-                        info.AB.Unload(true);
-                        ResourceManager.Instance.mABLoadedMap.Remove(mABName);
+                        HAssetBundle ab = ResourceManager.Instance.mResMap[name] as HAssetBundle;
+                        ab.RefCount--;
+                        if (ab.RefCount == 0)
+                        {
+                            if(ab.AB != null)
+                            {
+                                ab.AB.Unload(true);
+                            }
+                            else
+                            {
+                                Debug.Log(string.Format("AB {0} release is null, please check", name));
+                            }
+                        }
                     }
                 }
             }

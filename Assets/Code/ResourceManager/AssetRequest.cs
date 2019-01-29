@@ -102,56 +102,49 @@ namespace AssetLoad
             {
                 for (int i = 0; i < mABList.Count; i++)
                 {
-                    AssetLoadedInfo loadedInfo;
-                    ResourceManager.Instance.mABLoadedMap.TryGetValue(mABList[i], out loadedInfo);
-                    if (loadedInfo == null)
+                    if(ResourceManager.Instance.mResMap.ContainsKey(mABList[i]))
                     {
-                        //AB不存在
-                        AssetLoadingInfo loadingInfo = ResourceManager.Instance.GetLoadingAsset(mABList[i]);
-                        if (loadingInfo == null)
+                        HAssetBundle ab = ResourceManager.Instance.mResMap[mABList[i]] as HAssetBundle;
+                        if(ab.LoadStatus == HAssetBundle.ABLoadStatus.eNone)
                         {
-                            //AB没有在加载
-                            ResourceManager.Instance.AddLoadingAsset(mABList[i]);
-                            ResourceManager.Instance.StartCoroutine(LoadAB(mABList[i]));
+                            ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoading;
+                            ResourceManager.Instance.StartCoroutine(LoadAB(mABList[i], ab));
                         }
-                        else
+                        else if (ab.LoadStatus == HAssetBundle.ABLoadStatus.eLoading)
                         {
-                            //AB正在加载中
-                            loadingInfo.AddLoadRequest(this);
+                            ab.AddRequest(this);
+                        }
+                        else if(ab.LoadStatus == HAssetBundle.ABLoadStatus.eLoaded)
+                        {
+                            //已经存在了这个AB
+                            AddLoadABNum();
+                            ab.RefCount++;
                         }
                     }
                     else
                     {
-                        //已经存在了这个AB
-                        AddLoadABNum();
-                        loadedInfo.Ref++;
+                        ResourceManager.Instance.LoadAB(mABList[i], null);
                     }
                 }
             }
 
-            private IEnumerator LoadAB(string name)
+            private IEnumerator LoadAB(string name, HAssetBundle ab)
             {
-                AssetLoadingInfo loadingInfo = ResourceManager.Instance.GetLoadingAsset(name);
-                if (loadingInfo != null)
+                ab.AddRequest(this);
+                string url = PathManager.URL(name, AssetType.eAB);
+                WWW www = new WWW(url);
+                yield return www;
+                if (!string.IsNullOrEmpty(www.error))
                 {
-                    loadingInfo.AddLoadRequest(this);
-                    string url = ResourceManager.Instance.URL(name, AssetType.eAB);
-                    WWW www = new WWW(url);
-                    yield return www;
-                    if (!string.IsNullOrEmpty(www.error))
+                    Debug.LogError("xxxxxxxx www load is error : " + name + " " + www.error);
+                }
+                else
+                {
+                    if(mMainABName == name)
                     {
-                        Debug.LogError("xxxxxxxx www load is error : " + name + " " + www.error);
-                    }
-                    else
-                    {
-                        if(mMainABName == name)
-                        {
-                            mAB = www.assetBundle;
-                        }
-                        ResourceManager.Instance.mABLoadedMap.Add(name, new AssetLoadedInfo(www.assetBundle, loadingInfo.mRequestList.Count));
-                        loadingInfo.Completed();
-                        ResourceManager.Instance.RemoveLoadingAsset(name);
-                    }
+                        mAB = www.assetBundle;
+                    }                                                              
+                    ab.CompleteRequest();
                 }
             }
 

@@ -29,7 +29,7 @@ namespace AssetLoad
 
             private IEnumerator Load()
             {
-                WWW www = new WWW(ResourceManager.Instance.URL(mAssetName, AssetType.eText));
+                WWW www = new WWW(PathManager.URL(mAssetName, AssetType.eText));
                 yield return www;
 
                 if(mBytes == null)

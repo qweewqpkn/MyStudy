@@ -16,72 +16,11 @@ namespace AssetLoad
         eSprite,
         eManifest,
     }
-    public partial class ResourceManager
-    {
-        public class AssetLoadedInfo
-        {
-            private AssetBundle mAB;
-            private int mRef;
-
-            public int Ref
-            {
-                get
-                {
-                    return mRef;
-                }
-                
-                set { mRef = value; }
-            }
-
-            public AssetBundle AB
-            {
-                get
-                {
-                    return mAB;
-                }
-
-                set
-                {
-                    mAB = value;
-                }
-            }
-            
-            public AssetLoadedInfo(AssetBundle ab, int refCount)
-            {
-                mAB = ab;
-                mRef = refCount;
-            }
-        }
-
-        public class AssetLoadingInfo
-        {
-            public List<ABRequest> mRequestList = new List<ABRequest>();
-
-            public AssetLoadingInfo()
-            {
-            }
-
-            public void AddLoadRequest(ABRequest request)
-            {
-                mRequestList.Add(request);
-            }
-
-            public void Completed()
-            {
-                for (int i = 0; i < mRequestList.Count; i++)
-                {
-                    mRequestList[i].AddLoadABNum();
-                }
-            }
-        }
-    }
 
     public partial class ResourceManager : MonoBehaviour
     {
         public AssetBundleManifest mAssestBundleManifest;
         public Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
-        public Dictionary<string, AssetLoadedInfo> mABLoadedMap = new Dictionary<string, AssetLoadedInfo>();
-        private Dictionary<string, AssetLoadingInfo> mABLoadingMap = new Dictionary<string, AssetLoadingInfo>();
         private Dictionary<string, Shader> mShaderMap = new Dictionary<string, Shader>();
         private Dictionary<string, List<byte[]>> mLuaBytesMap = new Dictionary<string, List<byte[]>>();
         public Action mInitComplete = null;
@@ -108,7 +47,6 @@ namespace AssetLoad
         public void LoadAB(string abName, Action<AssetBundle> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{AB}/{1}", "TEXT", abName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -117,7 +55,6 @@ namespace AssetLoad
             {
                 res = new HAssetBundle(abName);
                 res.Load(success, error);
-                mResMap.Add(name, res);
             }
         }
 
@@ -125,7 +62,6 @@ namespace AssetLoad
         public void LoadText(string assetName, Action<byte[]> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", "TEXT", assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -134,7 +70,6 @@ namespace AssetLoad
             {
                 res = new HText(assetName);
                 res.Load(success, error);
-                mResMap.Add(name, res);
             }
         }
 
@@ -142,7 +77,6 @@ namespace AssetLoad
         public void LoadPrefab(string abName, string assetName, Action<GameObject> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -151,7 +85,6 @@ namespace AssetLoad
             {
                 res = new HPrefab(abName, assetName);
                 res.Load(success, error);
-                mResMap.Add(name, res);
             }
         }
 
@@ -167,18 +100,12 @@ namespace AssetLoad
             {
                 res = new HSprite(abName, assetName);
                 res.Load(success, error);
-                mResMap.Add(abName, res);
             }
         }
 
-        //记载texture
-        //todo
-        //1.连续调用两次该函数该如何解决？想清楚
-        //2.如何贴图已经加载出来了，是否就不用走加载ab和ab其中贴图的流程了，直接拿缓存的texture就可以了？
         public void LoadTexture(string abName, string assetName, Action<Texture> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -187,7 +114,6 @@ namespace AssetLoad
             {
                 res = new HTexture(abName, assetName);
                 res.Load(success, error);
-                mResMap.Add(name, res);
             }
         }
 
@@ -195,7 +121,6 @@ namespace AssetLoad
         public void LoadAudioClip(string abName, string assetName, Action<AudioClip> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -204,7 +129,6 @@ namespace AssetLoad
             {
                 res = new HAudioCilp(abName, assetName);
                 res.Load(success, error);
-                mResMap.Add(name, res);
             }
         }
 
@@ -212,7 +136,6 @@ namespace AssetLoad
         public void LoadMaterial(string abName, string assetName, Action<Material> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -221,7 +144,6 @@ namespace AssetLoad
             {
                 res = new HAudioCilp(abName, assetName);
                 res.Load(success, error);
-                mResMap.Add(name, res);
             }
         }
 
@@ -241,7 +163,6 @@ namespace AssetLoad
             {
                 res = new HManifest(abName, assetName);
                 res.Load(success, error);
-                mResMap.Add(abName, res);
             }
         }
 
@@ -256,7 +177,6 @@ namespace AssetLoad
             {
                 res = new HShader(abName);
                 res.Load(success, error);
-                mResMap.Add(abName, res);
             }
         }
 
@@ -277,61 +197,14 @@ namespace AssetLoad
             }
         }
 
-        public string URL(string abName, AssetType type)
+        public void ReleaseAll()
         {
-            StringBuilder result = new StringBuilder();
-            switch (Application.platform)
+            foreach(var item in mResMap)
             {
-                //这里除了android 其余的平台都要加file://才能使用www进行加载
-                case RuntimePlatform.Android:
-                    {
-                        result.Append(PathManager.RES_PATH_ANDROID_PHONE);
-                    }
-                    break;
-                case RuntimePlatform.IPhonePlayer:
-                    {
-                        result.Append("file://" + PathManager.RES_PATH_IOS_PHONE);
-                    }
-                    break;
-                case RuntimePlatform.OSXEditor:
-                    {
-                        result.Append("file://" + PathManager.RES_PATH_IOS);
-                    }
-                    break;
-                case RuntimePlatform.WindowsEditor:
-                    {
-                        result.Append("file://" + PathManager.RES_PATH_WINDOWS);
-                    }
-                    break;
-                default:
-                    {
-                        result.Append("file://" + PathManager.RES_PATH_WINDOWS);
-                    }
-                    break;
+                item.Value.Release();
             }
 
-            switch (type)
-            {
-                case AssetType.eAB:
-                case AssetType.eAudioClip:
-                case AssetType.eManifest:
-                case AssetType.ePrefab:
-                case AssetType.eShader:
-                case AssetType.eSprite:
-                case AssetType.eTexture:
-                    {
-                        result.Append("/Assetbundle/");
-                    }
-                    break;
-                case AssetType.eText:
-                    {
-                        result.Append("/Config/");
-                    }
-                    break;
-            }
-
-            result.Append(abName);
-            return result.ToString();
+            mResMap.Clear();
         }
 
         private void Init()
@@ -352,32 +225,6 @@ namespace AssetLoad
                     }
                 });
             }, null);
-        }
-
-        private void AddLoadingAsset(string name)
-        {
-            AssetLoadingInfo info;
-            if (!mABLoadingMap.TryGetValue(name, out info))
-            {
-                info = new AssetLoadingInfo();
-                mABLoadingMap[name] = info;
-            }
-        }
-
-        private void RemoveLoadingAsset(string name)
-        {
-            mABLoadingMap.Remove(name);
-        }
-
-        private AssetLoadingInfo GetLoadingAsset(string name)
-        {
-            AssetLoadingInfo info;
-            if (mABLoadingMap.TryGetValue(name, out info))
-            {
-                return info;
-            }
-
-            return null;
         }
     }
 }
