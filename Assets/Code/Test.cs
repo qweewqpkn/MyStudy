@@ -14,6 +14,11 @@ public class Test : MonoBehaviour {
             {
                 obj.name = "testTest";
             });
+
+            ResourceManager.Instance.LoadPrefab("cube", "cube.bytess", (obj) =>
+            {
+                obj.name = "testTest";
+            });
         };
     }
 	

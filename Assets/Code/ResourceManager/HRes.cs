@@ -19,8 +19,10 @@ namespace AssetLoad
             {
                 mABName = abName;
                 mAssetName = assetName;
+                string name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
+                ResourceManager.Instance.mResMap.Add(name, this);
 
-                if(!string.IsNullOrEmpty(mABName))
+                if (!string.IsNullOrEmpty(mABName))
                 {
                     mAllABList = new List<string>();
                     mAllABList.Add(mABName);
@@ -30,9 +32,6 @@ namespace AssetLoad
                         mAllABList.AddRange(depList);
                     }
                 }
-
-                string name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
-                ResourceManager.Instance.mResMap.Add(name, this);
             }
 
             public virtual IEnumerator Load<T>(Action<T> success, Action error) where T : UnityEngine.Object
@@ -49,7 +48,7 @@ namespace AssetLoad
 
             }
 
-            public virtual void Load(Action<Shader[]> success, Action error)
+            public virtual void Load(Action<Shader> success, Action error)
             {
             }
 
@@ -80,7 +79,6 @@ namespace AssetLoad
 
             public virtual void Release()
             {
-                //卸载AB
                 for (int i = 0; i < mAllABList.Count; i++)
                 {
                     string name = mAllABList[i];

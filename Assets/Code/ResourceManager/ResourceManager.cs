@@ -21,8 +21,6 @@ namespace AssetLoad
     {
         public AssetBundleManifest mAssestBundleManifest;
         public Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
-        private Dictionary<string, Shader> mShaderMap = new Dictionary<string, Shader>();
-        private Dictionary<string, List<byte[]>> mLuaBytesMap = new Dictionary<string, List<byte[]>>();
         public Action mInitComplete = null;
 
         private static ResourceManager mInstance;
@@ -47,7 +45,7 @@ namespace AssetLoad
         public void LoadAB(string abName, Action<AssetBundle> success, Action error = null)
         {
             HRes res = null;
-            if (mResMap.TryGetValue(name, out res))
+            if (mResMap.TryGetValue(abName, out res))
             {
                 res.Load(success, error);
             }
@@ -62,7 +60,7 @@ namespace AssetLoad
         public void LoadText(string assetName, Action<byte[]> success, Action error = null)
         {
             HRes res = null;
-            if (mResMap.TryGetValue(name, out res))
+            if (mResMap.TryGetValue(assetName, out res))
             {
                 res.Load(success, error);
             }
@@ -77,6 +75,7 @@ namespace AssetLoad
         public void LoadPrefab(string abName, string assetName, Action<GameObject> success, Action error = null)
         {
             HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -92,7 +91,8 @@ namespace AssetLoad
         public void LoadSprite(string abName, string assetName, Action<Texture> success, Action error = null)
         {
             HRes res = null;
-            if (mResMap.TryGetValue(abName, out res))
+            string name = string.Format("{0}/{1}", abName, assetName);
+            if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
             }
@@ -106,6 +106,7 @@ namespace AssetLoad
         public void LoadTexture(string abName, string assetName, Action<Texture> success, Action error = null)
         {
             HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -121,6 +122,7 @@ namespace AssetLoad
         public void LoadAudioClip(string abName, string assetName, Action<AudioClip> success, Action error = null)
         {
             HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -136,13 +138,14 @@ namespace AssetLoad
         public void LoadMaterial(string abName, string assetName, Action<Material> success, Action error = null)
         {
             HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
             }
             else
             {
-                res = new HAudioCilp(abName, assetName);
+                res = new HMaterial(abName, assetName);
                 res.Load(success, error);
             }
         }
@@ -155,6 +158,7 @@ namespace AssetLoad
         public void LoadManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
         {
             HRes res = null;
+            string name = string.Format("{0}/{1}", abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -166,25 +170,19 @@ namespace AssetLoad
             }
         }
 
-        private void LoadShader(string abName, Action<Shader[]> success, Action error = null)
+        public void LoadShader(string abName, string assetName, Action<Shader> success, Action error = null)
         {
             HRes res = null;
-            if (mResMap.TryGetValue(abName, out res))
+            string name = string.Format("{0}/{1}", abName, assetName);
+            if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
             }
             else
             {
-                res = new HShader(abName);
+                res = new HShader(abName, assetName);
                 res.Load(success, error);
             }
-        }
-
-        public Shader GetShader(string name)
-        {
-            Shader shader = null;
-            mShaderMap.TryGetValue(name, out shader);
-            return shader;
         }
 
         public void Release(string name)
@@ -212,18 +210,10 @@ namespace AssetLoad
             LoadManifest("Assetbundle", "AssetBundleManifest", (manifest) =>
             {
                 mAssestBundleManifest = manifest;
-                LoadShader("allshader", (shaders) =>
+                if (mInitComplete != null)
                 {
-                    for (int i = 0; i < shaders.Length; i++)
-                    {
-                        mShaderMap[shaders[i].name] = shaders[i];
-                    }
-
-                    if (mInitComplete != null)
-                    {
-                        mInitComplete();
-                    }
-                });
+                    mInitComplete();
+                }
             }, null);
         }
     }

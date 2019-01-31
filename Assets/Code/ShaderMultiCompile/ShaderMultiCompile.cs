@@ -11,10 +11,12 @@ public class ShaderMultiCompile : MonoBehaviour {
 	void Start () {
         ResourceManager.Instance.mInitComplete = () =>
         {
-            Shader item = ResourceManager.Instance.GetShader("Unlit/NewUnlitShader");
-            Material material = new Material(item);
-            obj.GetComponent<MeshRenderer>().sharedMaterial = material;
-            material.EnableKeyword("ENABLE_COLOR");
+            ResourceManager.Instance.LoadShader("allshader", "NewUnlitShader", (shader) =>
+            {
+                Material material = new Material(shader);
+                obj.GetComponent<MeshRenderer>().sharedMaterial = material;
+                material.EnableKeyword("ENABLE_COLOR");
+            }, null);
         };
 	}
 	

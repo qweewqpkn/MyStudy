@@ -13,17 +13,16 @@ namespace AssetLoad
             private AssetRequest mAssetRequest;
             private Action<Sprite> mSuccess;
             private Action mError;
-            private Dictionary<string, Sprite> mSpriteDict = new Dictionary<string, Sprite>();       
+            private Sprite mSprite;
 
             public HSprite(string abName, string assestName) : base(abName, assestName)
             {
-
             }
 
             public override void Load(Action<Sprite> success, Action error)
             {
-                mABRequest = new ABRequest(mAllABList);
-                mSuccess += success; 
+                mABRequest.Load(mABName, mAllABList);
+                mSuccess += success;
                 mError += error;
                 ResourceManager.Instance.StartCoroutine(Load());
             }
@@ -31,36 +30,17 @@ namespace AssetLoad
             private IEnumerator Load()
             {
                 yield return mABRequest;
-
-                Sprite sprite = null;
-                if (mSpriteDict == null)
+                if(mSprite == null)
                 {
-                    mAssetRequest = new AssetRequest(mABRequest.GetAB(), mAssetName, true);
+                    mAssetRequest = new AssetRequest(mABRequest.mainAB, mAssetName, false);
                     yield return mAssetRequest;
-                    UnityEngine.Object[] sprites = mAssetRequest.GetAssets();
-                    if (sprites != null)
-                    {
-                        for (int i = 0; i < sprites.Length; i++)
-                        {
-                            mSpriteDict[sprites[i].name] = sprites[i] as Sprite;
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("HSptire sprites is null");
-                    }
+                    mSprite = mAssetRequest.GetAssets<Sprite>(mAssetName);
                 }
-
-                if(mSpriteDict.ContainsKey(mAssetName))
-                {
-                    sprite = mSpriteDict[mAssetName];
-                }
-
-                if (sprite != null)
+                if (mSprite != null)
                 {
                     if (mSuccess != null)
                     {
-                        mSuccess(sprite);
+                        mSuccess(mSprite);
                     }
                 }
                 else

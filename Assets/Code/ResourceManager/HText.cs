@@ -17,7 +17,6 @@ namespace AssetLoad
 
             public HText(string assetName) : base(assetName, assetName)
             {
-
             }
 
             public override void Load(Action<byte[]> success, Action error)

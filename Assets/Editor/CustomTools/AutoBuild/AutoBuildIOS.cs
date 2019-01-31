@@ -90,7 +90,6 @@ public class AutoBuildIOS {
     }
 
 #if UNITY_IOS
-    //这个函数会在BuildPipeline.BuildPlayer完成后调用，用于修改xcode工程的属性
     [PostProcessBuildAttribute(2)]
     public static void OnPostProcessBuild(BuildTarget target, string path)
     {
@@ -120,10 +119,11 @@ public class AutoBuildIOS {
         project.SetBuildProperty(targetGUID, "ENABLE_BITCODE", "NO");
         project.SetTargetAttributes("ProvisioningStyle", "Manual");
 
-        //设置开发版本的证书
-        project.SetBuildProperty(targetGUID, "PROVISIONING_PROFILE", "56a4a604-de21-4f53-a866-6a2f8477d15c");
-        project.SetBuildProperty(targetGUID, "CODE_SIGN_IDENTITY", "iPhone Developer");
-        project.SetBuildProperty(targetGUID, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", "iPhone Developer: zhang min (AC6ZKF5S5L)");
+        //这里替换Replace("_", "-"),Replace("_", " ") 由于我们用了"-"作为分割识别符所以要改成了"_", 还有就是参数传递是已" "来分割的，所以当我们参数中自身就带了空格，那么就会截断，所以参数里面用"_"替换了" "，这里再替换回来
+        project.SetBuildProperty(targetGUID, "PROVISIONING_PROFILE", argDic["PROVISIONING_PROFILE"].Replace("_", "-"));
+        project.SetBuildProperty(targetGUID, "CODE_SIGN_IDENTITY", argDic["CODE_SIGN_IDENTITY"].Replace("_", " "));
+        project.SetBuildProperty(targetGUID, "CODE_SIGN_IDENTITY[sdk=iphoneos*]", argDic["CODE_SIGN_IDENTITY"].Replace("_", " "));
+        project.SetBuildProperty(targetGUID, "DEVELOPMENT_TEAM", argDic["DEVELOPMENT_TEAM"]);
 
         File.WriteAllText(projectPath, project.WriteToString());
     }
@@ -135,9 +135,11 @@ public class AutoBuildIOS {
         PlistDocument pList = new PlistDocument();
         pList.ReadFromFile(plistPath);
         PlistElementDict rootDict = pList.root;
-
+        
         rootDict.SetString("NSCameraUsageDescription", "我们需要使用摄像头权限");
         rootDict.SetString("NSLocationWhenInUseUsageDescription", "我们需要使用定位权限");
+        rootDict.SetString("CFBundleShortVersionString", argDic["Version"]);
+        rootDict.SetString("CFBundleVersion", argDic["Build"]);
 
         pList.WriteToFile(plistPath);
     }

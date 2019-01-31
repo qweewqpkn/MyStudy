@@ -9,7 +9,7 @@ namespace AssetLoad
     {
         class HPrefab : HRes
         {
-            private ABRequest mABRequest;
+            private ABRequest mABRequest = new ABRequest();
             private AssetRequest mAssetRequest;
             private Action<GameObject> mSuccess;
             private Action mError;
@@ -21,7 +21,7 @@ namespace AssetLoad
 
             public override void Load(Action<GameObject> success, Action error)
             {
-                mABRequest = new ABRequest(mAllABList);
+                mABRequest.Load(mABName, mAllABList);
                 mSuccess += success;
                 mError += error;
                 ResourceManager.Instance.StartCoroutine(Load());
@@ -33,7 +33,7 @@ namespace AssetLoad
 
                 if(mPrefab == null)
                 {
-                    mAssetRequest = new AssetRequest(mABRequest.GetAB(), mAssetName, true);
+                    mAssetRequest = new AssetRequest(mABRequest.mainAB, mAssetName, false);
                     yield return mAssetRequest;
                     mPrefab = mAssetRequest.GetAssets<GameObject>(mAssetName);
                 }

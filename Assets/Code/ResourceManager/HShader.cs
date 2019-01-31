@@ -11,18 +11,19 @@ namespace AssetLoad
     {
         class HShader : HRes
         {
-            private ABRequest mABRequest;
+            private ABRequest mABRequest = new ABRequest();
             private AssetRequest mAssetRequest;
-            private Action<Shader[]> mSuccess;
+            private Action<Shader> mSuccess;
             private Action mError;
+            private Shader mShader;
 
-            public HShader(string abName) : base(abName, "")
+            public HShader(string abName, string assetName) : base(abName, assetName)
             {
             }
 
-            public override void Load(Action<Shader[]> success, Action error)
+            public override void Load(Action<Shader> success, Action error)
             {
-                mABRequest = new ABRequest(mAllABList);
+                mABRequest.Load(mABName, mAllABList);
                 mSuccess += success;
                 mError += error;
                 ResourceManager.Instance.StartCoroutine(Load());
@@ -30,26 +31,19 @@ namespace AssetLoad
 
             private IEnumerator Load()
             {
-                yield return mABRequest;          
-                AssetBundle ab = mABRequest.GetAB();
-                mAssetRequest = new AssetRequest(ab, "", true);
-                yield return mAssetRequest;
-                UnityEngine.Object[] objs = mAssetRequest.GetAssets();
-                List<Shader> shaderList = new List<Shader>();
-                for(int i = 0; i < objs.Length; i++)
+                yield return mABRequest;
+                if(mShader == null)
                 {
-                    Shader shader = objs[i] as Shader;
-                    if(shader != null)
-                    {
-                        shaderList.Add(shader);
-                    }
+                    mAssetRequest = new AssetRequest(mABRequest.mainAB, mAssetName, false);
+                    yield return mAssetRequest;
+                    mShader = mAssetRequest.GetAssets<Shader>(mAssetName);
                 }
 
-                if (objs != null)
+                if (mShader != null)
                 {
                     if (mSuccess != null)
                     {
-                        mSuccess(shaderList.ToArray());
+                        mSuccess(mShader);
                     }
                 }
                 else

@@ -17,19 +17,11 @@ namespace AssetLoad
                 eLoadError,
             }
 
-            private ABRequest mRequest;
+            private ABRequest mABRequest = new ABRequest();
             private Action<AssetBundle> mSuccess;
             private Action mError;
             private List<ABRequest> mRequestList = new List<ABRequest>();
-            private AssetBundle mAB;
-            public AssetBundle AB
-            {
-                get
-                {
-                    return mAB;
-                }
-            }
-
+            public AssetBundle AB { get; set; }
             private ABLoadStatus mLoadStatus = ABLoadStatus.eNone;
             public ABLoadStatus LoadStatus
             {
@@ -60,12 +52,11 @@ namespace AssetLoad
 
             public HAssetBundle(string abName) : base(abName, "")
             {
-
             }
 
             public override void Load(Action<AssetBundle> success, Action error)
             {
-                mRequest = new ABRequest(mAllABList);
+                mABRequest.Load(mABName, mAllABList);
                 mSuccess += success;
                 mError += error;
                 ResourceManager.Instance.StartCoroutine(Load());
@@ -73,14 +64,13 @@ namespace AssetLoad
 
             private IEnumerator Load()
             {
-                yield return mRequest;
-                mAB = mRequest.GetAB();
-                if (mAB != null)
+                yield return mABRequest;
+                if (AB != null)
                 {
                     mLoadStatus = ABLoadStatus.eLoaded;
                     if (mSuccess != null)
                     {
-                        mSuccess(mAB);
+                        mSuccess(AB);
                     }
                 }
                 else
@@ -101,8 +91,9 @@ namespace AssetLoad
                 mRequestList.Add(request);
             }
 
-            public void CompleteRequest()
+            public void CompleteRequest(AssetBundle ab)
             {
+                AB = ab;
                 RefCount += mRequestList.Count;
                 for (int i = 0; i < mRequestList.Count; i++)
                 {

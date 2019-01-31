@@ -75,40 +75,32 @@ namespace AssetLoad
             private int mLoadABNum;
             //需要加载的AB数量
             private int mNeedABNum;
-            //ab名字
-            private AssetBundle mAB;
-            //主ab名字
-            private string mMainABName;
-            //加载列表
-            List<string> mABList = new List<string>();
+            private string mMainName;
+            public AssetBundle mainAB { get; private set; }
 
-            public ABRequest(List<string> abList)
+            public ABRequest()
             {
-                if(abList.Count > 0)
-                {
-                    mMainABName = abList[0];
-                }
-                else
+            }
+
+            public void Load(string mainName, List<string> abList)
+            {
+                if (abList.Count <= 0)
                 {
                     Debug.LogError("ABRequest load ablist is null");
                     return;
                 }
-                mABList.AddRange(abList);
-                mNeedABNum = mABList.Count;
-                StartLoad();
-            }
+                mMainName = mainName;
+                mNeedABNum = abList.Count;
 
-            private void StartLoad()
-            {
-                for (int i = 0; i < mABList.Count; i++)
+                for (int i = 0; i < abList.Count; i++)
                 {
-                    if(ResourceManager.Instance.mResMap.ContainsKey(mABList[i]))
+                    if(ResourceManager.Instance.mResMap.ContainsKey(abList[i]))
                     {
-                        HAssetBundle ab = ResourceManager.Instance.mResMap[mABList[i]] as HAssetBundle;
+                        HAssetBundle ab = ResourceManager.Instance.mResMap[abList[i]] as HAssetBundle;
                         if(ab.LoadStatus == HAssetBundle.ABLoadStatus.eNone)
                         {
                             ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoading;
-                            ResourceManager.Instance.StartCoroutine(LoadAB(mABList[i], ab));
+                            ResourceManager.Instance.StartCoroutine(LoadAB(abList[i], ab));
                         }
                         else if (ab.LoadStatus == HAssetBundle.ABLoadStatus.eLoading)
                         {
@@ -123,7 +115,9 @@ namespace AssetLoad
                     }
                     else
                     {
-                        ResourceManager.Instance.LoadAB(mABList[i], null);
+                        HAssetBundle ab = new HAssetBundle(abList[i]);
+                        ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoading;
+                        ResourceManager.Instance.StartCoroutine(LoadAB(abList[i], ab));
                     }
                 }
             }
@@ -140,11 +134,11 @@ namespace AssetLoad
                 }
                 else
                 {
-                    if(mMainABName == name)
+                    if (name == mMainName)
                     {
-                        mAB = www.assetBundle;
-                    }                                                              
-                    ab.CompleteRequest();
+                        mainAB = www.assetBundle;
+                    }
+                    ab.CompleteRequest(www.assetBundle);
                 }
             }
 
@@ -173,11 +167,6 @@ namespace AssetLoad
                 }
 
                 return true;
-            }
-
-            public AssetBundle GetAB()
-            {
-                return mAB;
             }
         }
     }
