@@ -13,11 +13,12 @@ public class AutoBuildAndroid {
     {
         InitArg();
         InitPlayerSetting();
+        BuildAB.Build();
         //将你打包的资源拷贝到StreamingAssets中
         FileUtility.CopyTo(PathManager.RES_PATH_ANDROID, PathManager.RES_PATH_ANDROID_PHONE);
         string[] level = GetBuildScene();
         string path = argDic["output_path"].Replace("\\", "/");
-        path = string.Format("{0}/{1}_{2}.apk", path, "doudizhu", string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
+        path = string.Format("{0}/{1}_{2}.apk", path, "monk", string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
         BuildPipeline.BuildPlayer(level, path, BuildTarget.Android, BuildOptions.None);
     }
 
@@ -38,14 +39,14 @@ public class AutoBuildAndroid {
 
     static void InitPlayerSetting()
     {
-        PlayerSettings.productName = "名字";
-        PlayerSettings.companyName = "公司名";
+        PlayerSettings.productName = "monk";
+        PlayerSettings.companyName = "monk";
         PlayerSettings.applicationIdentifier = "com.monk.game";
         //设置签名
-        PlayerSettings.Android.keystoreName = Application.dataPath + "/Editor/AndroidKeyStore/game";
-        PlayerSettings.Android.keystorePass = "123";
-        PlayerSettings.Android.keyaliasName = "game";
-        PlayerSettings.Android.keyaliasPass = "123";
+        //layerSettings.Android.keystoreName = Application.dataPath + "/Editor/AndroidKeyStore/game";
+        //layerSettings.Android.keystorePass = "123";
+        //layerSettings.Android.keyaliasName = "game";
+        //layerSettings.Android.keyaliasPass = "123";
 
         //设置icon
         string iconName = "icon_512x512";
@@ -61,20 +62,24 @@ public class AutoBuildAndroid {
 
         StringBuilder defines = new StringBuilder();
         //根据外部传入参数添加指定宏
-        if (argDic["log"] == "true")
+        if (GetArg("log") == "true")
         {
             defines.Append("LOG_OPEN;");
         }
-        if (argDic["log_file"] == "true")
-        {
-            defines.Append("LOG_TO_FILE;");
-        }
-        if (argDic["network"] == "true")
-        {
-            defines.Append("INTERNET;");
-        }
 
-        PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, defines.ToString());
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines.ToString());
+    }
+
+    static string GetArg(string key)
+    {
+        if (argDic.ContainsKey(key))
+        {
+            return argDic[key];
+        }
+        else
+        {
+            return "";
+        }
     }
 
     //获取通过shell脚本传入的参数

@@ -1,0 +1,1 @@
+E:\code\Unity\MyStudy\Assets\Editor\CustomTools\AutoBuild\AutoBuildPC.bat *output_path-E:\code\Unity\Release

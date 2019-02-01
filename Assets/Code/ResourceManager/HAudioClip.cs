@@ -11,10 +11,6 @@ namespace AssetLoad
     {
         class HAudioCilp : HRes
         {
-            private ABRequest mABRequest = new ABRequest();
-            private AssetRequest mAssetRequest;
-            private Action<AudioClip> mSuccess;
-            private Action mError;
             private AudioClip mAudioClip;
 
             public HAudioCilp(string abName, string assetName) : base(abName, assetName)
@@ -24,39 +20,35 @@ namespace AssetLoad
             //对于反复加载同一个资源，不论ab是否已经存在，我们都要走ab请求的逻辑，为了在内部能正常进行ab的引用计数，这样才能正确释放资源。
             public override void Load(Action<AudioClip> success, Action error)
             {
-                mABRequest.Load(mABName, mAllABList);
-                mSuccess += success;
-                mError += error;
-                ResourceManager.Instance.StartCoroutine(Load());
+                ABRequest abRequest = new ABRequest();
+                abRequest.Load(mABName, mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 
-            private IEnumerator Load()
+            private IEnumerator Load(ABRequest abRequest, Action<AudioClip> success, Action error)
             {
-                yield return mABRequest;
+                yield return abRequest;
                 if (mAudioClip == null)
                 {
-                    mAssetRequest = new AssetRequest(mABRequest.mainAB, mAssetName);
-                    yield return mAssetRequest;
-                    mAudioClip = mAssetRequest.GetAssets<AudioClip>(mAssetName);
+                    AssetRequest assetRequest = new AssetRequest(abRequest.mAB, mAssetName);
+                    yield return assetRequest;
+                    mAudioClip = assetRequest.GetAssets<AudioClip>(mAssetName);
                 }
 
                 if (mAudioClip != null)
                 {
-                    if (mSuccess != null)
+                    if (success != null)
                     {
-                        mSuccess(mAudioClip);
+                        success(mAudioClip);
                     }
                 }
                 else
                 {
-                    if (mError != null)
+                    if (error != null)
                     {
-                        mError();
+                        error();
                     }
                 }
-
-                mSuccess = null;
-                mError = null;
             }
         }
     }

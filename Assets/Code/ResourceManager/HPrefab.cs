@@ -9,10 +9,6 @@ namespace AssetLoad
     {
         class HPrefab : HRes
         {
-            private ABRequest mABRequest = new ABRequest();
-            private AssetRequest mAssetRequest;
-            private Action<GameObject> mSuccess;
-            private Action mError;
             private GameObject mPrefab;
 
             public HPrefab(string abName, string assestName) : base(abName, assestName)
@@ -21,45 +17,39 @@ namespace AssetLoad
 
             public override void Load(Action<GameObject> success, Action error)
             {
-                mABRequest.Load(mABName, mAllABList);
-                mSuccess += success;
-                mError += error;
-                ResourceManager.Instance.StartCoroutine(Load());
+                ABRequest abRequest = new ABRequest();
+                abRequest.Load(mABName, mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 
-            private IEnumerator Load()
+            private IEnumerator Load(ABRequest abRequest, Action<GameObject> success, Action error)
             {
-                yield return mABRequest;
+                yield return abRequest;
 
                 if(mPrefab == null)
                 {
-                    mAssetRequest = new AssetRequest(mABRequest.mainAB, mAssetName, false);
-                    yield return mAssetRequest;
-                    mPrefab = mAssetRequest.GetAssets<GameObject>(mAssetName);
+                    AssetRequest assetRequest = new AssetRequest(abRequest.mAB, mAssetName, false);
+                    yield return assetRequest;
+                    mPrefab = assetRequest.GetAssets<GameObject>(mAssetName);
                 }
-
 
                 if(mPrefab != null)
                 {
                     GameObject newObj = GameObject.Instantiate(mPrefab);
                     newObj.AddComponent<PrefabAutoDestory>();
-                    if(mSuccess != null)
+                    if(success != null)
                     {
-                        mSuccess(newObj);
+                        success(newObj);
                     }
                 }
                 else
                 {
-                    if(mError != null)
+                    if(error != null)
                     {
-                        mError();
+                        error();
                     }
                 }
-
-                mSuccess = null;
-                mError = null;
             }
-
         }
     }
 }

@@ -1,0 +1,2 @@
+chmod 777 /Users/juncao/Desktop/qipai/Project/Assets/Editor/AutoBuild/BuildIOS.sh
+/Users/juncao/Desktop/qipai/Project/Assets/Editor/AutoBuild/BuildIOS.sh $exportOptionsPlist *output_path-/Users/juncao/Desktop/qipai/XCode *log-$OpenLog *log_file-$LogToFile  *network-$Internet *anysdk-$AnySDK *umeng_sdk-$UMengSDK *open_install_sdk-$OpenInstallSDK *ysdk-$ysdk *test_use-$test_use *Version-$Version *Build-$Build *PROVISIONING_PROFILE-$PROVISIONING_PROFILE *CODE_SIGN_IDENTITY-"$CODE_SIGN_IDENTITY" *DEVELOPMENT_TEAM-$DEVELOPMENT_TEAM *AppID-$AppID

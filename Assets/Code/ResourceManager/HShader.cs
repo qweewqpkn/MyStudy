@@ -11,10 +11,6 @@ namespace AssetLoad
     {
         class HShader : HRes
         {
-            private ABRequest mABRequest = new ABRequest();
-            private AssetRequest mAssetRequest;
-            private Action<Shader> mSuccess;
-            private Action mError;
             private Shader mShader;
 
             public HShader(string abName, string assetName) : base(abName, assetName)
@@ -23,39 +19,35 @@ namespace AssetLoad
 
             public override void Load(Action<Shader> success, Action error)
             {
-                mABRequest.Load(mABName, mAllABList);
-                mSuccess += success;
-                mError += error;
-                ResourceManager.Instance.StartCoroutine(Load());
+                ABRequest abRequest = new ABRequest();
+                abRequest.Load(mABName, mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 
-            private IEnumerator Load()
+            private IEnumerator Load(ABRequest abRequest, Action<Shader> success, Action error)
             {
-                yield return mABRequest;
+                yield return abRequest;
                 if(mShader == null)
                 {
-                    mAssetRequest = new AssetRequest(mABRequest.mainAB, mAssetName, false);
-                    yield return mAssetRequest;
-                    mShader = mAssetRequest.GetAssets<Shader>(mAssetName);
+                    AssetRequest assetRequest = new AssetRequest(abRequest.mAB, mAssetName);
+                    yield return assetRequest;
+                    mShader = assetRequest.GetAssets<Shader>(mAssetName);
                 }
 
                 if (mShader != null)
                 {
-                    if (mSuccess != null)
+                    if (success != null)
                     {
-                        mSuccess(mShader);
+                        success(mShader);
                     }
                 }
                 else
                 {
-                    if (mError != null)
+                    if (error != null)
                     {
-                        mError();
+                        error();
                     }
                 }
-
-                mSuccess = null;
-                mError = null;
             }
         }
     }

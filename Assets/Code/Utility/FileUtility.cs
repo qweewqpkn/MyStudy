@@ -44,7 +44,7 @@ public class FileUtility{
             for (int i = 0; i < curDirs.Length; i++)
             {
                 curDirs[i] = curDirs[i].Replace("\\", "/");
-                string path = curDirs[i].Substring(curDirs[i].LastIndexOf("\\") + 1);
+                string path = curDirs[i].Substring(curDirs[i].LastIndexOf("/") + 1);
                 CopyTo(curDirs[i], targetDir + "/" + path);
             }
         }

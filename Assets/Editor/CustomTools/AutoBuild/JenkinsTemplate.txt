@@ -1,7 +1,0 @@
-Android:
-D:\QP_Android\client\Project\Assets\Editor\AutoBuild\BuildAPK.bat "C:\Program Files\Unity5.6.4p3\Editor\Unity.exe" "D:\QP_Android\client\Project" "D:\QP_Android\client\Project\Assets" "D:\QP_Android\client\ClientRes\Lua"  *output_path-"C:\Program Files (x86)\Jenkins\workspace\棋牌_Android" *log-%OpenLog% *log_file-%LogToFile%  *network-%Internet% *anysdk-%AnySDK% *umeng_sdk-%UMengSDK% *open_install_sdk-%OpenInstallSDK% *ysdk-%ysdk% *mini_game-%MINIGAME%
-
-
-IOS:
-chmod 777 /Users/juncao/Desktop/qipai/Project/Assets/Editor/AutoBuild/BuildIOS.sh
-/Users/juncao/Desktop/qipai/Project/Assets/Editor/AutoBuild/BuildIOS.sh *output_path-/Users/juncao/Desktop/qipai/XCode *log-%OpenLog% *log_file-%LogToFile%  *network-%Internet% *anysdk-%AnySDK% *umeng_sdk-%UMengSDK% *open_install_sdk-%OpenInstallSDK% *ysdk-%ysdk%

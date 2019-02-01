@@ -11,8 +11,6 @@ namespace AssetLoad
     {
         class HText : HRes
         {
-            private Action<byte[]> mSuccess;
-            private Action mError;
             private byte[] mBytes;
 
             public HText(string assetName) : base(assetName, assetName)
@@ -21,12 +19,10 @@ namespace AssetLoad
 
             public override void Load(Action<byte[]> success, Action error)
             {
-                mSuccess += success;
-                mError += error;
-                ResourceManager.Instance.StartCoroutine(Load());
+                ResourceManager.Instance.StartCoroutine(LoadInternal(success, error));
             }
 
-            private IEnumerator Load()
+            private IEnumerator LoadInternal(Action<byte[]> success, Action error)
             {
                 WWW www = new WWW(PathManager.URL(mAssetName, AssetType.eText));
                 yield return www;
@@ -38,21 +34,18 @@ namespace AssetLoad
 
                 if (string.IsNullOrEmpty(www.error))
                 {
-                    if (mSuccess != null)
+                    if (success != null)
                     {
-                        mSuccess(mBytes);
+                        success(mBytes);
                     }
                 }
                 else
                 {
-                    if (mError != null)
+                    if (error != null)
                     {
-                        mError();
+                        error();
                     }
                 }
-
-                mSuccess = null;
-                mError = null;
             }
         }
     }

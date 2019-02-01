@@ -17,37 +17,23 @@ namespace AssetLoad
                 eLoadError,
             }
 
-            private ABRequest mABRequest = new ABRequest();
-            private Action<AssetBundle> mSuccess;
-            private Action mError;
             private List<ABRequest> mRequestList = new List<ABRequest>();
-            public AssetBundle AB { get; set; }
-            private ABLoadStatus mLoadStatus = ABLoadStatus.eNone;
-            public ABLoadStatus LoadStatus
+            public AssetBundle AB
             {
-                get
-                {
-                    return mLoadStatus;
-                }
-
-                set
-                {
-                    mLoadStatus = value;
-                }
+                get;
+                set;
             }
 
-            private int mRefCount = 0;
+            public ABLoadStatus LoadStatus
+            {
+                get;
+                set;
+            }
+
             public int RefCount
             {
-                get
-                {
-                    return mRefCount;
-                }
-
-                set
-                {
-                    mRefCount = value;
-                }
+                get;
+                set;
             }
 
             public HAssetBundle(string abName) : base(abName, "")
@@ -56,34 +42,28 @@ namespace AssetLoad
 
             public override void Load(Action<AssetBundle> success, Action error)
             {
-                mABRequest.Load(mABName, mAllABList);
-                mSuccess += success;
-                mError += error;
-                ResourceManager.Instance.StartCoroutine(Load());
+                ABRequest abRequest = new ABRequest();
+                abRequest.Load(mABName, mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 
-            private IEnumerator Load()
+            private IEnumerator Load(ABRequest abRequest, Action<AssetBundle> success, Action error)
             {
-                yield return mABRequest;
+                yield return abRequest;
                 if (AB != null)
                 {
-                    mLoadStatus = ABLoadStatus.eLoaded;
-                    if (mSuccess != null)
+                    if (success != null)
                     {
-                        mSuccess(AB);
+                        success(AB);
                     }
                 }
                 else
                 {
-                    mLoadStatus = ABLoadStatus.eLoadError;
-                    if (mError != null)
+                    if (error != null)
                     {
-                        mError();
+                        error();
                     }
                 }
-
-                mSuccess = null;
-                mError = null;
             }
 
             public void AddRequest(ABRequest request)
@@ -97,7 +77,7 @@ namespace AssetLoad
                 RefCount += mRequestList.Count;
                 for (int i = 0; i < mRequestList.Count; i++)
                 {
-                    mRequestList[i].AddLoadABNum();
+                    mRequestList[i].AddLoadNum();
                 }
             }
         }

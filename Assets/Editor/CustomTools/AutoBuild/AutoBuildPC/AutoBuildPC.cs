@@ -81,41 +81,7 @@ public class AutoBuildPC {
         {
             defines.Append("LOG_OPEN;");
         }
-        if (GetArg("log_file") == "true")
-        {
-            defines.Append("LOG_TO_FILE;");
-        }
-        if (GetArg("network") == "true")
-        {
-            defines.Append("INTERNET;");
-        }
 
-        PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, defines.ToString());
-    }
-
-    [PostProcessBuildAttribute(2)]
-    public static void OnPostProcessBuild(BuildTarget target, string path)
-    {
-        if(!File.Exists("D:/Game/1.txt"))
-        {
-            FileStream fs = File.Open("D:/Game/1.txt", FileMode.CreateNew, FileAccess.ReadWrite);
-            StreamWriter sw = new StreamWriter(fs);
-            sw.WriteLine("123");
-            if (argDic.Count == 0)
-            {
-                sw.WriteLine("is is null");
-            }
-            else
-            {
-                foreach(var item in argDic)
-                {
-                    sw.WriteLine(item.Value);
-                }
-            }
-            fs.Flush();
-            sw.Flush();
-            sw.Close();
-            fs.Close();
-        }
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Standalone, defines.ToString());
     }
 }

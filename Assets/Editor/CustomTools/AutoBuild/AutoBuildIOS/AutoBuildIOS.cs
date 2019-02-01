@@ -55,20 +55,24 @@ public class AutoBuildIOS {
 
         StringBuilder defines = new StringBuilder();
         //根据外部传入参数添加指定宏
-        if (argDic["log"] == "true")
+        if (GetArg("log") == "true")
         {
             defines.Append("LOG_OPEN;");
         }
-        if (argDic["log_file"] == "true")
-        {
-            defines.Append("LOG_TO_FILE;");
-        }
-        if (argDic["network"] == "true")
-        {
-            defines.Append("INTERNET;");
-        }
 
         PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, defines.ToString());
+    }
+
+    static string GetArg(string key)
+    {
+        if (argDic.ContainsKey(key))
+        {
+            return argDic[key];
+        }
+        else
+        {
+            return "";
+        }
     }
 
     //获取通过shell脚本传入的参数
@@ -90,6 +94,7 @@ public class AutoBuildIOS {
     }
 
 #if UNITY_IOS
+    //当BuildPipeline.BuildPlayer 完成后会调用这个函数，我们可以在这里修改xcode工程，根据需要添加库，修改xcode的证书还有各种属性
     [PostProcessBuildAttribute(2)]
     public static void OnPostProcessBuild(BuildTarget target, string path)
     {

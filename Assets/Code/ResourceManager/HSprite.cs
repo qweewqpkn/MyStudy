@@ -9,10 +9,6 @@ namespace AssetLoad
     {
         class HSprite : HRes
         {
-            private ABRequest mABRequest;
-            private AssetRequest mAssetRequest;
-            private Action<Sprite> mSuccess;
-            private Action mError;
             private Sprite mSprite;
 
             public HSprite(string abName, string assestName) : base(abName, assestName)
@@ -21,38 +17,34 @@ namespace AssetLoad
 
             public override void Load(Action<Sprite> success, Action error)
             {
-                mABRequest.Load(mABName, mAllABList);
-                mSuccess += success;
-                mError += error;
-                ResourceManager.Instance.StartCoroutine(Load());
+                ABRequest abRequest = new ABRequest();
+                abRequest.Load(mABName, mAllABList);
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 
-            private IEnumerator Load()
+            private IEnumerator Load(ABRequest abRequest, Action<Sprite> success, Action error)
             {
-                yield return mABRequest;
+                yield return abRequest;
                 if(mSprite == null)
                 {
-                    mAssetRequest = new AssetRequest(mABRequest.mainAB, mAssetName, false);
-                    yield return mAssetRequest;
-                    mSprite = mAssetRequest.GetAssets<Sprite>(mAssetName);
+                    AssetRequest assetRequest = new AssetRequest(abRequest.mAB, mAssetName);
+                    yield return assetRequest;
+                    mSprite = assetRequest.GetAssets<Sprite>(mAssetName);
                 }
                 if (mSprite != null)
                 {
-                    if (mSuccess != null)
+                    if (success != null)
                     {
-                        mSuccess(mSprite);
+                        success(mSprite);
                     }
                 }
                 else
                 {
-                    if (mError != null)
+                    if (error != null)
                     {
-                        mError();
+                        error();
                     }
                 }
-
-                mSuccess = null;
-                mError = null;
             }
         }
     }

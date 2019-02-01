@@ -76,7 +76,19 @@ namespace AssetLoad
             //需要加载的AB数量
             private int mNeedABNum;
             private string mMainName;
-            public AssetBundle mainAB { get; private set; }
+            public AssetBundle mAB
+            {
+                get
+                {
+                    if(ResourceManager.Instance.mResMap.ContainsKey(mMainName))
+                    {
+                        HAssetBundle ab = ResourceManager.Instance.mResMap[mMainName] as HAssetBundle;
+                        return ab.AB;
+                    }
+
+                    return null;
+                }
+            }
 
             public ABRequest()
             {
@@ -109,7 +121,7 @@ namespace AssetLoad
                         else if(ab.LoadStatus == HAssetBundle.ABLoadStatus.eLoaded)
                         {
                             //已经存在了这个AB
-                            AddLoadABNum();
+                            AddLoadNum();
                             ab.RefCount++;
                         }
                     }
@@ -130,24 +142,22 @@ namespace AssetLoad
                 yield return www;
                 if (!string.IsNullOrEmpty(www.error))
                 {
+                    ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoadError;
                     Debug.LogError("xxxxxxxx www load is error : " + name + " " + www.error);
                 }
                 else
                 {
-                    if (name == mMainName)
-                    {
-                        mainAB = www.assetBundle;
-                    }
+                    ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoaded;
                     ab.CompleteRequest(www.assetBundle);
                 }
             }
 
-            public void AddLoadABNum()
+            public void AddLoadNum()
             {
                 mLoadABNum++;
             }
 
-            protected bool IsABLoadComplete()
+            protected bool IsLoadComplete()
             {
                 if (mLoadABNum >= mNeedABNum)
                 {
@@ -161,7 +171,7 @@ namespace AssetLoad
 
             public bool MoveNext()
             {
-                if (IsABLoadComplete())
+                if (IsLoadComplete())
                 {
                     return false;
                 }
