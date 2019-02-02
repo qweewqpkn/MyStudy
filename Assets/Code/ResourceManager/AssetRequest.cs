@@ -18,6 +18,12 @@ namespace AssetLoad
 
             public AssetRequest(AssetBundle ab, string assetName, bool isAll = false)
             {
+                if(ab == null)
+                {
+                    Debug.Log(string.Format("ab is null in load {0} AssetRequest", assetName));
+                    return;
+                }
+
                 if(isAll)
                 {
                     mRequest = ab.LoadAllAssetsAsync();

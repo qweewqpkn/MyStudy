@@ -18,11 +18,17 @@ namespace AssetLoad
             }
 
             //对于反复加载同一个资源，不论ab是否已经存在，我们都要走ab请求的逻辑，为了在内部能正常进行ab的引用计数，这样才能正确释放资源。
-            public override void Load(Action<AudioClip> success, Action error)
+            public override void Load<T>(Action<T> success, Action error)
             {
+                base.Load(success, error);
+                Action<AudioClip> complete = (ab) =>
+                {
+                    success(ab as T);
+                };
+
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, complete, error));
             }
 
             private IEnumerator Load(ABRequest abRequest, Action<AudioClip> success, Action error)
@@ -49,6 +55,12 @@ namespace AssetLoad
                         error();
                     }
                 }
+            }
+
+            public override void Release()
+            {
+                base.Release();
+                mAudioClip = null;
             }
         }
     }

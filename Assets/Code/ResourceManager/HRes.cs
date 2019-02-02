@@ -15,11 +15,18 @@ namespace AssetLoad
             protected string mAssetName;
             protected List<string> mAllABList;
 
+            //该资源被引用的次数
+            public int RefCount
+            {
+                get;
+                set;
+            }
+
             public HRes(string abName, string assetName)
             {
                 mABName = abName;
                 mAssetName = assetName;
-                string name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
+                string name = ResourceManager.GetResName(abName, assetName);
                 ResourceManager.Instance.mResMap.Add(name, this);
 
                 if (!string.IsNullOrEmpty(mABName))
@@ -34,67 +41,46 @@ namespace AssetLoad
                 }
             }
 
-            public virtual IEnumerator Load<T>(Action<T> success, Action error) where T : UnityEngine.Object
+            public virtual void Load<T>(Action<T> success, Action error) where T : UnityEngine.Object
             {
-                yield return null;
+                Load();
             }
 
             public virtual void Load(Action<byte[]> success, Action error)
             {
+                Load();
             }
 
-            public virtual void Load(Action<AssetBundle> success, Action error)
+            private void Load()
             {
-
-            }
-
-            public virtual void Load(Action<Shader> success, Action error)
-            {
-            }
-
-            public virtual void Load(Action<GameObject> success, Action error)
-            {
-            }
-
-            public virtual void Load(Action<Texture> success, Action error)
-            {
-            }
-
-            public virtual void Load(Action<AssetBundleManifest> success, Action error)
-            {
-            }
-
-            public virtual void Load(Action<AudioClip> success, Action error)
-            {
-            }
-
-            public virtual void Load(Action<Material> success, Action error)
-            {
-            }
-
-            public virtual void Load(Action<Sprite> success, Action error)
-            {
-
+                RefCount++;
             }
 
             public virtual void Release()
             {
-                for (int i = 0; i < mAllABList.Count; i++)
+                //该资源被引用了多少次
+                for(int i = 0; i < RefCount; i++)
                 {
-                    string name = mAllABList[i];
-                    if (ResourceManager.Instance.mResMap.ContainsKey(name))
+                    //该资源每次引用对应的ab依赖都要进行释放
+                    for(int j = 0; j < mAllABList.Count; j++)
                     {
-                        HAssetBundle ab = ResourceManager.Instance.mResMap[name] as HAssetBundle;
-                        ab.RefCount--;
-                        if (ab.RefCount == 0)
+                        if(ResourceManager.Instance.mResMap.ContainsKey(mAllABList[j]))
                         {
-                            if(ab.AB != null)
+                            HAssetBundle ab = ResourceManager.Instance.mResMap[mAllABList[j]] as HAssetBundle;
+                            if(ab != null)
                             {
-                                ab.AB.Unload(true);
-                            }
-                            else
-                            {
-                                Debug.Log(string.Format("AB {0} release is null, please check", name));
+                                ab.RefCount--;
+                                if(ab.RefCount == 0)
+                                {
+                                    if (ab.AB != null)
+                                    {
+                                        ab.AB.Unload(true);
+                                    }
+                                    else
+                                    {
+                                        Debug.LogError("HRes Release ab is null, please check!");
+                                    }
+                                }
                             }
                         }
                     }

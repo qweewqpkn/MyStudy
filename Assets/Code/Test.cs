@@ -30,6 +30,8 @@ public class Test : MonoBehaviour {
                 {
                     mImage.texture = tex;
                 });
+
+                ResourceManager.Instance.ReleaseAll();
             });
 
             ResourceManager.Instance.LoadPrefab("cube", "cube.bytess", (obj) =>

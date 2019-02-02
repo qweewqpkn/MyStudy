@@ -19,6 +19,7 @@ namespace AssetLoad
 
             public override void Load(Action<byte[]> success, Action error)
             {
+                base.Load(success, error);
                 ResourceManager.Instance.StartCoroutine(LoadInternal(success, error));
             }
 
@@ -46,6 +47,12 @@ namespace AssetLoad
                         error();
                     }
                 }
+            }
+
+            public override void Release()
+            {
+                base.Release();
+                mBytes = null;
             }
         }
     }

@@ -41,6 +41,12 @@ namespace AssetLoad
             }
         }
 
+        public static string GetResName(string abName, string assetName)
+        {
+            string name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
+            return name;
+        }
+
         //单独加载AB(比如:Loading界面做预加载)
         public void LoadAB(string abName, Action<AssetBundle> success, Action error = null)
         {
@@ -75,7 +81,7 @@ namespace AssetLoad
         public void LoadPrefab(string abName, string assetName, Action<GameObject> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
+            string name = GetResName(abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -88,10 +94,10 @@ namespace AssetLoad
         }
 
         //加载图集
-        public void LoadSprite(string abName, string assetName, Action<Texture> success, Action error = null)
+        public void LoadSprite(string abName, string assetName, Action<Sprite> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
+            string name = GetResName(abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -106,7 +112,7 @@ namespace AssetLoad
         public void LoadTexture(string abName, string assetName, Action<Texture> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
+            string name = GetResName(abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -122,7 +128,7 @@ namespace AssetLoad
         public void LoadAudioClip(string abName, string assetName, Action<AudioClip> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
+            string name = GetResName(abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -138,7 +144,7 @@ namespace AssetLoad
         public void LoadMaterial(string abName, string assetName, Action<Material> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
+            string name = GetResName(abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -158,7 +164,7 @@ namespace AssetLoad
         public void LoadManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
+            string name = GetResName(abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -173,7 +179,7 @@ namespace AssetLoad
         public void LoadShader(string abName, string assetName, Action<Shader> success, Action error = null)
         {
             HRes res = null;
-            string name = string.Format("{0}/{1}", abName, assetName);
+            string name = GetResName(abName, assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -187,7 +193,14 @@ namespace AssetLoad
 
         public void Release(string name)
         {
+            name = name.ToLower();
+            Release(name, name);
+        }
+
+        public void Release(string abName, string assetName)
+        {
             HRes res;
+            string name = GetResName(abName.ToLower(), assetName);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Release();

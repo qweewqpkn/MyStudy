@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class PrefabAutoDestory : MonoBehaviour {
 
-    public string mAssetBundleName;
+    public string mABName;
 
     void OnDestroy()
     {
-        ResourceManager.Instance.Release(mAssetBundleName);
+        ResourceManager.Instance.Release(mABName, "");
     }
 }

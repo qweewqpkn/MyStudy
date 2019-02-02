@@ -19,11 +19,17 @@ namespace AssetLoad
                 ResourceManager.Instance.mResMap.Add(name, this);
             }
 
-            public override void Load(Action<Material> success, Action error)
+            public override void Load<T>(Action<T> success, Action error)
             {
+                base.Load(success, error);
+                Action<Material> complete = (ab) =>
+                {
+                    success(ab as T);
+                };
+
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, complete, error));
             }
 
             private IEnumerator Load(ABRequest abRequest, Action<Material> success, Action error)
@@ -50,6 +56,12 @@ namespace AssetLoad
                         error();
                     }
                 }
+            }
+
+            public override void Release()
+            {
+                base.Release();
+                mMaterial = null;
             }
         }
     }

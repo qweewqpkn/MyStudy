@@ -347,7 +347,7 @@ public class AudioManager : MonoBehaviour
     {
         //if (mAudioClipDict.ContainsKey(name))
         {
-            ResourceManager.Instance.Release(name.ToLower());
+            ResourceManager.Instance.Release(name, name);
             //mAudioClipDict.Remove(name);
         }
     }
@@ -478,7 +478,7 @@ public class AudioManager : MonoBehaviour
     {
         GetAudioClip(name, (audioClip) =>
         {
-            ResourceManager.Instance.Release(name.ToLower());
+            ResourceManager.Instance.Release(name, name);
             float length = 0;
             if (audioClip != null)
             {

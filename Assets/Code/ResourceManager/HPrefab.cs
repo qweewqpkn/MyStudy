@@ -15,11 +15,17 @@ namespace AssetLoad
             {
             }
 
-            public override void Load(Action<GameObject> success, Action error)
+            public override void Load<T>(Action<T> success, Action error)
             {
+                base.Load(success, error);
+                Action<GameObject> complete = (ab) =>
+                {
+                    success(ab as T);
+                };
+
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, complete, error));
             }
 
             private IEnumerator Load(ABRequest abRequest, Action<GameObject> success, Action error)
@@ -49,6 +55,12 @@ namespace AssetLoad
                         error();
                     }
                 }
+            }
+
+            public override void Release()
+            {
+                base.Release();
+                mPrefab = null;
             }
         }
     }
