@@ -13,7 +13,7 @@ namespace AssetLoad
         {
             private AssetBundleManifest mManifest;
 
-            public HManifest(string abName, string assetName) : base(abName, assetName)
+            public HManifest(string abName, string assetName) : base(abName, assetName, AssetType.eManifest)
             {
             }
 

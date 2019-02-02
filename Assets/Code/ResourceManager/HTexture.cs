@@ -11,7 +11,7 @@ namespace AssetLoad
         {
             private Texture mTexture;
 
-            public HTexture(string abName, string assetName) : base(abName, assetName)
+            public HTexture(string abName, string assetName) : base(abName, assetName, AssetType.eTexture)
             {
             }
 

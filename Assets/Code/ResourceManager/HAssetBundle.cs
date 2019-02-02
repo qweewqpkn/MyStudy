@@ -31,7 +31,7 @@ namespace AssetLoad
             }
 
 
-            public HAssetBundle(string abName) : base(abName, "")
+            public HAssetBundle(string abName) : base(abName, "", AssetType.eAB)
             {
             }
 

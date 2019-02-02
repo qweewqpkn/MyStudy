@@ -13,7 +13,7 @@ namespace AssetLoad
         {
             private AudioClip mAudioClip;
 
-            public HAudioCilp(string abName, string assetName) : base(abName, assetName)
+            public HAudioCilp(string abName, string assetName) : base(abName, assetName, AssetType.eAudioClip)
             {
             }
 

@@ -9,39 +9,54 @@ namespace AssetLoad
     {
         class HSprite : HRes
         {
-            private Sprite mSprite;
+            private Dictionary<string, Sprite> mSpriteDict = new Dictionary<string, Sprite>();
 
-            public HSprite(string abName, string assestName) : base(abName, assestName)
+            public HSprite(string abName) : base(abName, "*", AssetType.eSprite)
             {
             }
 
-            public override void Load<T>(Action<T> success, Action error)
+            public override void Load<T>(string assetName, Action<T> success, Action error)
             {
-                base.Load(success, error);
-                Action<Sprite> complete = (ab) =>
+                base.Load(assetName, success, error);
+                Action<Sprite> complete = (sprite) =>
                 {
-                    success(ab as T);
+                    success(sprite as T);
                 };
 
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, complete, error));
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, complete, error));
             }
 
-            private IEnumerator Load(ABRequest abRequest, Action<Sprite> success, Action error)
+            private IEnumerator Load(ABRequest abRequest, string assetName, Action<Sprite> success, Action error)
             {
                 yield return abRequest;
-                if(mSprite == null)
+
+                Sprite sprite = null;
+                if(mSpriteDict.Count == 0)
                 {
-                    AssetRequest assetRequest = new AssetRequest(abRequest.mAB, mAssetName);
+                    AssetRequest assetRequest = new AssetRequest(abRequest.mAB, "", true);
                     yield return assetRequest;
-                    mSprite = assetRequest.GetAssets<Sprite>(mAssetName);
+                    UnityEngine.Object[] objs = assetRequest.GetAssets();
+                    for(int i = 0; i < objs.Length; i++)
+                    {
+                        if(!mSpriteDict.ContainsKey(objs[i].name))
+                        {
+                            mSpriteDict.Add(objs[i].name, objs[i] as Sprite);
+                        }
+                    }
                 }
-                if (mSprite != null)
+
+                if(mSpriteDict.ContainsKey(assetName))
+                {
+                    sprite = mSpriteDict[assetName];
+                }
+
+                if (sprite != null)
                 {
                     if (success != null)
                     {
-                        success(mSprite);
+                        success(sprite);
                     }
                 }
                 else
@@ -56,7 +71,8 @@ namespace AssetLoad
             public override void Release()
             {
                 base.Release();
-                mSprite = null;
+                mSpriteDict.Clear();
+                mSpriteDict = null;
             }
         }
     }

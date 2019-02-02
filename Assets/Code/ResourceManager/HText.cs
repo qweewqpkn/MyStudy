@@ -13,7 +13,7 @@ namespace AssetLoad
         {
             private byte[] mBytes;
 
-            public HText(string assetName) : base(assetName, assetName)
+            public HText(string assetName) : base(assetName, assetName, AssetType.eText)
             {
             }
 

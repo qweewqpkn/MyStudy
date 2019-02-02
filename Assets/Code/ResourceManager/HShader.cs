@@ -13,7 +13,7 @@ namespace AssetLoad
         {
             private Shader mShader;
 
-            public HShader(string abName, string assetName) : base(abName, assetName)
+            public HShader(string abName, string assetName) : base(abName, assetName, AssetType.eShader)
             {
             }
 

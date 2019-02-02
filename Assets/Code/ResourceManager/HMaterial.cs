@@ -13,7 +13,7 @@ namespace AssetLoad
         {
             private Material mMaterial;
 
-            public HMaterial(string abName, string assestName) : base(abName, assestName)
+            public HMaterial(string abName, string assestName) : base(abName, assestName, AssetType.eMaterial)
             {
                 string name = string.Format("{0}/{1}", abName, assestName);
                 ResourceManager.Instance.mResMap.Add(name, this);

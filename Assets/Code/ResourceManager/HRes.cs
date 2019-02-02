@@ -13,6 +13,7 @@ namespace AssetLoad
         {
             protected string mABName;
             protected string mAssetName;
+            protected AssetType mAssetType;
             protected List<string> mAllABList;
 
             //该资源被引用的次数
@@ -22,10 +23,12 @@ namespace AssetLoad
                 set;
             }
 
-            public HRes(string abName, string assetName)
+            public HRes(string abName, string assetName, AssetType assetType)
             {
                 mABName = abName;
                 mAssetName = assetName;
+                mAssetType = assetType;
+
                 string name = ResourceManager.GetResName(abName, assetName);
                 ResourceManager.Instance.mResMap.Add(name, this);
 
@@ -42,6 +45,11 @@ namespace AssetLoad
             }
 
             public virtual void Load<T>(Action<T> success, Action error) where T : UnityEngine.Object
+            {
+                Load();
+            }
+
+            public virtual void Load<T>(string assetName, Action<T> success, Action error) where T : UnityEngine.Object
             {
                 Load();
             }

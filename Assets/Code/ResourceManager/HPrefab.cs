@@ -11,7 +11,7 @@ namespace AssetLoad
         {
             private GameObject mPrefab;
 
-            public HPrefab(string abName, string assestName) : base(abName, assestName)
+            public HPrefab(string abName, string assestName) : base(abName, assestName, AssetType.ePrefab)
             {
             }
 
@@ -42,8 +42,9 @@ namespace AssetLoad
                 if(mPrefab != null)
                 {
                     GameObject newObj = GameObject.Instantiate(mPrefab);
-                    newObj.AddComponent<PrefabAutoDestory>();
-                    if(success != null)
+                    PrefabAutoDestory audoDestroy = newObj.AddComponent<PrefabAutoDestory>();
+                    audoDestroy.mABName = mABName;
+                    if (success != null)
                     {
                         success(newObj);
                     }

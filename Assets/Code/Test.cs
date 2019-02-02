@@ -8,6 +8,7 @@ public class Test : MonoBehaviour {
 
     public Button mButton;
     public RawImage mImage;
+    public Image mSprite;
 
 	// Use this for initialization
 	void Start () {
@@ -16,22 +17,17 @@ public class Test : MonoBehaviour {
 
             mButton.onClick.AddListener(() =>
             {
-                ResourceManager.Instance.LoadTexture("texture", "texture", (tex) =>
+                ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
                 {
-                    mImage.texture = tex;
+                    mSprite.sprite = sprite;
                 });
 
-                ResourceManager.Instance.LoadTexture("texture", "texture", (tex) =>
+                ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
                 {
-                    mImage.texture = tex;
+                    mSprite.sprite = sprite;
                 });
 
-                ResourceManager.Instance.LoadTexture("texture", "texture", (tex) =>
-                {
-                    mImage.texture = tex;
-                });
-
-                ResourceManager.Instance.ReleaseAll();
+                //ResourceManager.Instance.ReleaseAll();
             });
 
             ResourceManager.Instance.LoadPrefab("cube", "cube.bytess", (obj) =>

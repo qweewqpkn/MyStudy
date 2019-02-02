@@ -11,6 +11,7 @@ public class BuildAB
         switch(EditorUserBuildSettings.activeBuildTarget)
         {
             case BuildTarget.StandaloneWindows64:
+            case BuildTarget.StandaloneWindows:
                 {
                     path = PathManager.RES_PATH_WINDOWS + "/Assetbundle";
                 }

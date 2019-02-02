@@ -7,6 +7,7 @@ namespace AssetLoad
 {
     public enum AssetType
     {
+        eNone,
         eAB,
         ePrefab,
         eTexture,
@@ -15,6 +16,7 @@ namespace AssetLoad
         eShader,
         eSprite,
         eManifest,
+        eMaterial,
     }
 
     public partial class ResourceManager : MonoBehaviour
@@ -43,7 +45,8 @@ namespace AssetLoad
 
         public static string GetResName(string abName, string assetName)
         {
-            string name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
+            string name = "";
+            name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
             return name;
         }
 
@@ -97,15 +100,15 @@ namespace AssetLoad
         public void LoadSprite(string abName, string assetName, Action<Sprite> success, Action error = null)
         {
             HRes res = null;
-            string name = GetResName(abName, assetName);
+            string name = GetResName(abName, "*");
             if (mResMap.TryGetValue(name, out res))
             {
-                res.Load(success, error);
+                res.Load(assetName, success, error);
             }
             else
             {
-                res = new HSprite(abName, assetName);
-                res.Load(success, error);
+                res = new HSprite(abName);
+                res.Load(assetName, success, error);
             }
         }
 
