@@ -11,24 +11,19 @@ namespace AssetLoad
         {
             private Dictionary<string, Sprite> mSpriteDict = new Dictionary<string, Sprite>();
 
-            public HSprite(string abName) : base(abName, "*", AssetType.eSprite)
+            public HSprite(string abName) : base(abName, "", AssetType.eSprite)
             {
             }
 
             public override void Load<T>(string assetName, Action<T> success, Action error)
             {
                 base.Load(assetName, success, error);
-                Action<Sprite> complete = (sprite) =>
-                {
-                    success(sprite as T);
-                };
-
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, complete, error));
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, success, error));
             }
 
-            private IEnumerator Load(ABRequest abRequest, string assetName, Action<Sprite> success, Action error)
+            private IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
             {
                 yield return abRequest;
 
@@ -56,7 +51,7 @@ namespace AssetLoad
                 {
                     if (success != null)
                     {
-                        success(sprite);
+                        success(sprite as T);
                     }
                 }
                 else

@@ -18,17 +18,12 @@ namespace AssetLoad
             public override void Load<T>(Action<T> success, Action error)
             {
                 base.Load(success, error);
-                Action<GameObject> complete = (ab) =>
-                {
-                    success(ab as T);
-                };
-
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, complete, error));
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 
-            private IEnumerator Load(ABRequest abRequest, Action<GameObject> success, Action error)
+            private IEnumerator Load<T>(ABRequest abRequest, Action<T> success, Action error) where T : UnityEngine.Object
             {
                 yield return abRequest;
 
@@ -46,7 +41,7 @@ namespace AssetLoad
                     audoDestroy.mABName = mABName;
                     if (success != null)
                     {
-                        success(newObj);
+                        success(newObj as T);
                     }
                 }
                 else

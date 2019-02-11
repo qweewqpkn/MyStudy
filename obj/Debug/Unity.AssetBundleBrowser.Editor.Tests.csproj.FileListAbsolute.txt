@@ -1,0 +1,2 @@
+D:\Development\Unity\MyStudyPC\obj\Debug\Unity.AssetBundleBrowser.Editor.Tests.csprojAssemblyReference.cache
+D:\Development\Unity\MyStudyPC\obj\Debug\Unity.AssetBundleBrowser.Editor.Tests.csproj.CoreCompileInputs.cache

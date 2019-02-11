@@ -30,20 +30,13 @@ public class Test : MonoBehaviour {
                 //ResourceManager.Instance.ReleaseAll();
             });
 
-            ResourceManager.Instance.LoadPrefab("cube", "cube.bytess", (obj) =>
+            ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
             {
                 obj.name = "testTest";
             });
 
-            ResourceManager.Instance.LoadPrefab("cube", "cube.bytess", (obj) =>
-            {
-                obj.name = "testTest";
-            });
-
-            ResourceManager.Instance.LoadPrefab("cube", "cube.bytess", (obj) =>
-            {
-                obj.name = "testTest";
-            });
+            TextAsset lua = ResourceManager.Instance.LoadLua("lobby", "Main.lua");
+            TextAsset lua1 = ResourceManager.Instance.LoadLua("main", "Test.lua");
         };
     }
 	

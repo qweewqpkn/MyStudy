@@ -13,7 +13,7 @@ public class AutoBuildAndroid {
     {
         InitArg();
         InitPlayerSetting();
-        BuildAB.Build();
+        BuildRes.Build();
         //将你打包的资源拷贝到StreamingAssets中
         FileUtility.CopyTo(PathManager.RES_PATH_ANDROID, PathManager.RES_PATH_ANDROID_PHONE);
         string[] level = GetBuildScene();

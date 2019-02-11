@@ -12,14 +12,7 @@ public class TestLua : MonoBehaviour {
 	void Start () {
         mLuaState = new LuaState();
         mLuaState.Start();
-
-        ResourceManager.Instance.mInitComplete = () =>
-        {
-            ResourceManager.Instance.LoadPrefab("lobby/test", "testCube", (ab) =>
-            {
-                
-            });
-        };
+        mLuaState.DoFile("Main/Main.lua");
 	}
 	
 	// Update is called once per frame

@@ -19,7 +19,7 @@ public class AutoBuildIOS {
     {
         InitArg();
         InitPlayerSetting();
-        BuildAB.Build();
+        BuildRes.Build();
         FileUtility.CopyTo(PathManager.RES_PATH_IOS, PathManager.RES_PATH_IOS_PHONE);
         string[] level = GetBuildScene();
         string outputPath = argDic["output_path"].Replace("\\", "/");

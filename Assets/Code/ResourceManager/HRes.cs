@@ -29,7 +29,7 @@ namespace AssetLoad
                 mAssetName = assetName;
                 mAssetType = assetType;
 
-                string name = ResourceManager.GetResName(abName, assetName);
+                string name = ResourceManager.GetResName(abName, assetName, assetType);
                 ResourceManager.Instance.mResMap.Add(name, this);
 
                 if (!string.IsNullOrEmpty(mABName))
@@ -42,6 +42,11 @@ namespace AssetLoad
                         mAllABList.AddRange(depList);
                     }
                 }
+            }
+
+            public virtual T LoadSync<T>(string assetName) where T : UnityEngine.Object
+            {
+                return default(T);
             }
 
             public virtual void Load<T>(Action<T> success, Action error) where T : UnityEngine.Object

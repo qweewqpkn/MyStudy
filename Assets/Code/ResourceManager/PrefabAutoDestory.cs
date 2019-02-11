@@ -9,6 +9,6 @@ public class PrefabAutoDestory : MonoBehaviour {
 
     void OnDestroy()
     {
-        ResourceManager.Instance.Release(mABName, "");
+        ResourceManager.Instance.Release(mABName, "", AssetType.ePrefab);
     }
 }

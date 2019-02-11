@@ -17,7 +17,7 @@ public class PathManager
 
     public static string RES_PATH_WINDOWS = RES_ROOT_PATH + "/Windows";
 
-    public static string URL(string abName, AssetType type)
+    public static string URL(string abName, AssetType type, bool isWWW = true)
     {
         StringBuilder result = new StringBuilder();
         switch (Application.platform)
@@ -29,22 +29,38 @@ public class PathManager
                 break;
             case RuntimePlatform.IPhonePlayer:
                 {
-                    result.Append("file://" + RES_PATH_IOS_PHONE);
+                    if(isWWW)
+                    {
+                        result.Append("file://");
+                    }
+                    result.Append(RES_PATH_IOS_PHONE);
                 }
                 break;
             case RuntimePlatform.OSXEditor:
                 {
-                    result.Append("file://" + RES_PATH_IOS);
+                    if (isWWW)
+                    {
+                        result.Append("file://");
+                    }
+                    result.Append(RES_PATH_IOS);
                 }
                 break;
             case RuntimePlatform.WindowsEditor:
                 {
-                    result.Append("file://" + RES_PATH_WINDOWS);
+                    if (isWWW)
+                    {
+                        result.Append("file://");
+                    }
+                    result.Append(RES_PATH_WINDOWS);
                 }
                 break;
             default:
                 {
-                    result.Append("file://" + RES_PATH_WINDOWS);
+                    if (isWWW)
+                    {
+                        result.Append("file://");
+                    }
+                    result.Append(RES_PATH_WINDOWS);
                 }
                 break;
         }
@@ -65,6 +81,11 @@ public class PathManager
             case AssetType.eText:
                 {
                     result.Append("/Config/");
+                }
+                break;
+            case AssetType.eLua:
+                {
+                    result.Append("/Lua/");
                 }
                 break;
         }

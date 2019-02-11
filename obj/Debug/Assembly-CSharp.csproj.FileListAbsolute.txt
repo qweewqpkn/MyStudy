@@ -166,3 +166,7 @@ D:\Development\Unity3d\MyStudy\obj\Debug\Assembly-CSharp.csproj.CoreCompileInput
 D:\Development\Unity3d\MyStudy\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 D:\Development\Unity3d\MyStudy\obj\Debug\Assembly-CSharp.dll
 D:\Development\Unity3d\MyStudy\obj\Debug\Assembly-CSharp.pdb
+D:\Development\Unity\MyStudyPC\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+D:\Development\Unity\MyStudyPC\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+D:\Development\Unity\MyStudyPC\obj\Debug\Assembly-CSharp.dll
+D:\Development\Unity\MyStudyPC\obj\Debug\Assembly-CSharp.pdb

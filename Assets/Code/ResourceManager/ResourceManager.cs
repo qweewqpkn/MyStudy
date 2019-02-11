@@ -15,6 +15,7 @@ namespace AssetLoad
         eText,
         eShader,
         eSprite,
+        eLua,
         eManifest,
         eMaterial,
     }
@@ -43,18 +44,28 @@ namespace AssetLoad
             }
         }
 
-        public static string GetResName(string abName, string assetName)
+        public static string GetResName(string abName, string assetName, AssetType type)
         {
-            string name = "";
-            name = assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
-            return name;
+            switch(type)
+            {
+                case AssetType.eSprite:
+                case AssetType.eLua:
+                    {
+                        return string.Format("{0}/{1}", abName, "*");
+                    }
+                default:
+                    {
+                        return assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
+                    }
+            }
         }
 
         //单独加载AB(比如:Loading界面做预加载)
         public void LoadAB(string abName, Action<AssetBundle> success, Action error = null)
         {
             HRes res = null;
-            if (mResMap.TryGetValue(abName, out res))
+            string name = GetResName(abName, "", AssetType.eAB);
+            if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
             }
@@ -84,7 +95,7 @@ namespace AssetLoad
         public void LoadPrefab(string abName, string assetName, Action<GameObject> success, Action error = null)
         {
             HRes res = null;
-            string name = GetResName(abName, assetName);
+            string name = GetResName(abName, assetName, AssetType.ePrefab);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -100,7 +111,7 @@ namespace AssetLoad
         public void LoadSprite(string abName, string assetName, Action<Sprite> success, Action error = null)
         {
             HRes res = null;
-            string name = GetResName(abName, "*");
+            string name = GetResName(abName, assetName, AssetType.eSprite);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(assetName, success, error);
@@ -115,7 +126,7 @@ namespace AssetLoad
         public void LoadTexture(string abName, string assetName, Action<Texture> success, Action error = null)
         {
             HRes res = null;
-            string name = GetResName(abName, assetName);
+            string name = GetResName(abName, assetName, AssetType.eTexture);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -131,7 +142,7 @@ namespace AssetLoad
         public void LoadAudioClip(string abName, string assetName, Action<AudioClip> success, Action error = null)
         {
             HRes res = null;
-            string name = GetResName(abName, assetName);
+            string name = GetResName(abName, assetName, AssetType.eAudioClip);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -147,7 +158,7 @@ namespace AssetLoad
         public void LoadMaterial(string abName, string assetName, Action<Material> success, Action error = null)
         {
             HRes res = null;
-            string name = GetResName(abName, assetName);
+            string name = GetResName(abName, assetName, AssetType.eMaterial);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -159,15 +170,25 @@ namespace AssetLoad
             }
         }
 
-        public void LoadLua()
+        public TextAsset LoadLua(string abName, string assetName)
         {
-
+            HRes res = null;
+            string name = GetResName(abName, assetName, AssetType.eLua);
+            if (mResMap.TryGetValue(name, out res))
+            {
+                return res.LoadSync<TextAsset>(assetName);
+            }
+            else
+            {
+                res = new HLua(abName);
+                return res.LoadSync<TextAsset>(assetName);
+            }
         }
 
         public void LoadManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
         {
             HRes res = null;
-            string name = GetResName(abName, assetName);
+            string name = GetResName(abName, assetName, AssetType.eManifest);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -182,7 +203,7 @@ namespace AssetLoad
         public void LoadShader(string abName, string assetName, Action<Shader> success, Action error = null)
         {
             HRes res = null;
-            string name = GetResName(abName, assetName);
+            string name = GetResName(abName, assetName, AssetType.eShader);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Load(success, error);
@@ -194,16 +215,16 @@ namespace AssetLoad
             }
         }
 
-        public void Release(string name)
+        public void Release(string name, AssetType type)
         {
             name = name.ToLower();
-            Release(name, name);
+            Release(name, name, type);
         }
 
-        public void Release(string abName, string assetName)
+        public void Release(string abName, string assetName, AssetType type)
         {
             HRes res;
-            string name = GetResName(abName.ToLower(), assetName);
+            string name = GetResName(abName.ToLower(), assetName, type);
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Release();

@@ -240,16 +240,16 @@ namespace LuaInterface
                     fileName = fileName.Substring(pos + 1);
                 }
 
-                //if (!fileName.EndsWith(".lua"))
-                //{
-                 //   fileName += ".lua";
-                //}
+                if (!fileName.EndsWith(".lua"))
+                {
+                    fileName += ".lua";
+                }
 
 #if UNITY_5 || UNITY_5_3_OR_NEWER
-                //fileName += ".bytes";
+                fileName += ".bytes";
 #endif
                 zipName = sb.ToString();
-                zipMap.TryGetValue(fileName, out zipFile);
+                zipMap.TryGetValue(zipName, out zipFile);
             }
 
             if (zipFile != null)
