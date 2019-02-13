@@ -68,8 +68,8 @@ public class BuildRes
     [MenuItem("Tools/打包Lua")]
     static void BuildLua()
     {
-        FileUtility.CopyTo(Application.dataPath + "/Lua", Application.dataPath + "/LuaTemp", "*.lua", "bytes");
-        FileUtility.CopyTo(Application.dataPath + "/ToLua/Lua", Application.dataPath + "/LuaTemp/ToLua", "*.lua", "bytes");
+        FileUtility.CopyTo(Application.dataPath + "/Lua", Application.dataPath + "/LuaTemp", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
+        FileUtility.CopyTo(Application.dataPath + "/ToLua/Lua", Application.dataPath + "/LuaTemp/ToLua", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
 
         //获取lua根目录下的各个模块名和对应模块的lua文件
         string luaRootPath = Application.dataPath + "/LuaTemp";
@@ -92,6 +92,7 @@ public class BuildRes
             }
         }
 
+        //LuaTemp下的目录名将作为模块名，而各个目录下的文件将会打包到对应模块AB中
         List<AssetBundleBuild> abbList = new List<AssetBundleBuild>();
         foreach(var item in abbDict)
         {
@@ -125,6 +126,7 @@ public class BuildRes
         Directory.Delete(path, true);
         FileUtility.CreateDirectory(path);
         BuildPipeline.BuildAssetBundles(path, abbList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+        AssetDatabase.Refresh();
     }
 
     //移除无用的AB

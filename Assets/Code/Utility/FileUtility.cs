@@ -15,8 +15,12 @@ public class FileUtility{
     }
 
     //拷贝源目录所有文件(包含子目录的文件)到目标目录
-    public static void CopyTo(string sourceDir, string targetDir, string filter = "*",string postfix = "")
+    public static void CopyTo(string sourceDir, string targetDir,string filter = "*",string postfix = "", string rootPath = "")
     {
+        rootPath = rootPath.Replace("\\", "/");
+        targetDir = targetDir.Replace("\\", "/");
+        sourceDir = sourceDir.Replace("\\", "/");
+
         if (!Directory.Exists(sourceDir))
         {
             Debug.LogError("sourcePath is not exist");
@@ -34,13 +38,27 @@ public class FileUtility{
         {
             for (int i = 0; i < files.Length; i++)
             {
-                if(postfix == "")
+                string moduleName = targetDir.Replace(rootPath + "/", "").Split('/')[0];
+                string fileName = targetDir.Replace(rootPath + "/" + moduleName, "");
+                //fileName可能为空，在当前模块目录下有文件时
+                if(!string.IsNullOrEmpty(fileName))
                 {
-                    File.Copy(files[i], string.Format("{0}/{1}", targetDir, Path.GetFileName(files[i])));
+                    //移除斜杠,替换斜杠
+                    fileName = fileName.Remove(0, 1).Replace("/", "_");
+                    fileName = fileName + "_" + Path.GetFileName(files[i]);
                 }
                 else
                 {
-                    File.Copy(files[i], string.Format("{0}/{1}.{2}", targetDir, Path.GetFileName(files[i]), postfix));
+                    fileName = Path.GetFileName(files[i]);
+                }
+
+                if (postfix == "")
+                {
+                    File.Copy(files[i], string.Format("{0}/{1}", targetDir, fileName));
+                }
+                else
+                {
+                    File.Copy(files[i], string.Format("{0}/{1}.{2}", targetDir, fileName, postfix));
                 }
             }
         }
@@ -52,7 +70,7 @@ public class FileUtility{
             {
                 curDirs[i] = curDirs[i].Replace("\\", "/");
                 string path = curDirs[i].Substring(curDirs[i].LastIndexOf("/") + 1);
-                CopyTo(curDirs[i], targetDir + "/" + path, filter, postfix);
+                CopyTo(curDirs[i], targetDir + "/" + path, filter, postfix, rootPath);
             }
         }
     }

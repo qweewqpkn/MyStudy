@@ -17,6 +17,7 @@ namespace AssetLoad
 
             public override T LoadSync<T>(string assetName)
             {
+                assetName = assetName.ToLower();
                 ABRequestSync abRequestSync = new ABRequestSync();
                 AssetBundle ab = abRequestSync.Load(mABName, mAllABList, AssetType.eLua);
 
@@ -28,7 +29,7 @@ namespace AssetLoad
                     {
                         if (!mLuaDict.ContainsKey(objs[i].name))
                         {
-                            mLuaDict.Add(objs[i].name, objs[i] as TextAsset);
+                            mLuaDict.Add(objs[i].name.ToLower(), objs[i] as TextAsset);
                         }
                     }
                 }

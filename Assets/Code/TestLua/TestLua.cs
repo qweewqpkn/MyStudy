@@ -12,7 +12,7 @@ public class TestLua : MonoBehaviour {
 	void Start () {
         mLuaState = new LuaState();
         mLuaState.Start();
-        mLuaState.DoFile("Main/Main.lua");
+        mLuaState.DoFile("ui/ui_mail.lua");
 	}
 	
 	// Update is called once per frame
