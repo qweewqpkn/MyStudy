@@ -27,16 +27,22 @@ public class Test : MonoBehaviour {
                     mSprite.sprite = sprite;
                 });
 
-                //ResourceManager.Instance.ReleaseAll();
+                ResourceManager.Instance.ReleaseAll();
             });
 
             ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
             {
                 obj.name = "testTest";
             });
+            ResourceManager.Instance.LoadAB("lobby/test/cube", (ab)=>
+            {
 
-            TextAsset lua = ResourceManager.Instance.LoadLua("lobby", "Main.lua");
-            TextAsset lua1 = ResourceManager.Instance.LoadLua("main", "Test.lua");
+            });
+            ResourceManager.Instance.LoadAB("lobby/test/cube", (ab) =>
+            {
+
+            });
+
         };
     }
 	

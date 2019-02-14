@@ -67,7 +67,6 @@ namespace AssetLoad
             {
                 base.Release();
                 mSpriteDict.Clear();
-                mSpriteDict = null;
             }
         }
     }

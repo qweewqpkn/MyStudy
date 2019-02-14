@@ -9,6 +9,13 @@ namespace AssetLoad
     {
         public class HAssetBundle : HRes
         {
+            //ab被引用的次数
+            public int RefCount
+            {
+                get;
+                set;
+            }
+
             public enum ABLoadStatus
             {
                 eNone,
@@ -37,6 +44,7 @@ namespace AssetLoad
 
             public override void Load<T>(Action<T> success, Action error)
             {
+                base.Load(success, error);
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
                 ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
@@ -63,7 +71,8 @@ namespace AssetLoad
 
             public override void Release()
             {
-                //base.Release();
+                base.Release();
+                AB = null;
             }
 
             public void AddRequest(ABRequest request)

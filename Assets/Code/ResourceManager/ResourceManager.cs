@@ -228,7 +228,10 @@ namespace AssetLoad
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Release();
-                mResMap.Remove(name);
+                if(res.LoadCount == 0)
+                {
+                    mResMap.Remove(name);
+                }
             }
         }
 
@@ -236,7 +239,7 @@ namespace AssetLoad
         {
             foreach(var item in mResMap)
             {
-                item.Value.Release();
+                item.Value.ReleaseAll();
             }
 
             mResMap.Clear();

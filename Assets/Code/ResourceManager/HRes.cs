@@ -16,8 +16,8 @@ namespace AssetLoad
             protected AssetType mAssetType;
             protected List<string> mAllABList;
 
-            //该资源被引用的次数
-            public int RefCount
+            //该资源加载次数
+            public int LoadCount
             {
                 get;
                 set;
@@ -46,6 +46,7 @@ namespace AssetLoad
 
             public virtual T LoadSync<T>(string assetName) where T : UnityEngine.Object
             {
+                Load();
                 return default(T);
             }
 
@@ -66,33 +67,39 @@ namespace AssetLoad
 
             private void Load()
             {
-                RefCount++;
+                LoadCount++;
+            }
+
+            public void ReleaseAll()
+            {
+                int count = LoadCount;
+                for(int i = 0; i < count; i++)
+                {
+                    Release();
+                }
             }
 
             public virtual void Release()
             {
-                //该资源被引用了多少次
-                for(int i = 0; i < RefCount; i++)
+                LoadCount--;
+                //该资源每次引用对应的ab依赖都要进行释放
+                for (int j = 0; j < mAllABList.Count; j++)
                 {
-                    //该资源每次引用对应的ab依赖都要进行释放
-                    for(int j = 0; j < mAllABList.Count; j++)
+                    if (ResourceManager.Instance.mResMap.ContainsKey(mAllABList[j]))
                     {
-                        if(ResourceManager.Instance.mResMap.ContainsKey(mAllABList[j]))
+                        HAssetBundle ab = ResourceManager.Instance.mResMap[mAllABList[j]] as HAssetBundle;
+                        if (ab != null)
                         {
-                            HAssetBundle ab = ResourceManager.Instance.mResMap[mAllABList[j]] as HAssetBundle;
-                            if(ab != null)
+                            ab.RefCount--;
+                            if (ab.RefCount == 0)
                             {
-                                ab.RefCount--;
-                                if(ab.RefCount == 0)
+                                if (ab.AB != null)
                                 {
-                                    if (ab.AB != null)
-                                    {
-                                        ab.AB.Unload(true);
-                                    }
-                                    else
-                                    {
-                                        Debug.LogError("HRes Release ab is null, please check!");
-                                    }
+                                    ab.AB.Unload(true);
+                                }
+                                else
+                                {
+                                    Debug.LogError("HRes Release ab is null, please check!");
                                 }
                             }
                         }

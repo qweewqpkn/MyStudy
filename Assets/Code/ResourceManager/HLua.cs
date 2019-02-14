@@ -15,8 +15,10 @@ namespace AssetLoad
             {
             }
 
+            //同步加载
             public override T LoadSync<T>(string assetName)
             {
+                base.LoadSync<T>(assetName);
                 assetName = assetName.ToLower();
                 ABRequestSync abRequestSync = new ABRequestSync();
                 AssetBundle ab = abRequestSync.Load(mABName, mAllABList, AssetType.eLua);
@@ -43,6 +45,7 @@ namespace AssetLoad
                 return textAsset as T;
             }
 
+            //异步加载
             public override void Load<T>(string assetName, Action<T> success, Action error)
             {
                 base.Load(assetName, success, error);
