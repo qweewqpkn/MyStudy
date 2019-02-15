@@ -317,7 +317,6 @@
   <ItemGroup>
     <Compile Include="Assets\Code\UI\Editor\UIComponentBindEditor.cs" />
     <Compile Include="Assets\Editor\Custom\CustomSettings.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ABBuild\BuildAB.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\AnimationSplit.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\OptmizeAnimationClip.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\RenderCubeMap.cs" />
@@ -341,6 +340,7 @@
     <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PlistParser.cs" />
     <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\ProjectCapabilityManager.cs" />
     <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\XcScheme.cs" />
+    <Compile Include="Assets\Editor\CustomTools\BuildRes\BuildRes.cs" />
     <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_EventObject.cs" />
     <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaConstructor.cs" />
     <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaField.cs" />
@@ -364,7 +364,6 @@
     <Compile Include="Assets\ToLua\Injection\Editor\ToLuaText.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Art\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
@@ -390,6 +389,7 @@
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildPC\JenkinPC.txt" />
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
+    <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />
@@ -429,6 +429,10 @@
     <None Include="Assets\Shader\VertexAnimation\VA1\VA1.shader" />
     <None Include="Assets\Shader\Water\Water\Water.shader" />
     <None Include="Assets\Shader\Water\Water_Distortion\Water_Distortion.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Normal-Diffuse.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Normal-VertexLit.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Add.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Alpha Blend.shader" />
     <None Include="Assets\ToLua\Injection\InjectionBlackList.txt" />
     <None Include="Assets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
     <None Include="Assets\ToLua\Injection\LuaInjectionSkipPaths.txt" />

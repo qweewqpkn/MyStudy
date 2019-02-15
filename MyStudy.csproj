@@ -280,9 +280,11 @@
     <Compile Include="Assets\Code\GhostShadow\GhostShadowCreator.cs" />
     <Compile Include="Assets\Code\LightMap\LoadLightMap.cs" />
     <Compile Include="Assets\Code\LightMap\SceneConfig.cs" />
+    <Compile Include="Assets\Code\RenderEffectPerFrame\RenderEffectPerFrame.cs" />
     <Compile Include="Assets\Code\ResourceManager\AssetRequest.cs" />
     <Compile Include="Assets\Code\ResourceManager\HAssetBundle.cs" />
     <Compile Include="Assets\Code\ResourceManager\HAudioClip.cs" />
+    <Compile Include="Assets\Code\ResourceManager\HLua.cs" />
     <Compile Include="Assets\Code\ResourceManager\HManifest.cs" />
     <Compile Include="Assets\Code\ResourceManager\HMaterial.cs" />
     <Compile Include="Assets\Code\ResourceManager\HPrefab.cs" />
@@ -312,6 +314,7 @@
     <Compile Include="Assets\Code\UISceneAdapter\UISceneAdapter.cs" />
     <Compile Include="Assets\Code\Utility\FileUtility.cs" />
     <Compile Include="Assets\Code\Utility\Singleton.cs" />
+    <Compile Include="Assets\Code\Utility\TextureUtility.cs" />
     <Compile Include="Assets\Code\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Shader\AverageBlur\AverageBlur.cs" />
     <Compile Include="Assets\Shader\BillBoard\BillBoard2.cs" />
@@ -490,7 +493,6 @@
     <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Art\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
@@ -516,6 +518,7 @@
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildPC\JenkinPC.txt" />
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
+    <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />
@@ -555,6 +558,10 @@
     <None Include="Assets\Shader\VertexAnimation\VA1\VA1.shader" />
     <None Include="Assets\Shader\Water\Water\Water.shader" />
     <None Include="Assets\Shader\Water\Water_Distortion\Water_Distortion.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Normal-Diffuse.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Normal-VertexLit.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Add.shader" />
+    <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Alpha Blend.shader" />
     <None Include="Assets\ToLua\Injection\InjectionBlackList.txt" />
     <None Include="Assets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
     <None Include="Assets\ToLua\Injection\LuaInjectionSkipPaths.txt" />
