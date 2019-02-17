@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +14,8 @@ public class BuildRes
     {
         BuildABAll();
         BuildLua();
+        MD5Res();
+        CopyResToStreamingAssets();
     }
 
     [MenuItem("Tools/AssetBundle/增量打包AB")]
@@ -28,27 +32,7 @@ public class BuildRes
 
     static void BuildAB(bool isALL)
     {
-        string path = "";
-        switch (EditorUserBuildSettings.activeBuildTarget)
-        {
-            case BuildTarget.StandaloneWindows64:
-            case BuildTarget.StandaloneWindows:
-                {
-                    path = PathManager.RES_PATH_WINDOWS + "/Assetbundle";
-                }
-                break;
-            case BuildTarget.Android:
-                {
-                    path = PathManager.RES_PATH_ANDROID + "/Assetbundle";
-                }
-                break;
-            case BuildTarget.iOS:
-            case BuildTarget.StandaloneOSX:
-                {
-                    path = PathManager.RES_PATH_IOS + "/Assetbundle";
-                }
-                break;
-        }
+        string path = GetRootPath(RootPathType.eLocal, "Assetbundle");
         if(isALL)
         {
             if(Directory.Exists(path))
@@ -70,6 +54,7 @@ public class BuildRes
     {
         FileUtility.CopyTo(Application.dataPath + "/Lua", Application.dataPath + "/LuaTemp", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
         FileUtility.CopyTo(Application.dataPath + "/ToLua/Lua", Application.dataPath + "/LuaTemp/ToLua", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
+        AssetDatabase.Refresh();
 
         //获取lua根目录下的各个模块名和对应模块的lua文件
         string luaRootPath = Application.dataPath + "/LuaTemp";
@@ -102,31 +87,13 @@ public class BuildRes
             abbList.Add(abb);
         }
 
-        string path = "";
-        switch (EditorUserBuildSettings.activeBuildTarget)
+        string path = GetRootPath(RootPathType.eLocal,"Lua");
+        if(Directory.Exists(path))
         {
-            case BuildTarget.StandaloneWindows64:
-            case BuildTarget.StandaloneWindows:
-                {
-                    path = PathManager.RES_PATH_WINDOWS + "/Lua";
-                }
-                break;
-            case BuildTarget.Android:
-                {
-                    path = PathManager.RES_PATH_ANDROID + "/Lua";
-                }
-                break;
-            case BuildTarget.iOS:
-            case BuildTarget.StandaloneOSX:
-                {
-                    path = PathManager.RES_PATH_IOS + "/Lua";
-                }
-                break;
+            Directory.Delete(path, true);
         }
-        Directory.Delete(path, true);
         FileUtility.CreateDirectory(path);
         BuildPipeline.BuildAssetBundles(path, abbList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-        AssetDatabase.Refresh();
     }
 
     //移除无用的AB
@@ -156,66 +123,42 @@ public class BuildRes
     [MenuItem("Tools/生成资源MD5")]
     static void MD5Res()
     {
-        string path = "";
-        switch (EditorUserBuildSettings.activeBuildTarget)
-        {
-            case BuildTarget.StandaloneWindows64:
-            case BuildTarget.StandaloneWindows:
-                {
-                    path = PathManager.RES_PATH_WINDOWS;
-                }
-                break;
-            case BuildTarget.Android:
-                {
-                    path = PathManager.RES_PATH_ANDROID;
-                }
-                break;
-            case BuildTarget.iOS:
-            case BuildTarget.StandaloneOSX:
-                {
-                    path = PathManager.RES_PATH_IOS;
-                }
-                break;
-        }
-
+        string path = GetRootPath(RootPathType.eLocal);
         string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
         StringBuilder sb = new StringBuilder();
+        VersionRes version = new VersionRes();
+        version.version = "1.00";
+        version.resList = new List<VersionResData>(); 
         for(int i = 0; i < files.Length; i++)
         {
-            FileStream fs = File.Open(files[i], FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            MD5 md5 = MD5.Create();
-            string hash = System.BitConverter.ToString(md5.ComputeHash(fs));
-            sb.AppendLine(string.Format("{0}|{1}", files[i].Replace("\\", "/").Replace(path + "/", ""), hash));
+            VersionResData resData = new VersionResData();
+            resData.resLength = FileUtility.GetFileLength(files[i]);
+            resData.resMD5 = FileUtility.MD5File(files[i]);
+            resData.resName = files[i].Replace("\\", "/").Replace(path + "/", "");
+            version.resList.Add(resData);
+            //sb.AppendLine(string.Format("{0}|{1}|{2}", files[i].Replace("\\", "/").Replace(path + "/", ""), hash, fs.Length));
         }
 
-        FileStream md5FS = File.Open(path + "/VersionRes.txt", FileMode.Create, FileAccess.ReadWrite);
+        string versionJson = JsonUtility.ToJson(version);
+        FileStream md5FS = File.Open(path + "/VersionRes.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
         StreamWriter sw = new StreamWriter(md5FS);
-        sw.Write(sb);
+        sw.Write(versionJson);
         sw.Close();
-        sw.Dispose();
         md5FS.Close();
         md5FS.Dispose();
+
+        Debug.Log("生成MD5成功!");
     }
 
-    [MenuItem("Tools/AssetBundle/拷贝AB到StreamingAssets")]
-    static void CopyAB2StreamingAssets()
+    [MenuItem("Tools/AssetBundle/拷贝res到StreamingAssets")]
+    public static void CopyResToStreamingAssets()
     {
-        string sourceDir = Application.dataPath + "/../ClientRes";
-        switch (EditorUserBuildSettings.activeBuildTarget)
+        if(EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows)
         {
-            case BuildTarget.iOS:
-                {
-                    sourceDir += "/IOS";
-                }
-                break;
-            case BuildTarget.Android:
-                {
-                    sourceDir += "/Android";
-                }
-                break;
+            FileUtility.CopyTo(GetRootPath(RootPathType.eLocal), GetRootPath(RootPathType.ePhone));
+            AssetDatabase.Refresh();
+            Debug.Log("拷贝资源成功!");
         }
-        string targetDir = Application.dataPath + "/StreamingAssets";
-        FileUtility.CopyTo(sourceDir, targetDir);
     }
 
     [MenuItem("Tools/AssetBundle/设置AB Name")]
@@ -248,5 +191,56 @@ public class BuildRes
                 ai.assetBundleName = "";
             }
         }
+    }
+
+
+    public enum RootPathType
+    {
+        eLocal,
+        ePhone,
+    }
+    public static string GetRootPath(RootPathType type, string name = "")
+    {
+        StringBuilder result = new StringBuilder();
+        switch (type)
+        {
+            case RootPathType.eLocal:
+                {
+                    result.Append(PathManager.RES_LOCAL_ROOT_PATH);
+                }
+                break;
+            case RootPathType.ePhone:
+                {
+                    result.Append(PathManager.RES_STREAM_ROOT_PATH);
+                }
+                break;
+        }
+        switch (EditorUserBuildSettings.activeBuildTarget)
+        {
+            case BuildTarget.Android:
+                {
+                    result.Append("/Android");
+                }
+                break;
+            case BuildTarget.iOS:
+            case BuildTarget.StandaloneOSX:
+                {
+                    result.Append("/IOS");
+                }
+                break;
+            case BuildTarget.StandaloneWindows64:
+            case BuildTarget.StandaloneWindows:
+                {
+                    result.Append("/Windows");
+                }
+                break;
+        }
+
+        if (!string.IsNullOrEmpty(name))
+        {
+            result.Append("/");
+            result.Append(name);
+        }
+        return result.ToString();
     }
 }

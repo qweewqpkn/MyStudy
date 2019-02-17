@@ -20,13 +20,12 @@ public class TextureUtility : MonoBehaviour {
         return texture2D;
     }
 
-    public static void SaveRenderTexture(RenderTexture rt, int width, int height, TexFormat format, string path)
+    public static void SaveTexture2D(Texture2D texture, int width, int height, TexFormat format, string path)
     {
-        Texture2D texture = ConvertRenderTextureToTexture2D(rt, width, height);
-        if(texture != null)
+        if (texture != null)
         {
             byte[] textureData = null;
-            switch(format)
+            switch (format)
             {
                 case TexFormat.eJPG:
                     {
@@ -47,5 +46,11 @@ public class TextureUtility : MonoBehaviour {
             fs.Close();
             fs.Dispose();
         }
+    }
+
+    public static void SaveRenderTexture(RenderTexture rt, int width, int height, TexFormat format, string path)
+    {
+        Texture2D texture = ConvertRenderTextureToTexture2D(rt, width, height);
+        SaveTexture2D(texture, width, height, format, path);
     }
 }

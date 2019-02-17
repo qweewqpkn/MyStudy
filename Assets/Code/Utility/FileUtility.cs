@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class FileUtility{
@@ -38,14 +39,22 @@ public class FileUtility{
         {
             for (int i = 0; i < files.Length; i++)
             {
-                string moduleName = targetDir.Replace(rootPath + "/", "").Split('/')[0];
-                string fileName = targetDir.Replace(rootPath + "/" + moduleName, "");
-                //fileName可能为空，在当前模块目录下有文件时
-                if(!string.IsNullOrEmpty(fileName))
+                string fileName = "";
+                if (!string.IsNullOrEmpty(rootPath))
                 {
-                    //移除斜杠,替换斜杠
-                    fileName = fileName.Remove(0, 1).Replace("/", "_");
-                    fileName = fileName + "_" + Path.GetFileName(files[i]);
+                    string moduleName = targetDir.Replace(rootPath + "/", "").Split('/')[0];
+                    fileName = targetDir.Replace(rootPath + "/" + moduleName, "");
+                    //fileName可能为空，在当前模块目录下有文件时
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        //移除斜杠,替换斜杠
+                        fileName = fileName.Remove(0, 1).Replace("/", "_");
+                        fileName = fileName + "_" + Path.GetFileName(files[i]);
+                    }
+                    else
+                    {
+                        fileName = Path.GetFileName(files[i]);
+                    }
                 }
                 else
                 {
@@ -87,6 +96,36 @@ public class FileUtility{
         for(int i = 0; i < directories.Length; i++)
         {
             ClearEmptyDirectory(directories[i]);
+        }
+    }
+
+    public static string MD5File(string path)
+    {
+        string hash = "";
+        if (File.Exists(path))
+        {
+            FileStream fs = File.Open(path, FileMode.Open, FileAccess.ReadWrite);
+            MD5 md5 = MD5.Create();
+            hash = System.BitConverter.ToString(md5.ComputeHash(fs));
+            fs.Close();
+            fs.Dispose();
+        }
+        return hash;
+    }
+
+    public static long GetFileLength(string path)
+    {
+        if (File.Exists(path))
+        {
+            FileStream fs = File.Open(path, FileMode.Open, FileAccess.ReadWrite);
+            long length = fs.Length;
+            fs.Close();
+            fs.Dispose();
+            return length;
+        }
+        else
+        {
+            return 0;
         }
     }
 }
