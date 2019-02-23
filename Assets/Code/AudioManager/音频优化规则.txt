@@ -1,0 +1,39 @@
+一.加载方式
+1.Decompress On Load
+在音频加载的时候解压，针对很小的音频使用。如果使用vorbis压缩，在解压时会占用10倍内存，
+ADPCM会占用3.5倍。不要对大文件使用这个选项。
+（不要使用vorbis,使用PCM和ADPCM压缩）
+
+2.Compressed In Memory
+在内存中保持压缩状态，在播放的时候解压。针对大文件使用这个选项.
+
+3.Streaming
+会使用最少的内存占用，分配一个200kb缓存，一边从磁盘读取，一边进行解压。
+但相对的会占用更多CPU资源和I/O吞吐量。
+
+二.压缩格式
+1.PCM
+适合短音频，使用更大的文件大小，获得更高的音频质量
+
+2.ADPCM
+压缩结果比PCM小3.5倍。CPU比vorbis使用更低.适合那么被大量进行播放的音频
+
+3.Vorbis
+把文件压缩到最小，但是比PCM质量更低。适合中等长度和长的音频。压缩质量是通过Quality滑动条来调整
+
+使用方式：
+1.对于长音频
+使用：Streaming + Voribis
+
+2.对于短音频+经常播放
+使用：Decompress On Load + PCM 
+
+3.对于中等音频+经常播放
+使用:Compressed In Memory + ADPCM
+
+4.对于短音频+很少播放
+使用：Compressed In Memory + ADPCM
+
+
+
+
