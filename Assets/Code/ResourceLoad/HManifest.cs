@@ -18,11 +18,11 @@ namespace AssetLoad
             }
 
             //对于反复加载同一个资源，不论ab是否已经存在，我们都要走ab请求的逻辑，为了在内部能正常进行ab的引用计数，这样才能正确释放资源。
-            public override void Load<T>(Action<T> success, Action error)
+            public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
             {
-                base.Load(success, error);
+                base.Load(abName, assetName, success, error);
                 ABRequest abRequest = new ABRequest();
-                abRequest.Load(mABName, mAllABList);
+                abRequest.Load(abName, mAllABList);
                 ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 

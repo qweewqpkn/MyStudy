@@ -16,9 +16,9 @@ namespace AssetLoad
             }
 
             //同步加载
-            public override T LoadSync<T>(string assetName)
+            public override T LoadSync<T>(string abName, string assetName)
             {
-                base.LoadSync<T>(assetName);
+                base.LoadSync<T>(abName, assetName);
                 assetName = assetName.ToLower();
                 ABRequestSync abRequestSync = new ABRequestSync();
                 AssetBundle ab = abRequestSync.Load(mABName, mAllABList, AssetType.eLua);
@@ -46,9 +46,9 @@ namespace AssetLoad
             }
 
             //异步加载
-            public override void Load<T>(string assetName, Action<T> success, Action error)
+            public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
             {
-                base.Load(assetName, success, error);
+                base.Load(abName, assetName, success, error);
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
                 ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, success, error));

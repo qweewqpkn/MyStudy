@@ -65,30 +65,22 @@ namespace AssetLoad
         {
             HRes res = null;
             string name = GetResName(abName, "", AssetType.eAB);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HAssetBundle(abName);
-                res.Load(success, error);
             }
+            res.Load(abName, "", success, error);
         }
 
         //加载text
         public void LoadText(string assetName, Action<byte[]> success, Action error = null)
         {
             HRes res = null;
-            if (mResMap.TryGetValue(assetName, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(assetName, out res))
             {
                 res = new HText(assetName);
-                res.Load(success, error);
             }
+            res.Load(success, error);
         }
 
         //加载prefab
@@ -96,15 +88,11 @@ namespace AssetLoad
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.ePrefab);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HPrefab(abName, assetName);
-                res.Load(success, error);
             }
+            res.Load(abName, assetName, success, error);
         }
 
         //加载图集
@@ -112,30 +100,22 @@ namespace AssetLoad
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.eSprite);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(assetName, success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HSprite(abName);
-                res.Load(assetName, success, error);
             }
+            res.Load(abName, assetName, success, error);
         }
 
         public void LoadTexture(string abName, string assetName, Action<Texture> success, Action error = null)
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.eTexture);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HTexture(abName, assetName);
-                res.Load(success, error);
             }
+            res.Load(abName, assetName, success, error);
         }
 
         //加载音频
@@ -143,15 +123,11 @@ namespace AssetLoad
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.eAudioClip);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HAudioCilp(abName, assetName);
-                res.Load(success, error);
             }
+            res.Load(abName, assetName, success, error);
         }
 
         //加载材质
@@ -159,60 +135,44 @@ namespace AssetLoad
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.eMaterial);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HMaterial(abName, assetName);
-                res.Load(success, error);
             }
+            res.Load(abName, assetName, success, error);
         }
 
         public TextAsset LoadLua(string abName, string assetName)
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.eLua);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                return res.LoadSync<TextAsset>(assetName);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HLua(abName);
-                return res.LoadSync<TextAsset>(assetName);
             }
+            return res.LoadSync<TextAsset>(abName, assetName);
         }
 
         public void LoadManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.eManifest);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HManifest(abName, assetName);
-                res.Load(success, error);
             }
+            res.Load(abName, assetName, success, error);
         }
 
         public void LoadShader(string abName, string assetName, Action<Shader> success, Action error = null)
         {
             HRes res = null;
             string name = GetResName(abName, assetName, AssetType.eShader);
-            if (mResMap.TryGetValue(name, out res))
-            {
-                res.Load(success, error);
-            }
-            else
+            if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HShader(abName, assetName);
-                res.Load(success, error);
             }
+            res.Load(abName, assetName, success, error);
         }
 
         public void Release(string name, AssetType type)

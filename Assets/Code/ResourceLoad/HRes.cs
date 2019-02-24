@@ -44,18 +44,15 @@ namespace AssetLoad
                 }
             }
 
-            public virtual T LoadSync<T>(string assetName) where T : UnityEngine.Object
+            //同步加载
+            public virtual T LoadSync<T>(string abName, string assetName) where T : UnityEngine.Object
             {
                 Load();
                 return default(T);
             }
 
-            public virtual void Load<T>(Action<T> success, Action error) where T : UnityEngine.Object
-            {
-                Load();
-            }
-
-            public virtual void Load<T>(string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+            //异步加载
+            public virtual void Load<T>(string abName, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
             {
                 Load();
             }

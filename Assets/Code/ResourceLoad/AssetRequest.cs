@@ -147,6 +147,7 @@ namespace AssetLoad
                         HAssetBundle ab = ResourceManager.Instance.mResMap[abList[i]] as HAssetBundle;
                         if(ab.LoadStatus == HAssetBundle.ABLoadStatus.eNone)
                         {
+                            //对于加载HAssetbundle资源时，会出现此情况
                             ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoading;
                             ResourceManager.Instance.StartCoroutine(LoadAB(abList[i], ab));
                         }

@@ -15,11 +15,11 @@ namespace AssetLoad
             {
             }
 
-            public override void Load<T>(Action<T> success, Action error)
+            public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
             {
-                base.Load(success, error);
+                base.Load(abName, assetName, success, error);
                 ABRequest abRequest = new ABRequest();
-                abRequest.Load(mABName, mAllABList);
+                abRequest.Load(abName, mAllABList);
                 ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 

@@ -19,20 +19,15 @@ namespace AssetLoad
                 ResourceManager.Instance.mResMap.Add(name, this);
             }
 
-            public override void Load<T>(Action<T> success, Action error)
+            public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
             {
-                base.Load(success, error);
-                Action<Material> complete = (ab) =>
-                {
-                    success(ab as T);
-                };
-
+                base.Load(abName, assetName, success, error);
                 ABRequest abRequest = new ABRequest();
                 abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, complete, error));
+                ResourceManager.Instance.StartCoroutine(Load(abRequest, success, error));
             }
 
-            private IEnumerator Load(ABRequest abRequest, Action<Material> success, Action error)
+            private IEnumerator Load<T>(ABRequest abRequest, Action<T> success, Action error) where T : UnityEngine.Object
             {
                 yield return abRequest;
                 if (mMaterial == null)
@@ -46,7 +41,7 @@ namespace AssetLoad
                 {
                     if (success != null)
                     {
-                        success(mMaterial);
+                        success(mMaterial as T);
                     }
                 }
                 else

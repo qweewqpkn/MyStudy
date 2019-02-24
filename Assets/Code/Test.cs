@@ -21,7 +21,7 @@ public class Test : MonoBehaviour {
                 {
                     mSprite.sprite = sprite;
                 });
-
+                
                 ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
                 {
                     mSprite.sprite = sprite;
@@ -34,9 +34,9 @@ public class Test : MonoBehaviour {
             {
                 obj.name = "testTest";
             });
-            ResourceManager.Instance.LoadAB("lobby/test/cube", (ab)=>
+            ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj)=>
             {
-
+                obj.name = "testTest1";
             });
             ResourceManager.Instance.LoadAB("lobby/test/cube", (ab) =>
             {
