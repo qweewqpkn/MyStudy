@@ -22,6 +22,7 @@ namespace AssetLoad
 
     public partial class ResourceManager : MonoBehaviour
     {
+        private AssetRequestQueue mAssetRequestQueue = new AssetRequestQueue();
         public AssetBundleManifest mAssestBundleManifest;
         public Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
         public Action mInitComplete = null;
@@ -60,86 +61,129 @@ namespace AssetLoad
             }
         }
 
+        private HRes CreateRes(AssetType type)
+        {
+            HRes res = null;
+            switch (type)
+            {
+                case AssetType.eAB:
+                    {
+                        res = new HAssetBundle();
+                    }
+                    break;
+                case AssetType.eAudioClip:
+                    {
+                        res = new HAudioCilp();
+                    }
+                    break;
+                case AssetType.eLua:
+                    {
+                        res = new HLua();
+                    }
+                    break;
+                case AssetType.eManifest:
+                    {
+                        res = new HManifest();
+                    }
+                    break;
+                case AssetType.eMaterial:
+                    {
+                        res = new HMaterial();
+                    }
+                    break;
+                case AssetType.ePrefab:
+                    {
+                        res = new HPrefab();
+                    }
+                    break;
+                case AssetType.eShader:
+                    {
+                        res = new HShader();
+                    }
+                    break;
+                case AssetType.eSprite:
+                    {
+                        res = new HSprite();
+                    }
+                    break;
+                case AssetType.eText:
+                    {
+                        res = new HText();
+                    }
+                    break;
+                case AssetType.eTexture:
+                    {
+                        res = new HTexture();
+                    }
+                    break;
+            }
+
+            return res;
+        }
+
+        public void LoadRes<T>(string abName, string assetName, AssetType type, Action<T> success, Action error) where T : UnityEngine.Object
+        {
+            HRes res = null;
+            string name = GetResName(abName, assetName, type);
+            if (!mResMap.TryGetValue(name, out res))
+            {
+                res = CreateRes(type);
+                res.Init(abName);
+                mResMap.Add(name, res);
+            }
+            mAssetRequestQueue.AddReuqest(res, abName, assetName, success, error);
+        }
+
         //单独加载AB(比如:Loading界面做预加载)
         public void LoadAB(string abName, Action<AssetBundle> success, Action error = null)
         {
-            HRes res = null;
-            string name = GetResName(abName, "", AssetType.eAB);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HAssetBundle(abName);
-            }
-            res.Load(abName, "", success, error);
+            LoadRes(abName, "", AssetType.eAB, success, error);
         }
 
         //加载text
-        public void LoadText(string assetName, Action<byte[]> success, Action error = null)
+        public void LoadText(string assetName, Action<TextAsset> success, Action error = null)
         {
-            HRes res = null;
-            if (!mResMap.TryGetValue(assetName, out res))
-            {
-                res = new HText(assetName);
-            }
-            res.Load(success, error);
+            LoadRes("", assetName, AssetType.eText, success, error);
         }
 
         //加载prefab
         public void LoadPrefab(string abName, string assetName, Action<GameObject> success, Action error = null)
         {
-            HRes res = null;
-            string name = GetResName(abName, assetName, AssetType.ePrefab);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HPrefab(abName, assetName);
-            }
-            res.Load(abName, assetName, success, error);
+            LoadRes(abName, assetName, AssetType.ePrefab, success, error);
         }
 
         //加载图集
         public void LoadSprite(string abName, string assetName, Action<Sprite> success, Action error = null)
         {
-            HRes res = null;
-            string name = GetResName(abName, assetName, AssetType.eSprite);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HSprite(abName);
-            }
-            res.Load(abName, assetName, success, error);
+            LoadRes(abName, assetName, AssetType.eSprite, success, error);
         }
 
+        //加载贴图
         public void LoadTexture(string abName, string assetName, Action<Texture> success, Action error = null)
         {
-            HRes res = null;
-            string name = GetResName(abName, assetName, AssetType.eTexture);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HTexture(abName, assetName);
-            }
-            res.Load(abName, assetName, success, error);
+            LoadRes(abName, assetName, AssetType.eTexture, success, error);
         }
 
         //加载音频
         public void LoadAudioClip(string abName, string assetName, Action<AudioClip> success, Action error = null)
         {
-            HRes res = null;
-            string name = GetResName(abName, assetName, AssetType.eAudioClip);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HAudioCilp(abName, assetName);
-            }
-            res.Load(abName, assetName, success, error);
+            LoadRes(abName, assetName, AssetType.eAudioClip, success, error);
         }
 
         //加载材质
         public void LoadMaterial(string abName, string assetName, Action<Material> success, Action error = null)
         {
-            HRes res = null;
-            string name = GetResName(abName, assetName, AssetType.eMaterial);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HMaterial(abName, assetName);
-            }
-            res.Load(abName, assetName, success, error);
+            LoadRes(abName, assetName, AssetType.eMaterial, success, error);
+        }
+
+        public void LoadManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
+        {
+            LoadRes(abName, assetName, AssetType.eManifest, success, error);
+        }
+
+        public void LoadShader(string abName, string assetName, Action<Shader> success, Action error = null)
+        {
+            LoadRes(abName, assetName, AssetType.eShader, success, error);
         }
 
         public TextAsset LoadLua(string abName, string assetName)
@@ -148,31 +192,10 @@ namespace AssetLoad
             string name = GetResName(abName, assetName, AssetType.eLua);
             if (!mResMap.TryGetValue(name, out res))
             {
-                res = new HLua(abName);
+                res = new HLua();
+                res.Init(abName);
             }
             return res.LoadSync<TextAsset>(abName, assetName);
-        }
-
-        public void LoadManifest(string abName, string assetName, Action<AssetBundleManifest> success, Action error)
-        {
-            HRes res = null;
-            string name = GetResName(abName, assetName, AssetType.eManifest);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HManifest(abName, assetName);
-            }
-            res.Load(abName, assetName, success, error);
-        }
-
-        public void LoadShader(string abName, string assetName, Action<Shader> success, Action error = null)
-        {
-            HRes res = null;
-            string name = GetResName(abName, assetName, AssetType.eShader);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = new HShader(abName, assetName);
-            }
-            res.Load(abName, assetName, success, error);
         }
 
         public void Release(string name, AssetType type)

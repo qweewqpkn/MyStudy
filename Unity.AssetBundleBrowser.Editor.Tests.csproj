@@ -319,6 +319,7 @@
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
     <None Include="Assets\Art\UnityChan\Stage\Shader\AlphaMask.shader" />
     <None Include="Assets\Art\UnityChan\license.txt" />
+    <None Include="Assets\Code\AudioManager\音频优化规则.txt" />
     <None Include="Assets\Code\ClickEvent\说明.txt" />
     <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Code\LightMap\LightMap.shader" />

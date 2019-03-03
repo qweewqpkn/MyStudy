@@ -6,14 +6,25 @@ using UnityEngine;
 
 namespace AssetLoad
 {
-    public partial class ResourceManager
-    {
-        //负责加载Assetbundle中的资源
-        public class AssetRequest : IEnumerator
+
+        public class RequestAsync : IEnumerator
         {
             public object Current { get { return null; } }
-            public void Reset() { }
 
+            public virtual bool MoveNext()
+            {
+                return false;
+            }
+
+            public virtual void Reset()
+            {
+                
+            }
+        }
+
+        //负责加载Assetbundle中的资源
+        public class AssetRequest : RequestAsync
+        {
             private AssetBundleRequest mRequest;
 
             public AssetRequest(AssetBundle ab, string assetName, bool isAll = false)
@@ -34,7 +45,7 @@ namespace AssetLoad
                 }
             }
 
-            public bool MoveNext()
+            public override bool MoveNext()
             {
                 if (mRequest != null && mRequest.isDone)
                 {
@@ -103,10 +114,8 @@ namespace AssetLoad
         }
  
         //职责：负责加载Assetbundle
-        public class ABRequest : IEnumerator
+        public class ABRequest : RequestAsync
         {
-            public object Current { get { return null; } }
-            public void Reset() { }
             //当前加载的AB数量
             private int mLoadABNum;
             //需要加载的AB数量
@@ -206,7 +215,7 @@ namespace AssetLoad
                 }
             }
 
-            public bool MoveNext()
+            public override bool MoveNext()
             {
                 if (IsLoadComplete())
                 {
@@ -217,6 +226,7 @@ namespace AssetLoad
             }
         }
 
+        //同步加载AB
         public class ABRequestSync
         {
             public AssetBundle Load(string mainName, List<string> abList, AssetType assetType)
@@ -260,5 +270,4 @@ namespace AssetLoad
                 return mainAB.AB;
             }
         }
-    }
 }
