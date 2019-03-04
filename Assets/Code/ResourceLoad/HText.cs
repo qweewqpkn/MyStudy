@@ -7,53 +7,50 @@ using UnityEngine;
 
 namespace AssetLoad
 {
-    public partial class ResourceManager
+    class HText : HRes
     {
-        class HText : HRes
+        private byte[] mBytes;
+    
+        public HText()
         {
-            private byte[] mBytes;
-
-            public HText(string assetName) : base(assetName, assetName, AssetType.eText)
+        }
+    
+        public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
+        {
+            //base.Load(abName, assetName success, error);
+            //ResourceManager.Instance.StartCoroutine(LoadInternal(success, error));
+        }
+    
+        private IEnumerator LoadInternal(Action<byte[]> success, Action error)
+        {
+            WWW www = new WWW(PathManager.URL(mAssetName, AssetType.eText));
+            yield return www;
+    
+            if(mBytes == null)
             {
+                mBytes = www.bytes;
             }
-
-            public override void Load(Action<byte[]> success, Action error)
+    
+            if (string.IsNullOrEmpty(www.error))
             {
-                base.Load(success, error);
-                ResourceManager.Instance.StartCoroutine(LoadInternal(success, error));
-            }
-
-            private IEnumerator LoadInternal(Action<byte[]> success, Action error)
-            {
-                WWW www = new WWW(PathManager.URL(mAssetName, AssetType.eText));
-                yield return www;
-
-                if(mBytes == null)
+                if (success != null)
                 {
-                    mBytes = www.bytes;
-                }
-
-                if (string.IsNullOrEmpty(www.error))
-                {
-                    if (success != null)
-                    {
-                        success(mBytes);
-                    }
-                }
-                else
-                {
-                    if (error != null)
-                    {
-                        error();
-                    }
+                    success(mBytes);
                 }
             }
-
-            public override void Release()
+            else
             {
-                base.Release();
-                mBytes = null;
+                if (error != null)
+                {
+                    error();
+                }
             }
+        }
+    
+        public override void Release()
+        {
+            base.Release();
+            mBytes = null;
         }
     }
 }

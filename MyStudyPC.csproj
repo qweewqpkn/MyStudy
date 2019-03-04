@@ -272,6 +272,7 @@
     <Compile Include="Assets\Code\DataStruct\AVLTree\AVLTree.cs" />
     <Compile Include="Assets\Code\DataStruct\BinarySearchTree\BinarySearchMain.cs" />
     <Compile Include="Assets\Code\DataStruct\BinarySearchTree\BinarySearchTree.cs" />
+    <Compile Include="Assets\Code\GameManager\GameManager.cs" />
     <Compile Include="Assets\Code\GhostShadow\AnimationCallback.cs" />
     <Compile Include="Assets\Code\GhostShadow\GhostShadow.cs" />
     <Compile Include="Assets\Code\GhostShadow\GhostShadowCreator.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="Assets\Code\LightMap\SceneConfig.cs" />
     <Compile Include="Assets\Code\RenderEffectPerFrame\RenderEffectPerFrame.cs" />
     <Compile Include="Assets\Code\ResourceLoad\AssetRequest.cs" />
+    <Compile Include="Assets\Code\ResourceLoad\AssetRequestQueue.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HAssetBundle.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HAudioClip.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HLua.cs" />
@@ -503,6 +505,7 @@
     <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
     <None Include="Assets\Art\UnityChan\Stage\Shader\AlphaMask.shader" />
     <None Include="Assets\Art\UnityChan\license.txt" />
+    <None Include="Assets\Code\AudioManager\音频优化规则.txt" />
     <None Include="Assets\Code\ClickEvent\说明.txt" />
     <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Code\LightMap\LightMap.shader" />

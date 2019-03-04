@@ -16,6 +16,7 @@ public class Singleton<T> where T : new() {
 
             return mInstance;
         }
-
     }
+
+
 }

@@ -5,102 +5,99 @@ using UnityEngine;
 
 namespace AssetLoad
 {
-    public partial class ResourceManager
+    class HLua : HRes
     {
-        class HLua : HRes
+        private Dictionary<string, TextAsset> mLuaDict = new Dictionary<string, TextAsset>();
+
+        public HLua() 
         {
-            private Dictionary<string, TextAsset> mLuaDict = new Dictionary<string, TextAsset>();
+        }
 
-            public HLua(string abName) : base(abName, "", AssetType.eLua)
+        //同步加载
+        public override T LoadSync<T>(string abName, string assetName)
+        {
+            base.LoadSync<T>(abName, assetName);
+            assetName = assetName.ToLower();
+            ABRequestSync abRequestSync = new ABRequestSync();
+            AssetBundle ab = abRequestSync.Load(mABName, mAllABList, AssetType.eLua);
+
+            if (mLuaDict.Count == 0)
             {
-            }
-
-            //同步加载
-            public override T LoadSync<T>(string assetName)
-            {
-                base.LoadSync<T>(assetName);
-                assetName = assetName.ToLower();
-                ABRequestSync abRequestSync = new ABRequestSync();
-                AssetBundle ab = abRequestSync.Load(mABName, mAllABList, AssetType.eLua);
-
-                if (mLuaDict.Count == 0)
+                AssetRequestSync assetRequestSync = new AssetRequestSync();
+                UnityEngine.Object[] objs = assetRequestSync.LoadAll(ab);
+                for (int i = 0; i < objs.Length; i++)
                 {
-                    AssetRequestSync assetRequestSync = new AssetRequestSync();
-                    UnityEngine.Object[] objs = assetRequestSync.LoadAll(ab);
-                    for (int i = 0; i < objs.Length; i++)
+                    if (!mLuaDict.ContainsKey(objs[i].name))
                     {
-                        if (!mLuaDict.ContainsKey(objs[i].name))
-                        {
-                            mLuaDict.Add(objs[i].name.ToLower(), objs[i] as TextAsset);
-                        }
-                    }
-                }
-
-                TextAsset textAsset = null;
-                if (mLuaDict.ContainsKey(assetName))
-                {
-                    textAsset = mLuaDict[assetName];
-                }
-
-                return textAsset as T;
-            }
-
-            //异步加载
-            public override void Load<T>(string assetName, Action<T> success, Action error)
-            {
-                base.Load(assetName, success, error);
-                ABRequest abRequest = new ABRequest();
-                abRequest.Load(mABName, mAllABList);
-                ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, success, error));
-            }
-
-
-            private IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
-            {
-                yield return abRequest;
-
-                TextAsset textAsset = null;
-                if (mLuaDict.Count == 0)
-                {
-                    AssetRequest assetRequest = new AssetRequest(abRequest.mAB, "", true);
-                    yield return assetRequest;
-                    UnityEngine.Object[] objs = assetRequest.GetAssets();
-                    for (int i = 0; i < objs.Length; i++)
-                    {
-                        if (!mLuaDict.ContainsKey(objs[i].name))
-                        {
-                            mLuaDict.Add(objs[i].name, objs[i] as TextAsset);
-                        }
-                    }
-                }
-
-                if (mLuaDict.ContainsKey(assetName))
-                {
-                    textAsset = mLuaDict[assetName];
-                }
-
-                if (textAsset != null)
-                {
-                    if (success != null)
-                    {
-                        success(textAsset as T);
-                    }
-                }
-                else
-                {
-                    if (error != null)
-                    {
-                        error();
+                        mLuaDict.Add(objs[i].name.ToLower(), objs[i] as TextAsset);
                     }
                 }
             }
 
-            public override void Release()
+            TextAsset textAsset = null;
+            if (mLuaDict.ContainsKey(assetName))
             {
-                base.Release();
-                mLuaDict.Clear();
-                mLuaDict = null;
+                textAsset = mLuaDict[assetName];
             }
+
+            return textAsset as T;
+        }
+
+        //异步加载
+        public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
+        {
+            base.Load(abName, assetName, success, error);
+            ABRequest abRequest = new ABRequest();
+            abRequest.Load(mABName, mAllABList);
+            ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, success, error));
+        }
+
+
+        private IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        {
+            yield return abRequest;
+
+            TextAsset textAsset = null;
+            if (mLuaDict.Count == 0)
+            {
+                AssetRequest assetRequest = new AssetRequest(abRequest.mAB, "", true);
+                yield return assetRequest;
+                UnityEngine.Object[] objs = assetRequest.GetAssets();
+                for (int i = 0; i < objs.Length; i++)
+                {
+                    if (!mLuaDict.ContainsKey(objs[i].name))
+                    {
+                        mLuaDict.Add(objs[i].name, objs[i] as TextAsset);
+                    }
+                }
+            }
+
+            if (mLuaDict.ContainsKey(assetName))
+            {
+                textAsset = mLuaDict[assetName];
+            }
+
+            if (textAsset != null)
+            {
+                if (success != null)
+                {
+                    success(textAsset as T);
+                }
+            }
+            else
+            {
+                if (error != null)
+                {
+                    error();
+                }
+            }
+        }
+
+        public override void Release()
+        {
+            base.Release();
+            mLuaDict.Clear();
+            mLuaDict = null;
         }
     }
 }
