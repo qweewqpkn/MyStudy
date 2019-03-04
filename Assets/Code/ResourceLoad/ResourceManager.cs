@@ -61,61 +61,67 @@ namespace AssetLoad
             }
         }
 
-        private HRes CreateRes(AssetType type)
+        public HRes CreateRes(string abName, string assetName, AssetType type)
         {
             HRes res = null;
-            switch (type)
+            string name = GetResName(abName, assetName, type);
+            if (!mResMap.TryGetValue(name, out res))
             {
-                case AssetType.eAB:
-                    {
-                        res = new HAssetBundle();
-                    }
-                    break;
-                case AssetType.eAudioClip:
-                    {
-                        res = new HAudioCilp();
-                    }
-                    break;
-                case AssetType.eLua:
-                    {
-                        res = new HLua();
-                    }
-                    break;
-                case AssetType.eManifest:
-                    {
-                        res = new HManifest();
-                    }
-                    break;
-                case AssetType.eMaterial:
-                    {
-                        res = new HMaterial();
-                    }
-                    break;
-                case AssetType.ePrefab:
-                    {
-                        res = new HPrefab();
-                    }
-                    break;
-                case AssetType.eShader:
-                    {
-                        res = new HShader();
-                    }
-                    break;
-                case AssetType.eSprite:
-                    {
-                        res = new HSprite();
-                    }
-                    break;
-                case AssetType.eText:
-                    {
-                        res = new HText();
-                    }
-                    break;
-                case AssetType.eTexture:
-                    {
-                        res = new HTexture();
-                    }
-                    break;
+                switch (type)
+                {
+                    case AssetType.eAB:
+                        {
+                            res = new HAssetBundle();
+                        }
+                        break;
+                    case AssetType.eAudioClip:
+                        {
+                            res = new HAudioCilp();
+                        }
+                        break;
+                    case AssetType.eLua:
+                        {
+                            res = new HLua();
+                        }
+                        break;
+                    case AssetType.eManifest:
+                        {
+                            res = new HManifest();
+                        }
+                        break;
+                    case AssetType.eMaterial:
+                        {
+                            res = new HMaterial();
+                        }
+                        break;
+                    case AssetType.ePrefab:
+                        {
+                            res = new HPrefab();
+                        }
+                        break;
+                    case AssetType.eShader:
+                        {
+                            res = new HShader();
+                        }
+                        break;
+                    case AssetType.eSprite:
+                        {
+                            res = new HSprite();
+                        }
+                        break;
+                    case AssetType.eText:
+                        {
+                            res = new HText();
+                        }
+                        break;
+                    case AssetType.eTexture:
+                        {
+                            res = new HTexture();
+                        }
+                        break;
+                }
+                res.Init(abName);
+                mResMap.Add(name, res);
             }
 
             return res;
@@ -123,14 +129,7 @@ namespace AssetLoad
 
         public void LoadRes<T>(string abName, string assetName, AssetType type, Action<T> success, Action error) where T : UnityEngine.Object
         {
-            HRes res = null;
-            string name = GetResName(abName, assetName, type);
-            if (!mResMap.TryGetValue(name, out res))
-            {
-                res = CreateRes(type);
-                res.Init(abName);
-                mResMap.Add(name, res);
-            }
+            HRes res = CreateRes(abName, assetName, AssetType.eAB);
             mAssetRequestQueue.AddReuqest(res, abName, assetName, success, error);
         }
 
@@ -141,9 +140,9 @@ namespace AssetLoad
         }
 
         //加载text
-        public void LoadText(string assetName, Action<TextAsset> success, Action error = null)
+        public void LoadText(string abName, string assetName, Action<TextAsset> success, Action error = null)
         {
-            LoadRes("", assetName, AssetType.eText, success, error);
+            LoadRes(abName, assetName, AssetType.eText, success, error);
         }
 
         //加载prefab

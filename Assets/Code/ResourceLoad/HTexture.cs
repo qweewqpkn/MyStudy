@@ -13,15 +13,7 @@ namespace AssetLoad
         {
         }
     
-        public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
-        {
-            base.Load(abName, assetName, success, error);
-            ABRequest abRequest = new ABRequest();
-            abRequest.Load(abName, mAllABList);
-            ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, success, error));
-        }
-    
-        private IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        protected override IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error)
         {
             yield return abRequest;
             if(mTexture == null)

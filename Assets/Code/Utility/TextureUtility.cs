@@ -44,7 +44,6 @@ public class TextureUtility : MonoBehaviour {
             bw.Write(textureData);
             bw.Close();
             fs.Close();
-            fs.Dispose();
         }
     }
 

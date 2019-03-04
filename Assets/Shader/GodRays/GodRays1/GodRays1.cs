@@ -5,7 +5,7 @@ public class GodRays1 : MonoBehaviour {
 
     public Material mMaterial;
     public Camera mCamera;
-    public int blurCount = 1;
+    public int blurCount = 2;
 
 	// Use this for initialization
 	void Start () {
@@ -25,15 +25,15 @@ public class GodRays1 : MonoBehaviour {
         RenderTexture tempA = RenderTexture.GetTemporary(src.width / 4, src.height / 4);
         Graphics.Blit(src, tempA, mMaterial, 0);
 
-        for (int i = 0; i < blurCount; i++)
-        {
-            RenderTexture tempB = RenderTexture.GetTemporary(src.width / 4, src.height / 4);
-            Graphics.Blit(tempA, tempB, mMaterial, 1);
-            tempA.Release();
-            tempA = RenderTexture.GetTemporary(src.width / 4, src.height / 4);
-            Graphics.Blit(tempB, tempA, mMaterial, 1);
-            tempB.Release();
-        }
+        //for (int i = 0; i < blurCount; i++)
+        //{
+        //    RenderTexture tempB = RenderTexture.GetTemporary(src.width / 4, src.height / 4);
+        //    Graphics.Blit(tempA, tempB, mMaterial, 1);
+        //    tempA.Release();
+        //    tempA = RenderTexture.GetTemporary(src.width / 4, src.height / 4);
+        //    Graphics.Blit(tempB, tempA, mMaterial, 1);
+        //    tempB.Release();
+        //}
 
         mMaterial.SetTexture("_BlendTex", tempA);
         Graphics.Blit(src, des, mMaterial, 2);

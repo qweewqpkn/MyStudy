@@ -84,7 +84,7 @@ Shader "LH/GodRays"
 	{
 		fixed4 texColor = tex2D(_MainTex, i.uv.xy);
 		fixed4 blendColor = tex2D(_BlendTex, i.uv.xy);
-		fixed4 finalColor = texColor + blendColor;
+		fixed4 finalColor = blendColor;
 
 		return finalColor;
 	}

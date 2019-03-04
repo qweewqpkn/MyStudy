@@ -9,33 +9,41 @@ namespace AssetLoad
 {
     class HText : HRes
     {
-        private byte[] mBytes;
+        private Dictionary<string, TextAsset> mTextAssetDict = new Dictionary<string, TextAsset>();
     
         public HText()
         {
         }
     
-        public override void Load<T>(string abName, string assetName, Action<T> success, Action error)
+        protected override IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error)
         {
-            //base.Load(abName, assetName success, error);
-            //ResourceManager.Instance.StartCoroutine(LoadInternal(success, error));
-        }
-    
-        private IEnumerator LoadInternal(Action<byte[]> success, Action error)
-        {
-            WWW www = new WWW(PathManager.URL(mAssetName, AssetType.eText));
-            yield return www;
-    
-            if(mBytes == null)
+            yield return abRequest;
+
+            TextAsset textAsset = null;
+            if (mTextAssetDict.Count == 0)
             {
-                mBytes = www.bytes;
+                AssetRequest assetRequest = new AssetRequest(abRequest.mAB, "", true);
+                yield return assetRequest;
+                UnityEngine.Object[] objs = assetRequest.GetAssets();
+                for (int i = 0; i < objs.Length; i++)
+                {
+                    if (!mTextAssetDict.ContainsKey(objs[i].name))
+                    {
+                        mTextAssetDict.Add(objs[i].name, objs[i] as TextAsset);
+                    }
+                }
             }
-    
-            if (string.IsNullOrEmpty(www.error))
+
+            if (mTextAssetDict.ContainsKey(assetName))
+            {
+                textAsset = mTextAssetDict[assetName];
+            }
+
+            if (textAsset != null)
             {
                 if (success != null)
                 {
-                    success(mBytes);
+                    success(textAsset as T);
                 }
             }
             else
@@ -50,7 +58,8 @@ namespace AssetLoad
         public override void Release()
         {
             base.Release();
-            mBytes = null;
+            mTextAssetDict.Clear();
+            mTextAssetDict = null;
         }
     }
 }
