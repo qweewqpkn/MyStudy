@@ -23,11 +23,14 @@ namespace AssetLoad
                 AssetRequest assetRequest = new AssetRequest(abRequest.mAB, "", true);
                 yield return assetRequest;
                 UnityEngine.Object[] objs = assetRequest.GetAssets();
-                for(int i = 0; i < objs.Length; i++)
+                if(objs != null)
                 {
-                    if(!mSpriteDict.ContainsKey(objs[i].name))
+                    for (int i = 0; i < objs.Length; i++)
                     {
-                        mSpriteDict.Add(objs[i].name, objs[i] as Sprite);
+                        if (!mSpriteDict.ContainsKey(objs[i].name))
+                        {
+                            mSpriteDict.Add(objs[i].name, objs[i] as Sprite);
+                        }
                     }
                 }
             }

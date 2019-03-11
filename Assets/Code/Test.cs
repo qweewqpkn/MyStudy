@@ -9,6 +9,8 @@ public class Test : MonoBehaviour {
     public Button mButton;
     public RawImage mImage;
     public Image mSprite;
+    public bool mStart;
+    public int mFrame;
 
 	// Use this for initialization
 	void Start () {
@@ -26,8 +28,8 @@ public class Test : MonoBehaviour {
                 {
                     mSprite.sprite = sprite;
                 });
-
-                ResourceManager.Instance.ReleaseAll();
+                mStart = true;
+                mFrame = 1;
             });
 
             ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
@@ -48,6 +50,17 @@ public class Test : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        if(mStart)
+        {
+            if(mFrame == 0)
+            {
+                ResourceManager.Instance.ReleaseAll();
+                ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+                {
+                    obj.name = "testTest2";
+                });
+            }
+            mFrame--;
+        }
+    }
 }

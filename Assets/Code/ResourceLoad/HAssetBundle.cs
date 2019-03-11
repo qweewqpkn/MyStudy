@@ -20,6 +20,7 @@ namespace AssetLoad
             eLoading,
             eLoaded,
             eLoadError,
+            eRelease,
         }
     
         private List<ABRequest> mRequestList = new List<ABRequest>();

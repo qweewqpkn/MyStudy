@@ -58,5 +58,26 @@ namespace AssetLoad
                 }
             }
         }
+
+        //todo 删除单个，队列不好处理
+        public void Release(string abName, string assetName)
+        {
+            if(mRequestQueue.Count > 0)
+            {
+                RequestData[] requestList = mRequestQueue.ToArray();
+                for (int i = 0; i < requestList.Length; i++)
+                {
+
+                }
+            }
+        }
+
+        public void ReleaseAll()
+        {
+            if(mRequestQueue != null)
+            {
+                mRequestQueue.Clear();
+            }
+        }
     }
 }

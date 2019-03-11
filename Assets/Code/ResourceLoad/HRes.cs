@@ -26,10 +26,10 @@ namespace AssetLoad
 
         public virtual void Init(string abName)
         {
-            if (!string.IsNullOrEmpty(mABName) && mAllABList.Count == 0)
+            if (!string.IsNullOrEmpty(abName) && mAllABList.Count == 0)
             {
                 mABName = abName;
-                mAllABList.Add(mABName);
+                mAllABList.Add(abName);
                 if (ResourceManager.Instance.mAssestBundleManifest != null)
                 {
                     string[] depList = ResourceManager.Instance.mAssestBundleManifest.GetAllDependencies(mABName);
@@ -77,7 +77,8 @@ namespace AssetLoad
                 if (ResourceManager.Instance.mResMap.ContainsKey(mAllABList[j]))
                 {
                     HAssetBundle ab = ResourceManager.Instance.mResMap[mAllABList[j]] as HAssetBundle;
-                    if (ab != null)
+                    ab.LoadStatus = HAssetBundle.ABLoadStatus.eRelease; //标记AB为待释放,因为可能释放资源的时候，它引用的ab还在加载中..
+                    if (ab != null && ab.RefCount > 0)
                     {
                         ab.RefCount--;
                         if (ab.RefCount == 0)

@@ -27,8 +27,9 @@ namespace AssetLoad
             if(mPrefab != null)
             {
                 GameObject newObj = GameObject.Instantiate(mPrefab);
-                PrefabAutoDestory audoDestroy = newObj.AddComponent<PrefabAutoDestory>();
-                audoDestroy.mABName = mABName;
+                PrefabAutoDestory autoDestroy = newObj.AddComponent<PrefabAutoDestory>();
+                autoDestroy.mABName = mABName;
+                autoDestroy.mAssetName = assetName;
                 if (success != null)
                 {
                     success(newObj as T);

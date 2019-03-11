@@ -121,7 +121,10 @@ namespace AssetLoad
                         break;
                 }
                 res.Init(abName);
-                mResMap.Add(name, res);
+                if(type != AssetType.eManifest)
+                {
+                    mResMap.Add(name, res);
+                }
             }
 
             return res;
@@ -129,7 +132,7 @@ namespace AssetLoad
 
         public void LoadRes<T>(string abName, string assetName, AssetType type, Action<T> success, Action error) where T : UnityEngine.Object
         {
-            HRes res = CreateRes(abName, assetName, AssetType.eAB);
+            HRes res = CreateRes(abName, assetName, type);
             mAssetRequestQueue.AddReuqest(res, abName, assetName, success, error);
         }
 
@@ -225,6 +228,8 @@ namespace AssetLoad
             }
 
             mResMap.Clear();
+            //清空正在请求的队列
+            mAssetRequestQueue.ReleaseAll();
         }
 
         private void Init()
@@ -237,6 +242,11 @@ namespace AssetLoad
                     mInitComplete();
                 }
             }, null);
+        }
+
+        void Update()
+        {
+            mAssetRequestQueue.Update();
         }
     }
 }

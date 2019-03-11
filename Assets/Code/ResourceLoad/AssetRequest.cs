@@ -26,12 +26,14 @@ namespace AssetLoad
     public class AssetRequest : RequestAsync
     {
         private AssetBundleRequest mRequest;
+        private bool mIsError = false;
 
         public AssetRequest(AssetBundle ab, string assetName, bool isAll = false)
         {
             if(ab == null)
             {
                 Debug.Log(string.Format("ab is null in load {0} AssetRequest", assetName));
+                mIsError = true;
                 return;
             }
 
@@ -47,7 +49,7 @@ namespace AssetLoad
 
         public override bool MoveNext()
         {
-            if (mRequest != null && mRequest.isDone)
+            if ((mRequest != null && mRequest.isDone) || mIsError)
             {
                 return false;
             }
@@ -57,7 +59,7 @@ namespace AssetLoad
 
         public UnityEngine.Object[] GetAssets()
         {
-            if (mRequest != null && mRequest.isDone)
+            if (mRequest != null && mRequest.isDone && mIsError == false)
             {
                 return mRequest.allAssets;
             }
@@ -67,7 +69,7 @@ namespace AssetLoad
 
         public T GetAssets<T>(string name) where T : UnityEngine.Object
         {
-            if (mRequest != null && mRequest.isDone)
+            if (mRequest != null && mRequest.isDone && mIsError == false)
             {
                 int length = mRequest.allAssets.Length;
                 for (int i = 0; i < length; i++)
@@ -186,6 +188,7 @@ namespace AssetLoad
             string url = PathManager.URL(name, AssetType.eAB);
             WWW www = new WWW(url);
             yield return www;
+
             if (!string.IsNullOrEmpty(www.error))
             {
                 ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoadError;
@@ -194,8 +197,17 @@ namespace AssetLoad
             }
             else
             {
-                ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoaded;
-                ab.CompleteRequest(www.assetBundle);
+                //加载完成后，可能外部已经释放了这个资源
+                if(ab.LoadStatus == HAssetBundle.ABLoadStatus.eRelease)
+                {
+                    www.assetBundle.Unload(true);
+                    ab.CompleteRequest(null);
+                }
+                else
+                {
+                    ab.LoadStatus = HAssetBundle.ABLoadStatus.eLoaded;
+                    ab.CompleteRequest(www.assetBundle);
+                }
             }
         }
 
