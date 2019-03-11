@@ -19,7 +19,7 @@ namespace AssetLoad
             base.LoadSync<T>(abName, assetName);
             assetName = assetName.ToLower();
             ABRequestSync abRequestSync = new ABRequestSync();
-            AssetBundle ab = abRequestSync.Load(mABName, mAllABList, AssetType.eLua);
+            AssetBundle ab = abRequestSync.Load(abName, mAllABList, AssetType.eLua);
 
             if (mLuaDict.Count == 0)
             {

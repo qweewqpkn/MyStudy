@@ -51,6 +51,7 @@ namespace AssetLoad
             {
                 case AssetType.eSprite:
                 case AssetType.eLua:
+                case AssetType.eText:
                     {
                         return string.Format("{0}/{1}", abName, "*");
                     }
@@ -120,7 +121,7 @@ namespace AssetLoad
                         }
                         break;
                 }
-                res.Init(abName);
+                res.Init(abName, assetName, type);
                 if(type != AssetType.eManifest)
                 {
                     mResMap.Add(name, res);
@@ -195,7 +196,7 @@ namespace AssetLoad
             if (!mResMap.TryGetValue(name, out res))
             {
                 res = new HLua();
-                res.Init(abName);
+                res.Init(abName, assetName, AssetType.eLua);
             }
             return res.LoadSync<TextAsset>(abName, assetName);
         }
@@ -213,21 +214,22 @@ namespace AssetLoad
             if (mResMap.TryGetValue(name, out res))
             {
                 res.Release();
-                if(res.LoadCount == 0)
-                {
-                    mResMap.Remove(name);
-                }
             }
         }
 
         public void ReleaseAll()
         {
-            foreach(var item in mResMap)
+            List<HRes> resList = new List<HRes>();
+            foreach (var item in mResMap)
             {
-                item.Value.ReleaseAll();
+                resList.Add(item.Value);
             }
 
-            mResMap.Clear();
+            for(int i = 0; i < resList.Count; i++)
+            {
+                resList[i].ReleaseAll();
+            }
+
             //清空正在请求的队列
             mAssetRequestQueue.ReleaseAll();
         }

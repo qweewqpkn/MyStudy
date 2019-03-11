@@ -28,8 +28,9 @@ namespace AssetLoad
             {
                 GameObject newObj = GameObject.Instantiate(mPrefab);
                 PrefabAutoDestory autoDestroy = newObj.AddComponent<PrefabAutoDestory>();
-                autoDestroy.mABName = mABName;
+                autoDestroy.mABName = ABName;
                 autoDestroy.mAssetName = assetName;
+                autoDestroy.mPrefab = mPrefab;
                 if (success != null)
                 {
                     success(newObj as T);
@@ -42,6 +43,11 @@ namespace AssetLoad
                     error();
                 }
             }
+        }
+
+        public GameObject GetPrefab()
+        {
+            return mPrefab;
         }
 
         public override void Release()
