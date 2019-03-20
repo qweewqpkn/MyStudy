@@ -15,13 +15,11 @@ namespace AssetLoad
         { 
         }
 
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+        protected override void OnCompleted(AssetRequest request, string assetName)
         {
             if (mAudioClip == null)
             {
-                AssetRequest assetRequest = new AssetRequest(ab, assetName);
-                yield return assetRequest;
-                mAudioClip = assetRequest.GetAssets<AudioClip>(assetName);
+                mAudioClip = request.GetAssets<AudioClip>(assetName);
             }
 
             if (mAudioClip != null)

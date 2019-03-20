@@ -281,6 +281,7 @@
     <Compile Include="Assets\Code\LightMap\LoadLightMap.cs" />
     <Compile Include="Assets\Code\LightMap\SceneConfig.cs" />
     <Compile Include="Assets\Code\RenderEffectPerFrame\RenderEffectPerFrame.cs" />
+    <Compile Include="Assets\Code\ResourceLoad\ABRequest.cs" />
     <Compile Include="Assets\Code\ResourceLoad\AssetRequest.cs" />
     <Compile Include="Assets\Code\ResourceLoad\AssetRequestQueue.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HAssetBundle.cs" />

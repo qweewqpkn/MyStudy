@@ -84,21 +84,24 @@ namespace AssetLoad
             ResName = resName;
         }
 
-        public void Load<T>(string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        public void Load(string abName, string assetName)
         {
-            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, success, error));
+            ResourceManager.Instance.StartCoroutine(CoLoad(abName, assetName));
         }
 
-        private IEnumerator CoLoad<T>(string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        private IEnumerator CoLoad(string abName, string assetName)
         {
-            ABRes = GetRes<HAssetBundle>(ABName, "", AssetType.eAB);
-            yield return ABRes.LoadAB(false); 
-            yield return LoadAsset(ABRes.AB, assetName, success, error);
+            ABRequest abRequest = new ABRequest();
+            yield return abRequest.Load(abName);
+
+            AssetRequest assetRequest = new AssetRequest();
+            yield return assetRequest.Load(abRequest.AB, assetName, true);
+
+            OnCompleted(assetRequest, assetName);
         }
 
-        protected virtual IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        protected virtual void OnCompleted(AssetRequest request, string assetName) 
         {
-            yield return null;
         }
 
         public void ReleaseAll()
