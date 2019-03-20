@@ -15,14 +15,12 @@ namespace AssetLoad
         {
         }
     
-        protected override IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error)
+        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
         {
-            yield return abRequest;
-
             TextAsset textAsset = null;
             if (mTextAssetDict.Count == 0)
             {
-                AssetRequest assetRequest = new AssetRequest(abRequest.mAB, "", true);
+                AssetRequest assetRequest = new AssetRequest(ab, "", true);
                 yield return assetRequest;
                 UnityEngine.Object[] objs = assetRequest.GetAssets();
                 for (int i = 0; i < objs.Length; i++)

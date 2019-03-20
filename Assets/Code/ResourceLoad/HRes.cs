@@ -9,7 +9,7 @@ namespace AssetLoad
 {
     public class HRes
     {
-        protected List<string> mAllABList = new List<string>();
+        private static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
 
         public string ABName
         {
@@ -29,6 +29,13 @@ namespace AssetLoad
             set;
         }
 
+        //每个类型的资源都关联一个AB资源
+        public HAssetBundle ABRes
+        {
+            get;
+            set;
+        }
+
         //该资源加载次数
         public int LoadCount
         {
@@ -36,43 +43,60 @@ namespace AssetLoad
             set;
         }
 
-        public HRes()
-        {
-        }
+        public HRes(){}
 
-        public virtual void Init(string abName, string assetName, AssetType assetType)
+        public static string GetResName(string abName, string assetName, AssetType type)
         {
-            if (!string.IsNullOrEmpty(abName) && mAllABList.Count == 0)
+            switch (type)
             {
-                ABName = abName;
-                AssetName = AssetName;
-                ResName = ResourceManager.GetResName(abName, assetName, assetType);
-                mAllABList.Add(abName);
-                if (ResourceManager.Instance.mAssestBundleManifest != null)
-                {
-                    string[] depList = ResourceManager.Instance.mAssestBundleManifest.GetAllDependencies(ABName);
-                    mAllABList.AddRange(depList);
-                }
+                case AssetType.eSprite:
+                case AssetType.eLua:
+                case AssetType.eText:
+                    {
+                        return string.Format("{0}/{1}", abName, "*");
+                    }
+                default:
+                    {
+                        return assetName == "" ? abName : string.Format("{0}/{1}", abName, assetName);
+                    }
             }
         }
 
-        //同步加载
-        public virtual T LoadSync<T>(string abName, string assetName) where T : UnityEngine.Object
+        public static T GetRes<T>(string abName, string assetName, AssetType assetType) where T : HRes, new()
         {
-            LoadCount++;
-            return default(T);
+            HRes res = null;
+            string resName = GetResName(abName, assetName, assetType);
+            if (!mResMap.TryGetValue(resName, out res))
+            {
+                res = new T();
+                res.Init(abName, assetName, resName);
+                mResMap.Add(resName, res);
+            }
+
+            res.LoadCount++;
+            return res as T;
         }
 
-        //异步加载
-        public virtual void Load<T>(string abName, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        public void Init(string abName, string assetName, string resName)
         {
-            LoadCount++;
-            ABRequest abRequest = new ABRequest();
-            abRequest.Load(mAllABList);
-            ResourceManager.Instance.StartCoroutine(Load(abRequest, assetName, success, error));
+            ABName = abName;
+            AssetName = assetName;
+            ResName = resName;
         }
 
-        protected virtual IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        public void Load<T>(string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        {
+            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, success, error));
+        }
+
+        private IEnumerator CoLoad<T>(string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        {
+            ABRes = GetRes<HAssetBundle>(ABName, "", AssetType.eAB);
+            yield return ABRes.LoadAB(false); 
+            yield return LoadAsset(ABRes.AB, assetName, success, error);
+        }
+
+        protected virtual IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
         {
             yield return null;
         }

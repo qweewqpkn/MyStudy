@@ -13,12 +13,11 @@ namespace AssetLoad
         {
         }
     
-        protected override IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error)
+        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
         {
-            yield return abRequest;
             if(mTexture == null)
             {
-                AssetRequest assetRequest = new AssetRequest(abRequest.mAB, assetName);
+                AssetRequest assetRequest = new AssetRequest(ab, assetName);
                 yield return assetRequest;
                 mTexture = assetRequest.GetAssets<Texture>(assetName);
             }

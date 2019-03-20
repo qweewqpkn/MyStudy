@@ -13,45 +13,12 @@ namespace AssetLoad
         {
         }
 
-        //同步加载
-        public override T LoadSync<T>(string abName, string assetName)
+        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
         {
-            base.LoadSync<T>(abName, assetName);
-            assetName = assetName.ToLower();
-            ABRequestSync abRequestSync = new ABRequestSync();
-            AssetBundle ab = abRequestSync.Load(abName, mAllABList, AssetType.eLua);
-
-            if (mLuaDict.Count == 0)
-            {
-                AssetRequestSync assetRequestSync = new AssetRequestSync();
-                UnityEngine.Object[] objs = assetRequestSync.LoadAll(ab);
-                for (int i = 0; i < objs.Length; i++)
-                {
-                    if (!mLuaDict.ContainsKey(objs[i].name))
-                    {
-                        mLuaDict.Add(objs[i].name.ToLower(), objs[i] as TextAsset);
-                    }
-                }
-            }
-
-            TextAsset textAsset = null;
-            if (mLuaDict.ContainsKey(assetName))
-            {
-                textAsset = mLuaDict[assetName];
-            }
-
-            return textAsset as T;
-        }
-
-
-        protected override IEnumerator Load<T>(ABRequest abRequest, string assetName, Action<T> success, Action error)
-        {
-            yield return abRequest;
-
             TextAsset textAsset = null;
             if (mLuaDict.Count == 0)
             {
-                AssetRequest assetRequest = new AssetRequest(abRequest.mAB, "", true);
+                AssetRequest assetRequest = new AssetRequest(ab, "", true);
                 yield return assetRequest;
                 UnityEngine.Object[] objs = assetRequest.GetAssets();
                 for (int i = 0; i < objs.Length; i++)

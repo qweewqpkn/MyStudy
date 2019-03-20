@@ -11,14 +11,13 @@ namespace AssetLoad
         public class RequestData
         {
             public HRes mRes;
-            public string mABName;
             public string mAssetName;
             public Action<UnityEngine.Object> mSuccess;
             public Action mError;
 
             public void Load()
             {
-                mRes.Load(mABName, mAssetName, mSuccess, mError);
+                mRes.Load(mAssetName, mSuccess, mError);
             }
         }
 
@@ -26,12 +25,11 @@ namespace AssetLoad
         private int mCurLoadCount = 0;
         private Queue<RequestData> mRequestQueue = new Queue<RequestData>();
 
-        public void AddReuqest<T>(HRes res, string abName, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
+        public void AddReuqest<T>(HRes res, string assetName, Action<T> success, Action error) where T : UnityEngine.Object
         {
             RequestData request = new RequestData();
             mRequestQueue.Enqueue(request);
             request.mRes = res;
-            request.mABName = abName;
             request.mAssetName = assetName;
             request.mError = error;
             request.mSuccess = (obj)=>
