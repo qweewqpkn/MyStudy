@@ -7,55 +7,28 @@ namespace AssetLoad
 {
     class HLua : HRes
     {
-        private Dictionary<string, TextAsset> mLuaDict = new Dictionary<string, TextAsset>();
-
         public HLua() 
         {
         }
 
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+        public static void Load(string abName, string assetName, Action<TextAsset> callback)
         {
-            TextAsset textAsset = null;
-            if (mLuaDict.Count == 0)
+            Action<UnityEngine.Object> tCallBack = (obj) =>
             {
-                AssetRequest assetRequest = new AssetRequest(ab, "", true);
-                yield return assetRequest;
-                UnityEngine.Object[] objs = assetRequest.GetAssets();
-                for (int i = 0; i < objs.Length; i++)
-                {
-                    if (!mLuaDict.ContainsKey(objs[i].name))
-                    {
-                        mLuaDict.Add(objs[i].name, objs[i] as TextAsset);
-                    }
-                }
-            }
+                callback(obj as TextAsset);
+            };
+            LoadRes<HLua>(abName, assetName, tCallBack);
+        }
 
-            if (mLuaDict.ContainsKey(assetName))
-            {
-                textAsset = mLuaDict[assetName];
-            }
-
-            if (textAsset != null)
-            {
-                if (success != null)
-                {
-                    success(textAsset as T);
-                }
-            }
-            else
-            {
-                if (error != null)
-                {
-                    error();
-                }
-            }
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            OnCallBack(AssetObj);
         }
 
         public override void Release()
         {
             base.Release();
-            mLuaDict.Clear();
-            mLuaDict = null;
         }
     }
 }

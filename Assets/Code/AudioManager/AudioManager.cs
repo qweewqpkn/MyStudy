@@ -335,10 +335,6 @@ public class AudioManager : MonoBehaviour
         (res) =>
         {
             onComplete(res);
-        },
-        () =>
-        {
-            onComplete(null);
         });
     }
 
@@ -347,7 +343,7 @@ public class AudioManager : MonoBehaviour
     {
         //if (mAudioClipDict.ContainsKey(name))
         {
-            ResourceManager.Instance.Release(name, name, AssetType.eAudioClip);
+            ResourceManager.Instance.Release(name);
             //mAudioClipDict.Remove(name);
         }
     }
@@ -478,7 +474,7 @@ public class AudioManager : MonoBehaviour
     {
         GetAudioClip(name, (audioClip) =>
         {
-            ResourceManager.Instance.Release(name, name, AssetType.eAudioClip);
+            ResourceManager.Instance.Release(name);
             float length = 0;
             if (audioClip != null)
             {

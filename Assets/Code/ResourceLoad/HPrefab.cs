@@ -7,51 +7,47 @@ namespace AssetLoad
 {   
     class HPrefab : HRes
     {
-        private GameObject mPrefab;
-
         public HPrefab()
         {
         }
 
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+        public static void Load(string abName, string assetName, Action<GameObject> callback)
         {
-            if(mPrefab == null)
+            Action<UnityEngine.Object> tCallBack = (obj) =>
             {
-                AssetRequest assetRequest = new AssetRequest(ab, assetName, false);
-                yield return assetRequest;
-                mPrefab = assetRequest.GetAssets<GameObject>(assetName);
-            }
+                callback(obj as GameObject);
+            };
+            LoadRes<HPrefab>(abName, assetName, tCallBack);
+        }
 
-            if(mPrefab != null)
+        protected override void Init(string abName, string assetName, string resName)
+        {
+            base.Init(abName, assetName, resName);
+            HAssetBundle.Load(abName, (ab) =>
             {
-                GameObject newObj = GameObject.Instantiate(mPrefab);
+                ResourceManager.Instance.StartCoroutine(CoLoad(ab, abName, assetName));
+            });
+        }
+
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            if(obj != null)
+            {
+                GameObject newObj = GameObject.Instantiate(obj as GameObject);
                 PrefabAutoDestory autoDestroy = newObj.AddComponent<PrefabAutoDestory>();
-                autoDestroy.mABName = ABName;
-                autoDestroy.mAssetName = assetName;
-                autoDestroy.mPrefab = mPrefab;
-                if (success != null)
-                {
-                    success(newObj as T);
-                }
+                autoDestroy.mRes = this;
+                OnCallBack(newObj);
             }
             else
             {
-                if(error != null)
-                {
-                    error();
-                }
+                OnCallBack(null);
             }
-        }
-
-        public GameObject GetPrefab()
-        {
-            return mPrefab;
         }
 
         public override void Release()
         {
             base.Release();
-            mPrefab = null;
         }
     }
     

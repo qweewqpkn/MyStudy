@@ -9,41 +9,28 @@ namespace AssetLoad
 {
     class HShader : HRes
     {
-        private Shader mShader;
-
         public HShader()
         {
         }
 
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+        public static void Load(string abName, string assetName, Action<Shader> callback)
         {
-            if(mShader == null)
+            Action<UnityEngine.Object> tCallBack = (obj) =>
             {
-                AssetRequest assetRequest = new AssetRequest(ab, assetName);
-                yield return assetRequest;
-                mShader = assetRequest.GetAssets<Shader>(assetName);
-            }
+                callback(obj as Shader);
+            };
+            LoadRes<HShader>(abName, assetName, tCallBack);
+        }
 
-            if (mShader != null)
-            {
-                if (success != null)
-                {
-                    success(mShader as T);
-                }
-            }
-            else
-            {
-                if (error != null)
-                {
-                    error();
-                }
-            }
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            OnCallBack(AssetObj);
         }
 
         public override void Release()
         {
             base.Release();
-            mShader = null;
         }
     }
 }

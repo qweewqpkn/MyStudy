@@ -13,14 +13,12 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>2017.4.3f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -287,7 +285,6 @@
     <Compile Include="Assets\Code\ResourceLoad\HAssetBundle.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HAudioClip.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HLua.cs" />
-    <Compile Include="Assets\Code\ResourceLoad\HManifest.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HMaterial.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HPrefab.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HRes.cs" />

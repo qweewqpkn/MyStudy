@@ -9,41 +9,38 @@ namespace AssetLoad
 {
     class HMaterial : HRes
     {
-        private Material mMaterial;
-
         public HMaterial()
         {
         }
 
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+        public static void Load(string abName, string assetName, Action<Material> callback)
         {
-            if (mMaterial == null)
+            Action<UnityEngine.Object> tCallBack = (obj) =>
             {
-                AssetRequest assetRequest = new AssetRequest(ab, assetName);
-                yield return assetRequest;
-                mMaterial = assetRequest.GetAssets<Material>(assetName);
-            }
+                callback(obj as Material);
+            };
 
-            if (mMaterial != null)
+            LoadRes<HMaterial>(abName, assetName, tCallBack);
+        }
+
+        protected override void Init(string abName, string assetName, string resName)
+        {
+            base.Init(abName, assetName, resName);
+            HAssetBundle.Load(abName, (ab) =>
             {
-                if (success != null)
-                {
-                    success(mMaterial as T);
-                }
-            }
-            else
-            {
-                if (error != null)
-                {
-                    error();
-                }
-            }
+                ResourceManager.Instance.StartCoroutine(CoLoad(ab, abName, assetName));
+            });
+        }
+
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            OnCallBack(AssetObj);
         }
 
         public override void Release()
         {
             base.Release();
-            mMaterial = null;
         }
     }
 }

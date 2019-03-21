@@ -14,38 +14,33 @@ public class Test : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        ResourceManager.Instance.mInitComplete = () =>
+        mButton.onClick.AddListener(() =>
+        {
+            ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
+            {
+                mSprite.sprite = sprite;
+            });
+            
+            ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
+            {
+                mSprite.sprite = sprite;
+            });
+            mStart = true;
+            mFrame = 1;
+        });
+
+        ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+        {
+            obj.name = "testTest";
+        });
+        ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj)=>
+        {
+            obj.name = "testTest1";
+        });
+        ResourceManager.Instance.LoadAB("lobby/test/cube", (ab) =>
         {
 
-            mButton.onClick.AddListener(() =>
-            {
-                ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
-                {
-                    mSprite.sprite = sprite;
-                });
-                
-                ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
-                {
-                    mSprite.sprite = sprite;
-                });
-                mStart = true;
-                mFrame = 1;
-            });
-
-            ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
-            {
-                obj.name = "testTest";
-            });
-            ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj)=>
-            {
-                obj.name = "testTest1";
-            });
-            ResourceManager.Instance.LoadAB("lobby/test/cube", (ab) =>
-            {
-
-            });
-
-        };
+        });
     }
 	
 	// Update is called once per frame
@@ -54,7 +49,7 @@ public class Test : MonoBehaviour {
         {
             if(mFrame == 0)
             {
-                ResourceManager.Instance.ReleaseAll();
+                //ResourceManager.Instance.ReleaseAll();
                 ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
                 {
                     obj.name = "testTest2";

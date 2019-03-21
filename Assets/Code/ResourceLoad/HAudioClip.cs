@@ -9,39 +9,29 @@ namespace AssetLoad
 {
     class HAudioCilp : HRes
     {
-        private AudioClip mAudioClip;
-
         public HAudioCilp()
         { 
         }
 
-        protected override void OnCompleted(AssetRequest request, string assetName)
+        public static void Load(string abName, string assetName, Action<AudioClip> callback)
         {
-            if (mAudioClip == null)
+            Action<UnityEngine.Object> tCallBack = (obj) =>
             {
-                mAudioClip = request.GetAssets<AudioClip>(assetName);
-            }
+                callback(obj as AudioClip);
+            };
 
-            if (mAudioClip != null)
-            {
-                if (success != null)
-                {
-                    success(mAudioClip as T);
-                }
-            }
-            else
-            {
-                if (error != null)
-                {
-                    error();
-                }
-            }
+            LoadRes<HTexture>(abName, assetName, tCallBack);
+        }
+
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            OnCallBack(AssetObj);
         }
 
         public override void Release()
         {
             base.Release();
-            mAudioClip = null;
         }
     }
 }

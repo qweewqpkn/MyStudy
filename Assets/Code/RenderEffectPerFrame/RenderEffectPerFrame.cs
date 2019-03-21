@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class RenderEffectPerFrame : MonoBehaviour {
@@ -25,7 +24,7 @@ public class RenderEffectPerFrame : MonoBehaviour {
             TextureUtility.SaveRenderTexture(camera.targetTexture, width, height, TextureUtility.TexFormat.ePNG, Application.dataPath + "/TextureSave/" + i + ".png");
             if(i == frame)
             {
-                AssetDatabase.Refresh();
+                //AssetDatabase.Refresh();
             }
         }
 	}

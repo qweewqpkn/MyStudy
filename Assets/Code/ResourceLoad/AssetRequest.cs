@@ -11,55 +11,33 @@ namespace AssetLoad
         private AssetBundleRequest mRequest;
         private bool mIsError = false;
 
+        public UnityEngine.Object AssetObj
+        {
+            get;
+            private set;
+        }
+
         public AssetRequest(){}
 
-        public IEnumerator Load(AssetBundle ab, string assetName, bool isAll)
+        public IEnumerator Load(AssetBundle ab, string assetName)
         {
+            if(string.IsNullOrEmpty(assetName))
+            {
+                AssetObj = ab;
+                yield break;
+            }
+
             if (ab == null)
             {
                 Debug.Log(string.Format("ab is null in load {0} AssetRequest", assetName));
-                mIsError = true;
+                AssetObj = null;
             }
             else
             {
-                if (isAll)
-                {
-                    mRequest = ab.LoadAllAssetsAsync();
-                }
-                else
-                {
-                    mRequest = ab.LoadAssetAsync(assetName);
-                }
-
+                mRequest = ab.LoadAssetAsync(assetName);
                 yield return mRequest;
+                AssetObj = mRequest.asset;
             }
-        }
-
-        public UnityEngine.Object[] GetAssets()
-        {
-            if (mRequest != null && mRequest.isDone && mIsError == false)
-            {
-                return mRequest.allAssets;
-            }
-
-            return null;
-        }
-
-        public T GetAssets<T>(string name) where T : UnityEngine.Object
-        {
-            if (mRequest != null && mRequest.isDone && mIsError == false)
-            {
-                int length = mRequest.allAssets.Length;
-                for (int i = 0; i < length; i++)
-                {
-                    if (mRequest.allAssets[i].name.ToLower() == name.ToLower())
-                    {
-                        return mRequest.allAssets[i] as T;
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }

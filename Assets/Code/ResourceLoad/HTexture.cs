@@ -7,41 +7,28 @@ namespace AssetLoad
 {
     class HTexture : HRes
     {
-        private Texture mTexture;
-    
         public HTexture() 
         {
         }
-    
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+
+        public static void Load(string abName, string assetName, Action<Texture> callback)
         {
-            if(mTexture == null)
+            Action<UnityEngine.Object> tCallBack = (obj) =>
             {
-                AssetRequest assetRequest = new AssetRequest(ab, assetName);
-                yield return assetRequest;
-                mTexture = assetRequest.GetAssets<Texture>(assetName);
-            }
-    
-            if (mTexture != null)
-            {
-                if (success != null)
-                {
-                    success(mTexture as T);
-                }
-            }
-            else
-            {
-                if (error != null)
-                {
-                    error();
-                }
-            }
+                callback(obj as Texture);
+            };
+            LoadRes<HTexture>(abName, assetName, tCallBack);
         }
-    
+
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            OnCallBack(AssetObj);
+        }
+
         public override void Release()
         {
             base.Release();
-            mTexture = null;
         }
     }
 }

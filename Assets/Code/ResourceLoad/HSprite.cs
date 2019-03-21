@@ -7,57 +7,27 @@ namespace AssetLoad
 {
     class HSprite : HRes
     {
-        private Dictionary<string, Sprite> mSpriteDict = new Dictionary<string, Sprite>();
-
         public HSprite()
         {
         }
 
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+        public static void Load(string abName, string assetName, Action<Sprite> callback)
         {
-            Sprite sprite = null;
-            if(mSpriteDict.Count == 0)
+            Action<UnityEngine.Object> tCallBack = (obj) =>
             {
-                AssetRequest assetRequest = new AssetRequest(ab, "", true);
-                yield return assetRequest;
-                UnityEngine.Object[] objs = assetRequest.GetAssets();
-                if(objs != null)
-                {
-                    for (int i = 0; i < objs.Length; i++)
-                    {
-                        if (!mSpriteDict.ContainsKey(objs[i].name))
-                        {
-                            mSpriteDict.Add(objs[i].name, objs[i] as Sprite);
-                        }
-                    }
-                }
-            }
-
-            if(mSpriteDict.ContainsKey(assetName))
-            {
-                sprite = mSpriteDict[assetName];
-            }
-
-            if (sprite != null)
-            {
-                if (success != null)
-                {
-                    success(sprite as T);
-                }
-            }
-            else
-            {
-                if (error != null)
-                {
-                    error();
-                }
-            }
+                callback(obj as Sprite);
+            };
+            LoadRes<HSprite>(abName, assetName, tCallBack);
+        }
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            OnCallBack(AssetObj);
         }
 
         public override void Release()
         {
             base.Release();
-            mSpriteDict.Clear();
         }
     }
 }

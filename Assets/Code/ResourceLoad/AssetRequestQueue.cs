@@ -17,7 +17,7 @@ namespace AssetLoad
 
             public void Load()
             {
-                mRes.Load(mAssetName, mSuccess, mError);
+                //mRes.Load(mAssetName, mSuccess, mError);
             }
         }
 

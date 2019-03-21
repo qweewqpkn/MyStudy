@@ -26,53 +26,53 @@ namespace AssetLoad
             set;
         }
     
-        public AssetBundle AB
-        {
-            get;
-            set;
-        }
-    
         public ABLoadStatus LoadStatus
         {
             get;
             set;
         }
-
-        public bool IsCompleted
-        {
-            get;
-            set;
-        }
-    
     
         public HAssetBundle()
         {
         }
-    
-        protected override IEnumerator LoadAsset<T>(AssetBundle ab, string assetName, Action<T> success, Action error)
+
+        public static HAssetBundle Load(string abName, Action<AssetBundle> callback)
         {
-            if (ab != null)
+            Action<UnityEngine.Object> tCallBack = null;
+            if(callback != null)
             {
-                if (success != null)
+                tCallBack = (obj) =>
                 {
-                    success(ab as T);
-                }
-            }
-            else
-            {
-                if (error != null)
-                {
-                    error();
-                }
+                    callback(obj as AssetBundle);
+                };
             }
 
-            yield return null;
+            return LoadRes<HAssetBundle>(abName, "", tCallBack);
         }
-    
+
+        protected override void Init(string abName, string assetName, string resName)
+        {
+            base.Init(abName, assetName, resName);
+            ResourceManager.Instance.StartCoroutine(CoLoad(null, abName, assetName));
+        }
+
+        protected override IEnumerator CoLoad(AssetBundle ab, string abName, string assetName)
+        {
+            ABRequest abRequest = new ABRequest();
+            yield return abRequest.Load(abName);
+            OnCompleted(abRequest.AB);
+        }
+
+        protected override void OnCompleted(UnityEngine.Object obj)
+        {
+            base.OnCompleted(obj);
+            LoadStatus = ABLoadStatus.eLoaded;
+            OnCallBack(AssetObj);
+        }
+
         public override void Release()
         {
             base.Release();
-            AB = null;
         }
     }
 }

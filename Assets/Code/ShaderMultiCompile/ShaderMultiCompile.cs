@@ -16,7 +16,7 @@ public class ShaderMultiCompile : MonoBehaviour {
                 Material material = new Material(shader);
                 obj.GetComponent<MeshRenderer>().sharedMaterial = material;
                 material.EnableKeyword("ENABLE_COLOR");
-            }, null);
+            });
         };
 	}
 	
