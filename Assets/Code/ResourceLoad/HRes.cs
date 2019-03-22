@@ -9,28 +9,38 @@ namespace AssetLoad
 {
     public class HRes
     {
-        private static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
-        private List<Action<UnityEngine.Object>> mCallBackList = new List<Action<UnityEngine.Object>>();
-        private AssetRequest mAssetRequest;
+        public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
+        protected List<Action<UnityEngine.Object>> mCallBackList = new List<Action<UnityEngine.Object>>();
 
+        //最终加载出来的资源对象
         public UnityEngine.Object AssetObj
         {
             get;
             set;
         }
 
+        //该资源依赖的AB资源
+        public HAssetBundle HAB
+        {
+            get;
+            set;
+        }
+
+        //AB的名字
         public string ABName
         {
             get;
             set;
         }
 
+        //资源名
         public string AssetName
         {
             get;
             set;
         }
 
+        //资源完整名字
         public string ResName
         {
             get;
@@ -38,12 +48,13 @@ namespace AssetLoad
         }
 
         //该资源加载次数
-        public int LoadCount
+        public int RefCount
         {
             get;
             set;
         }
 
+        //资源是否加载完成
         public bool IsCompleted
         {
             get;
@@ -57,7 +68,7 @@ namespace AssetLoad
             return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
         }
 
-        public static T LoadRes<T>(string abName, string assetName, Action<UnityEngine.Object> callback) where T : HRes, new()
+        public static T LoadRes<T>(string abName, string assetName, Action<UnityEngine.Object> callback, params object[] datas) where T : HRes, new()
         {
             HRes res = null;
             string resName = GetResName(abName, assetName);
@@ -66,36 +77,31 @@ namespace AssetLoad
                 res = new T();
                 mResMap.Add(resName, res);
                 res.Init(abName, assetName, resName);
+                res.StartLoad(datas);
             }
 
             if (callback != null)
             {
-                if(res.IsCompleted)
+                res.mCallBackList.Add(callback);
+                if (res.IsCompleted)
                 {
-                    callback(res.AssetObj);
-                }
-                else
-                {
-                    res.mCallBackList.Add(callback);
+                    res.OnCompleted(res.AssetObj);
                 }
             }
 
-            res.LoadCount++;
+            res.RefCount++;
             return res as T;
         }
 
-        protected virtual void Init(string abName, string assetName, string resName)
+        private void Init(string abName, string assetName, string resName)
         {
             ABName = abName;
             AssetName = assetName;
             ResName = resName;
         }
 
-        protected virtual IEnumerator CoLoad(AssetBundle ab, string abName, string assetName)
+        protected virtual void StartLoad(params object[] datas)
         {
-            AssetRequest assetRequest = new AssetRequest();
-            yield return assetRequest.Load(ab, assetName);
-            OnCompleted(assetRequest.AssetObj);
         }
 
         protected virtual void OnCompleted(UnityEngine.Object obj) 
@@ -104,9 +110,9 @@ namespace AssetLoad
             AssetObj = obj;
         }
 
-        protected void OnCallBack(UnityEngine.Object obj)
+        protected virtual void OnCallBack(UnityEngine.Object obj)
         {
-            for(int i = 0; i < mCallBackList.Count; i++)
+            for (int i = 0; i < mCallBackList.Count; i++)
             {
                 mCallBackList[i](obj);
             }
@@ -115,7 +121,7 @@ namespace AssetLoad
 
         public void ReleaseAll()
         {
-            int count = LoadCount;
+            int count = RefCount;
             for (int i = 0; i < count; i++)
             {
                 Release();
@@ -124,54 +130,20 @@ namespace AssetLoad
 
         public virtual void Release()
         {
-            //if(LoadCount <= 0)
-            //{
-            //    return;
-            //}
-            //
-            //LoadCount--;
-            //if(LoadCount == 0)
-            //{
-            //    //todo，bug:要修复这里移除了AB，但是没有释放AB，ab.AB.Unload(true);考虑一下如何修复
-            //    if (ResourceManager.Instance.mResMap.ContainsKey(ResName))
-            //    {
-            //        ResourceManager.Instance.mResMap.Remove(ResName);
-            //    }
-            //}
-            //
-            ////该资源每次引用对应的ab依赖都要进行释放
-            //for (int j = 0; j < mAllABList.Count; j++)
-            //{
-            //    if (ResourceManager.Instance.mResMap.ContainsKey(mAllABList[j]))
-            //    {
-            //        HAssetBundle ab = ResourceManager.Instance.mResMap[mAllABList[j]] as HAssetBundle;
-            //        ab.LoadStatus = HAssetBundle.ABLoadStatus.eRelease; //标记AB为待释放,因为可能释放资源的时候，它引用的ab还在加载中..
-            //        if (ab != null)
-            //        {
-            //            if(ab.RefCount > 0)
-            //            {
-            //                ab.RefCount--;
-            //            }
-            //            
-            //            if (ab.RefCount == 0)
-            //            {
-            //                if (ResourceManager.Instance.mResMap.ContainsKey(ab.ResName))
-            //                {
-            //                    ResourceManager.Instance.mResMap.Remove(ab.ResName);
-            //                }
-            //
-            //                if (ab.AB != null)
-            //                {
-            //                    ab.AB.Unload(true);
-            //                }
-            //                else
-            //                {
-            //                    Debug.LogError("HRes Release ab is null, please check!");
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+            RefCount--;
+            if(RefCount <= 0)
+            {
+                if(mResMap.ContainsKey(ResName))
+                {
+                    mResMap.Remove(ResName);
+                }
+            }
+
+            //释放依赖的AB资源
+            if(HAB != null)
+            {
+                HAB.Release();
+            }
         }
     }
 }

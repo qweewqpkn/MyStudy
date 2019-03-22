@@ -16,17 +16,18 @@ public class Test : MonoBehaviour {
 	void Start () {
         mButton.onClick.AddListener(() =>
         {
-            ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
-            {
-                mSprite.sprite = sprite;
-            });
-            
-            ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
-            {
-                mSprite.sprite = sprite;
-            });
-            mStart = true;
-            mFrame = 1;
+            ResourceManager.Instance.ReleaseAll();
+            //ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
+            //{
+            //    mSprite.sprite = sprite;
+            //});
+            //
+            //ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
+            //{
+            //    mSprite.sprite = sprite;
+            //});
+            //mStart = true;
+            //mFrame = 1;
         });
 
         ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
@@ -45,17 +46,17 @@ public class Test : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(mStart)
-        {
-            if(mFrame == 0)
-            {
-                //ResourceManager.Instance.ReleaseAll();
-                ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
-                {
-                    obj.name = "testTest2";
-                });
-            }
-            mFrame--;
-        }
+        //if(mStart)
+        //{
+        //    if(mFrame == 0)
+        //    {
+        //        //ResourceManager.Instance.ReleaseAll();
+        //        ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+        //        {
+        //            obj.name = "testTest2";
+        //        });
+        //    }
+        //    mFrame--;
+        //}
     }
 }

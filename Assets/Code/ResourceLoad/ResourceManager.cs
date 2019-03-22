@@ -101,36 +101,33 @@ namespace AssetLoad
 
         public void Release(string name)
         {
-            //name = name.ToLower();
-            //Release(name, name);
+            name = name.ToLower();
+            Release(name, name);
         }
 
-        //public void Release(string abName, string assetName)
-        //{
-        //    HRes res;
-        //    string name = HRes.GetResName(abName.ToLower(), assetName);
-        //    if (HRes.mResMap.TryGetValue(name, out res))
-        //    {
-        //        res.Release();
-        //    }
-        //}
-        //
-        //public void ReleaseAll()
-        //{
-        //    List<HRes> resList = new List<HRes>();
-        //    foreach (var item in mResMap)
-        //    {
-        //        resList.Add(item.Value);
-        //    }
-        //
-        //    for(int i = 0; i < resList.Count; i++)
-        //    {
-        //        resList[i].ReleaseAll();
-        //    }
-        //
-        //    //清空正在请求的队列
-        //    mAssetRequestQueue.ReleaseAll();
-        //}
+        public void Release(string abName, string assetName)
+        {
+            HRes res;
+            string name = HRes.GetResName(abName.ToLower(), assetName);
+            if (HRes.mResMap.TryGetValue(name, out res))
+            {
+                res.Release();
+            }
+        }
+        
+        public void ReleaseAll()
+        {
+            List<HRes> resList = new List<HRes>();
+            foreach (var item in HRes.mResMap)
+            {
+                resList.Add(item.Value);
+            }
+        
+            for(int i = 0; i < resList.Count; i++)
+            {
+                resList[i].ReleaseAll();
+            }
+        }
 
         void Update()
         {

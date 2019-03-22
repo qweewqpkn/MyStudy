@@ -8,6 +8,9 @@ public class PrefabAutoDestory : MonoBehaviour {
     public HRes mRes;
     void OnDestroy()
     {
-        mRes.Release();
+        if(mRes != null)
+        {
+            mRes.Release();
+        }
     }
 }

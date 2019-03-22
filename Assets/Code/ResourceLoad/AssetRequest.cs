@@ -9,7 +9,6 @@ namespace AssetLoad
     public class AssetRequest
     {
         private AssetBundleRequest mRequest;
-        private bool mIsError = false;
 
         public UnityEngine.Object AssetObj
         {
@@ -21,22 +20,25 @@ namespace AssetLoad
 
         public IEnumerator Load(AssetBundle ab, string assetName)
         {
-            if(string.IsNullOrEmpty(assetName))
-            {
-                AssetObj = ab;
-                yield break;
-            }
-
             if (ab == null)
             {
-                Debug.Log(string.Format("ab is null in load {0} AssetRequest", assetName));
+                Debug.LogError(string.Format("AssetRequest ab is null, assetName is {0}", assetName));
                 AssetObj = null;
             }
             else
             {
-                mRequest = ab.LoadAssetAsync(assetName);
-                yield return mRequest;
-                AssetObj = mRequest.asset;
+                if(string.IsNullOrEmpty(assetName))
+                {
+                    AssetObj = null;
+                    Debug.LogError("AssetRequest assetName is null");
+                    yield break;
+                }
+                else
+                {
+                    mRequest = ab.LoadAssetAsync(assetName);
+                    yield return mRequest;
+                    AssetObj = mRequest.asset;
+                }
             }
         }
     }

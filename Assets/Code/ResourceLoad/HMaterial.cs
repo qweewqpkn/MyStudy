@@ -23,24 +23,25 @@ namespace AssetLoad
             LoadRes<HMaterial>(abName, assetName, tCallBack);
         }
 
-        protected override void Init(string abName, string assetName, string resName)
+        protected override void StartLoad(params object[] datas)
         {
-            base.Init(abName, assetName, resName);
-            HAssetBundle.Load(abName, (ab) =>
+            HAB = HAssetBundle.Load(ABName, (ab) =>
             {
-                ResourceManager.Instance.StartCoroutine(CoLoad(ab, abName, assetName));
-            });
+                ResourceManager.Instance.StartCoroutine(CoLoad(ab));
+            }, false);
+        }
+
+        IEnumerator CoLoad(AssetBundle ab)
+        {
+            AssetRequest assetRequest = new AssetRequest();
+            yield return assetRequest.Load(ab, AssetName);
+            OnCompleted(assetRequest.AssetObj);
         }
 
         protected override void OnCompleted(UnityEngine.Object obj)
         {
             base.OnCompleted(obj);
             OnCallBack(AssetObj);
-        }
-
-        public override void Release()
-        {
-            base.Release();
         }
     }
 }
