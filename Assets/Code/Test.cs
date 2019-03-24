@@ -41,6 +41,11 @@ public class Test : MonoBehaviour {
             if (obj != null)
                 obj.name = "testTest1";
         });
+
+        ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite1) =>
+        {
+            mSprite.sprite = sprite1;
+        });
         //ResourceManager.Instance.ReleaseAll();
         //ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
         //{

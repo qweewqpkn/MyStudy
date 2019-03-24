@@ -18,7 +18,7 @@ namespace AssetLoad
 
         public AssetRequest(){}
 
-        public IEnumerator Load(AssetBundle ab, string assetName)
+        public IEnumerator Load(AssetBundle ab, string assetName, bool isAll = false)
         {
             if (ab == null)
             {
@@ -35,9 +35,25 @@ namespace AssetLoad
                 }
                 else
                 {
-                    mRequest = ab.LoadAssetAsync(assetName);
-                    yield return mRequest;
-                    AssetObj = mRequest.asset;
+                    if(isAll)
+                    {
+                        mRequest = ab.LoadAllAssetsAsync();
+                        yield return mRequest;
+                        for(int i = 0; i < mRequest.allAssets.Length; i++)
+                        {
+                            if(mRequest.allAssets[i].name.ToLower() == assetName.ToLower())
+                            {
+                                AssetObj = mRequest.allAssets[i];
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mRequest = ab.LoadAssetAsync(assetName);
+                        yield return mRequest;
+                        AssetObj = mRequest.asset;
+                    }
                 }
             }
         }
