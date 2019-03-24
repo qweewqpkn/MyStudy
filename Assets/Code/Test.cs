@@ -32,16 +32,25 @@ public class Test : MonoBehaviour {
 
         ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
         {
+            if(obj != null)
             obj.name = "testTest";
         });
+        ResourceManager.Instance.Release("lobby/test/cube", "cube");
         ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj)=>
         {
-            obj.name = "testTest1";
+            if (obj != null)
+                obj.name = "testTest1";
         });
-        ResourceManager.Instance.LoadAB("lobby/test/cube", (ab) =>
-        {
-
-        });
+        //ResourceManager.Instance.ReleaseAll();
+        //ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+        //{
+        //    if (obj != null)
+        //        obj.name = "testTest2";
+        //});
+        //ResourceManager.Instance.ReleaseAll();
+        //ResourceManager.Instance.LoadAB("lobby/test/cube", (ab) =>
+        //{
+        //});
     }
 	
 	// Update is called once per frame

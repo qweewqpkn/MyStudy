@@ -19,22 +19,8 @@ namespace AssetLoad
             {
                 callback(obj as TextAsset);
             };
-            LoadRes<HText>(abName, assetName, tCallBack);
-        }
-
-        protected override void StartLoad(params object[] datas)
-        {
-            HAB = HAssetBundle.Load(ABName, (ab) =>
-            {
-                ResourceManager.Instance.StartCoroutine(CoLoad(ab));
-            }, false);
-        }
-
-        IEnumerator CoLoad(AssetBundle ab)
-        {
-            AssetRequest assetRequest = new AssetRequest();
-            yield return assetRequest.Load(ab, AssetName);
-            OnCompleted(assetRequest.AssetObj);
+            HText res = Get<HText>(abName, assetName, tCallBack);
+            res.StartLoad();
         }
 
         protected override void OnCompleted(UnityEngine.Object obj)

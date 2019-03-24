@@ -108,7 +108,7 @@ namespace AssetLoad
         public void Release(string abName, string assetName)
         {
             HRes res;
-            string name = HRes.GetResName(abName.ToLower(), assetName);
+            string name = HRes.GetResName(abName.ToLower(), assetName.ToLower());
             if (HRes.mResMap.TryGetValue(name, out res))
             {
                 res.Release();

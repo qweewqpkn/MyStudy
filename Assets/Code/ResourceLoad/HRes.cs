@@ -10,6 +10,7 @@ namespace AssetLoad
     public class HRes
     {
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
+        public static Dictionary<HAssetBundle, string> mRemoveMap = new Dictionary<HAssetBundle, string>();
         protected List<Action<UnityEngine.Object>> mCallBackList = new List<Action<UnityEngine.Object>>();
 
         //最终加载出来的资源对象
@@ -20,7 +21,7 @@ namespace AssetLoad
         }
 
         //该资源依赖的AB资源
-        public HAssetBundle HAB
+        public HAssetBundle ABDep
         {
             get;
             set;
@@ -54,13 +55,6 @@ namespace AssetLoad
             set;
         }
 
-        //资源是否加载完成
-        public bool IsCompleted
-        {
-            get;
-            set;
-        }
-
         public HRes(){}
 
         public static string GetResName(string abName, string assetName)
@@ -68,7 +62,7 @@ namespace AssetLoad
             return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
         }
 
-        public static T LoadRes<T>(string abName, string assetName, Action<UnityEngine.Object> callback, params object[] datas) where T : HRes, new()
+        public static T Get<T>(string abName, string assetName, Action<UnityEngine.Object> callback, params object[] datas) where T : HRes, new()
         {
             HRes res = null;
             string resName = GetResName(abName, assetName);
@@ -77,23 +71,18 @@ namespace AssetLoad
                 res = new T();
                 mResMap.Add(resName, res);
                 res.Init(abName, assetName, resName);
-                res.StartLoad(datas);
             }
 
-            if (callback != null)
+            if(callback != null)
             {
                 res.mCallBackList.Add(callback);
-                if (res.IsCompleted)
-                {
-                    res.OnCompleted(res.AssetObj);
-                }
             }
 
             res.RefCount++;
             return res as T;
         }
 
-        private void Init(string abName, string assetName, string resName)
+        protected virtual void Init(string abName, string assetName, string resName)
         {
             ABName = abName;
             AssetName = assetName;
@@ -102,11 +91,24 @@ namespace AssetLoad
 
         protected virtual void StartLoad(params object[] datas)
         {
+            ResourceManager.Instance.StartCoroutine(CoLoad());
+        }
+
+        protected virtual IEnumerator CoLoad()
+        {
+            ABDep = Get<HAssetBundle>(ABName, "", null);
+
+            ABRequest abRequest = new ABRequest();
+            yield return abRequest.Load(ABDep);
+
+            AssetRequest assetRequest = new AssetRequest();
+            yield return assetRequest.Load(ABDep.AB, AssetName);
+
+            OnCompleted(assetRequest.AssetObj);
         }
 
         protected virtual void OnCompleted(UnityEngine.Object obj) 
         {
-            IsCompleted = true;
             AssetObj = obj;
         }
 
@@ -140,9 +142,9 @@ namespace AssetLoad
             }
 
             //释放依赖的AB资源
-            if(HAB != null)
+            if(ABDep != null)
             {
-                HAB.Release();
+                ABDep.Release();
             }
         }
     }

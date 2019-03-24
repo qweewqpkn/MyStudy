@@ -17,22 +17,8 @@ namespace AssetLoad
             {
                 callback(obj as TextAsset);
             };
-            LoadRes<HLua>(abName, assetName, tCallBack);
-        }
-
-        protected override void StartLoad(params object[] datas)
-        {
-            HAB = HAssetBundle.Load(ABName, (ab) =>
-            {
-                ResourceManager.Instance.StartCoroutine(CoLoad(ab));
-            }, false);
-        }
-
-        IEnumerator CoLoad(AssetBundle ab)
-        {
-            AssetRequest assetRequest = new AssetRequest();
-            yield return assetRequest.Load(ab, AssetName);
-            OnCompleted(assetRequest.AssetObj);
+            HLua res = Get<HLua>(abName, assetName, tCallBack);
+            res.StartLoad();
         }
 
         protected override void OnCompleted(UnityEngine.Object obj)

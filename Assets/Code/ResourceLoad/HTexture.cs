@@ -17,23 +17,10 @@ namespace AssetLoad
             {
                 callback(obj as Texture);
             };
-            LoadRes<HTexture>(abName, assetName, tCallBack);
+            HTexture res = Get<HTexture>(abName, assetName, tCallBack);
+            res.StartLoad();
         }
 
-        protected override void StartLoad(params object[] datas)
-        {
-            HAB = HAssetBundle.Load(ABName, (ab) =>
-            {
-                ResourceManager.Instance.StartCoroutine(CoLoad(ab));
-            }, false);
-        }
-
-        IEnumerator CoLoad(AssetBundle ab)
-        {
-            AssetRequest assetRequest = new AssetRequest();
-            yield return assetRequest.Load(ab, AssetName);
-            OnCompleted(assetRequest.AssetObj);
-        }
         protected override void OnCompleted(UnityEngine.Object obj)
         {
             base.OnCompleted(obj);
