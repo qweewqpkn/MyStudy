@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace AssetLoad
 {
+    public enum LoadStatus
+    {
+        eNone,
+        eLoading,
+        eLoaded,
+    }
+
     public class HAssetBundle : HRes
     {
         private static AssetBundleManifest mAssetBundleManifest;
@@ -33,7 +40,15 @@ namespace AssetLoad
             get;
             set;
         }
-    
+
+        //加载状态
+
+        public LoadStatus Status
+        {
+            get;
+            set;
+        }
+
         public HAssetBundle()
         {
         }
@@ -79,29 +94,32 @@ namespace AssetLoad
 
         public override void AddRef()
         {
-            //增加自身
-            OnRef();
-            //增加该AB依赖的计数
+            OnAddRef();
+            AddDepRef();
+        }
+
+        private void OnAddRef()
+        {
+            RefCount++;
+        }
+
+        public void AddDepRef()
+        {
             for (int i = 0; i < DepList.Count; i++)
             {
                 if (mResMap.ContainsKey(DepList[i]))
                 {
                     HAssetBundle res = mResMap[DepList[i]] as HAssetBundle;
-                    res.OnRef();
+                    res.OnAddRef();
                 }
             }
         }
 
-        private void OnRef()
-        {
-            RefCount++;
-        }
-
         public override void Release()
         {
-            //减少自己的引用
+            //减少自身
             OnRelease();
-            //减少依赖的引用
+            //减少依赖
             for (int i = 0; i < DepList.Count; i++)
             {
                 if(mResMap.ContainsKey(DepList[i]))

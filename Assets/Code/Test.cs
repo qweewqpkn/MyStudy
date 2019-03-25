@@ -91,10 +91,6 @@ public class Test : MonoBehaviour {
             if(mFrame == 0)
             {
                 //ResourceManager.Instance.ReleaseAll();
-                ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
-                {
-                    obj.name = "testTestxxxx";
-                });
             }
             mFrame--;
         }
