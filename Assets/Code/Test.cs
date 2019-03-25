@@ -19,30 +19,42 @@ public class Test : MonoBehaviour {
 	void Start () {
         mButton.onClick.AddListener(() =>
         {
-            ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+            ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
             {
                 if (obj != null)
                     obj.name = "testTest1";
             });
             mStart = true;
             mFrame = 1;
-            ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+            ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
             {
                 if (obj != null)
                     obj.name = "testTest2";
             });
-            ResourceManager.Instance.ReleaseAll();
-            ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+            //ResourceManager.Instance.ReleaseAll();
+            ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
             {
                 if (obj != null)
                     obj.name = "testTest3";
             });
         });
 
-        ResourceManager.Instance.LoadPrefab("lobby/test/cube", "cube", (obj) =>
+        ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
         {
             if(obj != null)
                 obj.name = "testTest";
+        });
+
+        ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
+        {
+            if (obj != null)
+                obj.name = "testTest1";
+        });
+
+        ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
+        {
+            if (obj != null)
+                obj.name = "testTest2";
         });
 
         //ResourceManager.Instance.LoadTexture("texture/main_texture", "main_texture", (tex) =>

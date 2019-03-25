@@ -5,14 +5,6 @@ using UnityEngine;
 
 namespace AssetLoad
 {
-    public enum ABLoadStatus
-    {
-        eNone,
-        eLoading,
-        eLoaded,
-        eRelease,
-    }
-
     public class HAssetBundle : HRes
     {
         private static AssetBundleManifest mAssetBundleManifest;
@@ -37,12 +29,6 @@ namespace AssetLoad
         }
 
         public AssetBundle AB
-        {
-            get;
-            set;
-        }
-
-        public ABLoadStatus Status
         {
             get;
             set;
@@ -137,7 +123,7 @@ namespace AssetLoad
                     {
                         HAssetBundle hab = mResMap[ResName] as HAssetBundle;
                         //如果还在加载中，那么加入移除列表，等待加载完成后移除资源
-                        if(hab.Status == ABLoadStatus.eLoading)
+                        if(hab.Status == LoadStatus.eLoading)
                         {
                             mRemoveMap.Add(hab, hab.ResName);
                         }

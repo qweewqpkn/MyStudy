@@ -38,7 +38,7 @@ public class ABRequest
         //等待加载完成
         for (int i = 0; i < mABLoadList.Count; i++)
         {
-            while (mABLoadList[i].Status != ABLoadStatus.eLoaded)
+            while (mABLoadList[i].Status != LoadStatus.eLoaded)
             {
                 yield return null;
             }
@@ -47,9 +47,9 @@ public class ABRequest
 
     private IEnumerator CoLoad(HAssetBundle ab)
     {
-        if (ab.Status == ABLoadStatus.eNone)
+        if (ab.Status == LoadStatus.eNone)
         {
-            ab.Status = ABLoadStatus.eLoading;
+            ab.Status = LoadStatus.eLoading;
             while(mLoadingMap.ContainsKey(ab.ABName))
             {
                 //这里检测目的：当加载A后，WWW还没返回A的AB，但是外部却卸载了A，此时如果再次加载A，那么会走到这里等待之前的A被加载然后释放掉，然后在加载我们的A(Unity不允许同时加载同一个资源的AB)
@@ -66,11 +66,11 @@ public class ABRequest
             //yield return www;
             mLoadingMap.Remove(ab.ABName);
             ab.AB = request.assetBundle;
-            ab.Status = ABLoadStatus.eLoaded;
+            ab.Status = LoadStatus.eLoaded;
         }
-        else if (ab.Status == ABLoadStatus.eLoading)
+        else if (ab.Status == LoadStatus.eLoading)
         {
-            while (ab.Status != ABLoadStatus.eLoaded)
+            while (ab.Status != LoadStatus.eLoaded)
             {
                 yield return null;
             }

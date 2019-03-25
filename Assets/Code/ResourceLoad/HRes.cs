@@ -7,6 +7,13 @@ using UnityEngine;
 
 namespace AssetLoad
 {
+    public enum LoadStatus
+    {
+        eNone,
+        eLoading,
+        eLoaded,
+    }
+
     public class HRes
     {
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
@@ -55,6 +62,14 @@ namespace AssetLoad
             set;
         }
 
+        //加载状态
+
+        public LoadStatus Status
+        {
+            get;
+            set;
+        }
+
         public HRes(){}
 
         public static string GetResName(string abName, string assetName)
@@ -93,7 +108,18 @@ namespace AssetLoad
 
         protected virtual void StartLoad(params object[] datas)
         {
-            ResourceManager.Instance.StartCoroutine(CoLoad());
+            if(Status == LoadStatus.eNone)
+            {
+                Status = LoadStatus.eLoading;
+                ResourceManager.Instance.StartCoroutine(CoLoad());
+            }
+            else 
+            {
+                if (Status == LoadStatus.eLoaded)
+                {
+                    OnCompleted(AssetObj);
+                }
+            }
         }
 
         protected virtual IEnumerator CoLoad()
@@ -103,21 +129,16 @@ namespace AssetLoad
             ABRequest abRequest = new ABRequest();
             yield return abRequest.Load(ABDep);
 
-            if(AssetObj == null)
-            {
-                AssetRequest assetRequest = new AssetRequest();
-                yield return assetRequest.Load(ABDep.AB, AssetName);
-                OnCompleted(assetRequest.AssetObj);
-            }
-            else
-            {
-                OnCompleted(AssetObj);
-            }
+            AssetRequest assetRequest = new AssetRequest();
+            yield return assetRequest.Load(ABDep.AB, AssetName);
+
+            OnCompleted(assetRequest.AssetObj);
         }
 
         protected virtual void OnCompleted(UnityEngine.Object obj) 
         {
             AssetObj = obj;
+            Status = LoadStatus.eLoaded;
         }
 
         protected virtual void OnCallBack(UnityEngine.Object obj)
