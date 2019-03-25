@@ -22,7 +22,6 @@ namespace AssetLoad
         {
             if (ab == null)
             {
-                Debug.LogError(string.Format("AssetRequest ab is null, assetName is {0}", assetName));
                 AssetObj = null;
             }
             else

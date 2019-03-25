@@ -88,21 +88,27 @@ namespace AssetLoad
         protected override void OnCompleted(UnityEngine.Object obj)
         {
             base.OnCompleted(obj);
-            AB = obj as AssetBundle;
-            //检测是否加载完成时，外部已经标记为释放了
-            if (RefCount <= 0)
+            OnCallBack(AssetObj);
+        }
+
+        public override void AddRef()
+        {
+            //增加自身
+            OnRef();
+            //增加该AB依赖的计数
+            for (int i = 0; i < DepList.Count; i++)
             {
-                mResMap.Remove(ResName);
-                if (AB != null)
+                if (mResMap.ContainsKey(DepList[i]))
                 {
-                    AB.Unload(true);
+                    HAssetBundle res = mResMap[DepList[i]] as HAssetBundle;
+                    res.OnRef();
                 }
-                OnCallBack(null);
             }
-            else
-            {
-                OnCallBack(AssetObj);
-            }
+        }
+
+        private void OnRef()
+        {
+            RefCount++;
         }
 
         public override void Release()
@@ -130,6 +136,7 @@ namespace AssetLoad
                     if (mResMap.ContainsKey(ResName))
                     {
                         HAssetBundle hab = mResMap[ResName] as HAssetBundle;
+                        //如果还在加载中，那么加入移除列表，等待加载完成后移除资源
                         if(hab.Status == ABLoadStatus.eLoading)
                         {
                             mRemoveMap.Add(hab, hab.ResName);

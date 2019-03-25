@@ -382,6 +382,8 @@
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
+    <None Include="Assets\Export\Shader\Testlala.shader" />
+    <None Include="Assets\Export\Texture\Shader\ShaderTest.shader" />
     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />

@@ -150,7 +150,7 @@ public class BuildRes
         Debug.Log("生成MD5成功!");
     }
 
-    [MenuItem("Tools/AssetBundle/拷贝res到StreamingAssets")]
+    [MenuItem("Tools/AssetBundle/拷贝资源到StreamingAssets")]
     public static void CopyResToStreamingAssets()
     {
         if(EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows)
@@ -161,34 +161,51 @@ public class BuildRes
         }
     }
 
-    [MenuItem("Tools/AssetBundle/设置AB Name")]
-    static void SetABName()
+    [MenuItem("Tools/AssetBundle/设置所有AB Name")]
+    static void SetAllABName()
     {
-        string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
-        AssetImporter ai = AssetImporter.GetAtPath(assetPath);
-        int index = assetPath.LastIndexOf('/');     
-        ai.assetBundleName = assetPath.Substring(index + 1).Split('.')[0];
+        string[] files = Directory.GetFiles(PathManager.RES_EXPORT_ROOT_PATH, "*.*", SearchOption.AllDirectories);
+        if(files != null)
+        {
+            for (int i = 0; i < files.Length; i++)
+            {
+                string ext = Path.GetExtension(files[i]);
+                if(ext != ".meta")
+                {
+                    if(files[i].Contains("Shader"))
+                    {
+                        AssetImporter ai = AssetImporter.GetAtPath(files[i]);
+                        ai.assetBundleName = "allshader";
+                    }
+                    else
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                        AssetImporter ai = AssetImporter.GetAtPath(files[i]);                   
+                        ai.assetBundleName = fileName;
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError(string.Format("目录{0}资源为空,请确认!", PathManager.RES_EXPORT_ROOT_PATH));
+;       }
     }
 
-    [MenuItem("Tools/AssetBundle/设置Shader Name")]
-    static void SetShaderName()
-    {
-        string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
-        AssetImporter ai = AssetImporter.GetAtPath(assetPath);
-        ai.assetBundleName = "allshader";
-    }
-
-    [MenuItem("Tools/AssetBundle/重置所有Shader Name")]
+    [MenuItem("Tools/AssetBundle/重置所有AB Name")]
     static void ResetAllABName()
     {
-        string[] assetsPath = AssetDatabase.GetAllAssetPaths();
-
-        for(int i = 0; i < assetsPath.Length; i++)
+        string[] files = Directory.GetFiles(PathManager.RES_EXPORT_ROOT_PATH, "*.*", SearchOption.AllDirectories);
+        if (files != null)
         {
-            AssetImporter ai = AssetImporter.GetAtPath(assetsPath[i]);
-            if(ai != null)
+            for (int i = 0; i < files.Length; i++)
             {
-                ai.assetBundleName = "";
+                string ext = Path.GetExtension(files[i]);
+                if (ext != ".meta")
+                {
+                    AssetImporter ai = AssetImporter.GetAtPath(files[i]);
+                    ai.assetBundleName = "";
+                }
             }
         }
     }

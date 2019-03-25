@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class PathManager
 {
+    //本地导出资源路径
+    public static string RES_EXPORT_ROOT_PATH = "Assets/Export";
     //本地资源根路径
     public static string RES_LOCAL_ROOT_PATH = Application.dataPath + "/../ClientRes";
+    //流式路径
     public static string RES_STREAM_ROOT_PATH = Application.streamingAssetsPath + "/ClientRes";
+    //沙盒路径
     public static string RES_PERSISTENT_ROOT_PATH = Application.persistentDataPath + "/ClientRes";
-
     //服务器资源路径
     public static string RES_SERVER_ROOT_PATH = "";
 

@@ -62,9 +62,11 @@ namespace AssetLoad
             return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
         }
 
-        public static T Get<T>(string abName, string assetName, Action<UnityEngine.Object> callback, params object[] datas) where T : HRes, new()
+        public static T Get<T>(string abName, string assetName, Action<UnityEngine.Object> callback) where T : HRes, new()
         {
             HRes res = null;
+            abName = abName.ToLower();
+            assetName = assetName.ToLower();
             string resName = GetResName(abName, assetName);
             if (!mResMap.TryGetValue(resName, out res))
             {
@@ -101,10 +103,16 @@ namespace AssetLoad
             ABRequest abRequest = new ABRequest();
             yield return abRequest.Load(ABDep);
 
-            AssetRequest assetRequest = new AssetRequest();
-            yield return assetRequest.Load(ABDep.AB, AssetName);
-
-            OnCompleted(assetRequest.AssetObj);
+            if(AssetObj == null)
+            {
+                AssetRequest assetRequest = new AssetRequest();
+                yield return assetRequest.Load(ABDep.AB, AssetName);
+                OnCompleted(assetRequest.AssetObj);
+            }
+            else
+            {
+                OnCompleted(AssetObj);
+            }
         }
 
         protected virtual void OnCompleted(UnityEngine.Object obj) 
@@ -127,6 +135,16 @@ namespace AssetLoad
             for (int i = 0; i < count; i++)
             {
                 Release();
+            }
+        }
+
+        public virtual void AddRef()
+        {
+            RefCount++;
+            //增加该资源对应AB的计数
+            if(ABDep != null)
+            {
+                ABDep.AddRef();
             }
         }
 
