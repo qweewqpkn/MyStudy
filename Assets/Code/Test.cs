@@ -29,18 +29,19 @@ public class Test : MonoBehaviour {
         ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
         {
             if (Obj1 != null)
-                Obj1.name = "test22";
+                Obj1.name = "test1";
         });
-        GameObject Obj = ResourceManager.Instance.LoadPrefab("cube", "cube");
-        Obj.name = "testxx";
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test2";
+        });
         ResourceManager.Instance.ReleaseAll();
         ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
         {
             if (Obj1 != null)
-                Obj1.name = "test33";
+                Obj1.name = "test3";
         });
-        GameObject ObjX = ResourceManager.Instance.LoadPrefab("cube", "cube");
-        ObjX.name = "testYY";
         //ResourceManager.Instance.ReleaseAll();
         //ResourceManager.Instance.LoadPrefab("cube", "cube", (Obj1) =>
         //{
