@@ -21,34 +21,25 @@ public class Test : MonoBehaviour {
         {
             ResourceManager.Instance.ReleaseAll();
         });
-
-        //Material material = ResourceManager.Instance.LoadMaterialSync("material", "material");
-        //mObj.GetComponent<MeshRenderer>().sharedMaterial = material;
-
-        //AudioClip audioclip = ResourceManager.Instance.LoadAudioClip("sleep", "sleep");
+        
         ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
         {
             if (Obj1 != null)
                 Obj1.name = "test1";
         });
+        ResourceManager.Instance.ReleaseAll();
+        GameObject Objt1 = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        Objt1.name = "test5";
         ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
         {
             if (Obj1 != null)
-                Obj1.name = "test2";
+                Obj1.name = "test4";
         });
-        ResourceManager.Instance.ReleaseAll();
         ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
         {
             if (Obj1 != null)
                 Obj1.name = "test3";
         });
-        //ResourceManager.Instance.ReleaseAll();
-        //ResourceManager.Instance.LoadPrefab("cube", "cube", (Obj1) =>
-        //{
-        //    if (Obj1 != null)
-        //        Obj1.name = "test33";
-        //});
-        //GameObject Objt = ResourceManager.Instance.LoadPrefabSync("cube", "cube");
     }
 
     // Update is called once per frame

@@ -98,7 +98,7 @@ public class ABRequest
                 if (mRequestMap.ContainsKey(ab.ABName))
                 {
                     //打断异步加载，解释:这句会让之前的异步加载立马完成，像Goto一样跳转到yield return request后面的
-                    //逻辑执行，执行完之后协程的内容后，再回到这里继续执行。很难理解，但是为了在同一帧支持
+                    //逻辑执行，执行完之后协程的内容后，再回到这里继续执行。为了在同一帧支持
                     //同步加载和异步加载同一资源！！！
                     if (mRequestMap[ab.ABName].assetBundle != null)
                     {

@@ -251,12 +251,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Art\UnityChan\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Art\UnityChan\Scripts\FaceUpdate.cs" />
-    <Compile Include="Assets\Art\UnityChan\Scripts\IdleChanger.cs" />
-    <Compile Include="Assets\Art\UnityChan\Scripts\SceneLoader.cs" />
-    <Compile Include="Assets\Art\UnityChan\Scripts\ThirdPersonCamera.cs" />
-    <Compile Include="Assets\Art\UnityChan\Scripts\UnityChanControlScriptWithRgidBody.cs" />
     <Compile Include="Assets\Code\ActionManager\ActionManager.cs" />
     <Compile Include="Assets\Code\AndroidPlugin\AndroidPlugin.cs" />
     <Compile Include="Assets\Code\AudioManager\AudioManager.cs" />
@@ -281,7 +275,6 @@
     <Compile Include="Assets\Code\RenderEffectPerFrame\RenderEffectPerFrame.cs" />
     <Compile Include="Assets\Code\ResourceLoad\ABRequest.cs" />
     <Compile Include="Assets\Code\ResourceLoad\AssetRequest.cs" />
-    <Compile Include="Assets\Code\ResourceLoad\AssetRequestQueue.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HAssetBundle.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HAudioClip.cs" />
     <Compile Include="Assets\Code\ResourceLoad\HLua.cs" />
@@ -493,18 +486,6 @@
     <Compile Include="Assets\ToLua\Reflection\LuaReflection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye_blend.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eyelash_blend.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_fuku.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_fuku_ds.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hada_blend.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair.shader" />
-    <None Include="Assets\Art\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_hair_ds.shader" />
-    <None Include="Assets\Art\UnityChan\Stage\Shader\AlphaMask.shader" />
-    <None Include="Assets\Art\UnityChan\license.txt" />
     <None Include="Assets\Code\AudioManager\音频优化规则.txt" />
     <None Include="Assets\Code\ClickEvent\说明.txt" />
     <None Include="Assets\Code\GhostShadow\GhostShadow.shader" />
@@ -522,7 +503,6 @@
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Export\Shader\Testlala.shader" />
     <None Include="Assets\Export\Texture\Shader\ShaderTest.shader" />
-    <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard1.shader" />
