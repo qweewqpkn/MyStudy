@@ -13,20 +13,26 @@ namespace AssetLoad
         {
         }
 
-        public static void Load(string abName, string assetName, Action<Shader> callback)
+        public static void LoadAsync(string abName, string assetName, Action<Shader> callback)
         {
-            Action<UnityEngine.Object> tCallBack = (obj) =>
+            Action<UnityEngine.Object> tCallBack = null;
+            if (callback != null)
             {
-                callback(obj as Shader);
-            };
-            HShader res = Get<HShader>(abName, assetName, tCallBack);
-            res.StartLoad();
+                tCallBack = (obj) =>
+                {
+                    callback(obj as Shader);
+                };
+            }
+
+            HShader res = Get<HShader>(abName, assetName, AssetType.eShader);
+            res.StartLoad(assetName, false, tCallBack);
         }
 
-        protected override void OnCompleted(UnityEngine.Object obj)
+        public static Shader Load(string abName, string assetName)
         {
-            base.OnCompleted(obj);
-            OnCallBack(AssetObj);
+            HShader res = Get<HShader>(abName, assetName, AssetType.eShader);
+            res.StartLoad(assetName, true, null);
+            return res.AssetObj as Shader;
         }
     }
 }

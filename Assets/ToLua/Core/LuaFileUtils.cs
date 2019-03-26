@@ -176,19 +176,17 @@ namespace LuaInterface
                     }
 
                     TextAsset luaTA = null;
-                    ResourceManager.Instance.LoadLua("tolua", fileName, (ta)=>
-                    {
-                        luaTA = ta;
-                        if (luaTA == null)
-                        {
-                            ResourceManager.Instance.LoadLua("lobby", fileName, (ta1)=>
-                            {
-                                luaTA = ta1;
-                            });
-                        }
 
+                    luaTA = ResourceManager.Instance.LoadLua("tolua", fileName);
+                    if (luaTA == null)
+                    {
+                        luaTA = ResourceManager.Instance.LoadLua("lobby", fileName);
+                    }
+
+                    if(luaTA != null)
+                    {
                         str = luaTA.bytes;
-                    });
+                    }
                 }
 
                 return str;

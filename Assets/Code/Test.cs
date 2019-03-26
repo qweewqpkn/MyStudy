@@ -19,69 +19,35 @@ public class Test : MonoBehaviour {
 	void Start () {
         mButton.onClick.AddListener(() =>
         {
-            ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
-            {
-                if (obj != null)
-                    obj.name = "testTest1";
-            });
-            mStart = true;
-            mFrame = 1;
-            ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
-            {
-                if (obj != null)
-                    obj.name = "testTest2";
-            });
-            //ResourceManager.Instance.ReleaseAll();
-            ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
-            {
-                if (obj != null)
-                    obj.name = "testTest3";
-            });
+            ResourceManager.Instance.ReleaseAll();
         });
 
-        ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
+        //Material material = ResourceManager.Instance.LoadMaterialSync("material", "material");
+        //mObj.GetComponent<MeshRenderer>().sharedMaterial = material;
+
+        //AudioClip audioclip = ResourceManager.Instance.LoadAudioClip("sleep", "sleep");
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
         {
-            if(obj != null)
-                obj.name = "testTest";
+            if (Obj1 != null)
+                Obj1.name = "test22";
         });
-
-        ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
+        GameObject Obj = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        Obj.name = "testxx";
+        ResourceManager.Instance.ReleaseAll();
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1) =>
         {
-            if (obj != null)
-                obj.name = "testTest1";
+            if (Obj1 != null)
+                Obj1.name = "test33";
         });
-
-        ResourceManager.Instance.LoadPrefab("cube", "cube", (obj) =>
-        {
-            if (obj != null)
-                obj.name = "testTest2";
-        });
-
-        //ResourceManager.Instance.LoadTexture("texture/main_texture", "main_texture", (tex) =>
+        GameObject ObjX = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        ObjX.name = "testYY";
+        //ResourceManager.Instance.ReleaseAll();
+        //ResourceManager.Instance.LoadPrefab("cube", "cube", (Obj1) =>
         //{
-        //    mImage.texture = tex;
+        //    if (Obj1 != null)
+        //        Obj1.name = "test33";
         //});
-        //
-        //ResourceManager.Instance.LoadAudioClip("sleep", "sleep", (audio) =>
-        //{
-        //    mAS.clip = audio;
-        //    mAS.Play();
-        //});
-        //
-        //ResourceManager.Instance.LoadMaterial("material", "material", (mat) =>
-        //{
-        //    MeshRenderer mr = mObj.GetComponent<MeshRenderer>();
-        //    mr.material = mat;
-        //});
-        //ResourceManager.Instance.LoadSprite("sprite", "0001", (sprite) =>
-        //{
-        //    mSprite.sprite = sprite;
-        //});
-        //
-        //ResourceManager.Instance.LoadSprite("sprite", "0003", (sprite) =>
-        //{
-        //    mSprite1.sprite = sprite;
-        //});
+        //GameObject Objt = ResourceManager.Instance.LoadPrefabSync("cube", "cube");
     }
 
     // Update is called once per frame
@@ -90,7 +56,7 @@ public class Test : MonoBehaviour {
         {
             if(mFrame == 0)
             {
-                //ResourceManager.Instance.ReleaseAll();
+                ResourceManager.Instance.ReleaseAll();
             }
             mFrame--;
         }

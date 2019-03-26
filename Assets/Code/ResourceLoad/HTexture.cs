@@ -11,20 +11,26 @@ namespace AssetLoad
         {
         }
 
-        public static void Load(string abName, string assetName, Action<Texture> callback)
+        public static void LoadAsync(string abName, string assetName, Action<Texture> callback)
         {
-            Action<UnityEngine.Object> tCallBack = (obj) =>
+            Action<UnityEngine.Object> tCallBack = null;
+            if (callback != null)
             {
-                callback(obj as Texture);
-            };
-            HTexture res = Get<HTexture>(abName, assetName, tCallBack);
-            res.StartLoad();
+                tCallBack = (obj) =>
+                {
+                    callback(obj as Texture);
+                };
+            }
+
+            HTexture res = Get<HTexture>(abName, assetName, AssetType.eTexture);
+            res.StartLoad(assetName, false, tCallBack);
         }
 
-        protected override void OnCompleted(UnityEngine.Object obj)
+        public static Texture Load(string abName, string assetName)
         {
-            base.OnCompleted(obj);
-            OnCallBack(AssetObj);
+            HTexture res = Get<HTexture>(abName, assetName, AssetType.eTexture);
+            res.StartLoad(assetName, true, null);
+            return res.AssetObj as Texture;
         }
     }
 }

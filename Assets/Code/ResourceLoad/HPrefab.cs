@@ -7,37 +7,58 @@ namespace AssetLoad
 {   
     class HPrefab : HRes
     {
+        public GameObject InstObj
+        {
+            get;
+            set;
+        }
+
         public HPrefab()
         {
         }
 
-        public static void Load(string abName, string assetName, Action<GameObject> callback)
+        public static void LoadAsync(string abName, string assetName, Action<GameObject> callback)
         {
-            Action<UnityEngine.Object> tCallBack = (obj) =>
+            Action<UnityEngine.Object> tCallBack = null;
+            if (callback != null)
             {
-                callback(obj as GameObject);
-            };
-            HPrefab res = Get<HPrefab>(abName, assetName, tCallBack);
-            res.StartLoad();
+                tCallBack = (obj) =>
+                {
+                    callback(obj as GameObject);
+                };
+            }
+
+            HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
+            res.StartLoad(assetName, false, tCallBack);
         }
 
-        protected override void OnCompleted(UnityEngine.Object obj)
+        public static GameObject Load(string abName, string assetName)
         {
-            base.OnCompleted(obj);
-            if(obj != null)
+            HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
+            res.StartLoad(assetName, true, null);
+            return res.InstObj as GameObject;
+        }
+
+        protected override void OnCompleted(UnityEngine.Object obj, Action<UnityEngine.Object> callback)
+        {
+            AssetObj = obj;
+
+            if (obj != null)
             {
-                for (int i = 0; i < mCallBackList.Count; i++)
+                InstObj = GameObject.Instantiate(obj as GameObject);
+                PrefabAutoDestroy autoDestroy = InstObj.AddComponent<PrefabAutoDestroy>();
+                autoDestroy.mRes = this;
+                if(callback != null)
                 {
-                    GameObject newObj = GameObject.Instantiate(obj as GameObject);
-                    PrefabAutoDestory autoDestroy = newObj.AddComponent<PrefabAutoDestory>();
-                    autoDestroy.mRes = this;
-                    mCallBackList[i](newObj);
+                    callback(InstObj);
                 }
-                mCallBackList.Clear();
             }
             else
             {
-                OnCallBack(null);
+                if(callback != null)
+                {
+                    callback(null);
+                }
             }
         }
     }

@@ -5,14 +5,33 @@ using UnityEngine;
 
 public class ABRequest
 {
-    static private Dictionary<string, HAssetBundle> mLoadingMap = new Dictionary<string, HAssetBundle>();
     List<HAssetBundle> mABLoadList = new List<HAssetBundle>();
+    static Dictionary<string, AssetBundleCreateRequest> mRequestMap = new Dictionary<string, AssetBundleCreateRequest>();
+
+    private bool mIsComplete = false;
+    public bool IsComplete
+    {
+        get
+        {
+            return mIsComplete;
+        }
+
+        private set
+        {
+            mIsComplete = value;
+        }
+    }
 
     public ABRequest()
     { 
     }
 
-    public IEnumerator Load(HAssetBundle ab)
+    public void Load(HAssetBundle ab, bool isSync)
+    {
+        ResourceManager.Instance.StartCoroutine(CoLoad(ab, isSync));
+    }
+
+    public IEnumerator CoLoad(HAssetBundle ab, bool isSync = false)
     {
         if (ab == null)
         {
@@ -25,14 +44,14 @@ public class ABRequest
         mABLoadList.Add(ab);
         for (int i = 0; i < ab.DepList.Count; i++)
         {
-            HAssetBundle depAB = HRes.Get<HAssetBundle>(ab.DepList[i], "", null);
+            HAssetBundle depAB = HRes.Get<HAssetBundle>(ab.DepList[i], "", AssetType.eAB);
             mABLoadList.Add(depAB);
         }
 
         //开启所有加载
         for (int i = 0; i < mABLoadList.Count; i++)
         {
-            ResourceManager.Instance.StartCoroutine(CoLoad(mABLoadList[i]));
+            ResourceManager.Instance.StartCoroutine(OnLoad(mABLoadList[i], isSync));
         }
 
         //等待加载完成
@@ -43,36 +62,90 @@ public class ABRequest
                 yield return null;
             }
         }
+
+        IsComplete = true;
     }
 
-    private IEnumerator CoLoad(HAssetBundle ab)
+    private IEnumerator OnLoad(HAssetBundle ab, bool isSync)
     {
         if (ab.Status == LoadStatus.eNone)
         {
             ab.Status = LoadStatus.eLoading;
-            while(mLoadingMap.ContainsKey(ab.ABName))
+            if(isSync)
             {
-                //这里检测目的：当加载A后，WWW还没返回A的AB，但是外部却卸载了A，此时如果再次加载A，那么会走到这里等待之前的A被加载然后释放掉，然后在加载我们的A(Unity不允许同时加载同一个资源的AB)
-                yield return null;
+                if (mRequestMap.ContainsKey(ab.ABName))
+                {
+                    //打断，解释如下面的
+                    if (mRequestMap[ab.ABName].assetBundle != null)
+                    {
+                        if (mRequestMap.ContainsKey(ab.ABName))
+                        {
+                            mRequestMap[ab.ABName].assetBundle.Unload(true);
+                        }
+                    }
+                }
+
+                if (ab.AB == null)
+                {
+                    string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
+                    Debug.Log("url" + url);
+                    ab.AB = AssetBundle.LoadFromFile(url);
+                    ab.Status = LoadStatus.eLoaded;
+                }
             }
-            if (!mLoadingMap.ContainsKey(ab.ABName))
+            else
             {
-                mLoadingMap.Add(ab.ABName, ab);
+                if (mRequestMap.ContainsKey(ab.ABName))
+                {
+                    //打断异步加载，解释:这句会让之前的异步加载立马完成，像Goto一样跳转到yield return request后面的
+                    //逻辑执行，执行完之后协程的内容后，再回到这里继续执行。很难理解，但是为了在同一帧支持
+                    //同步加载和异步加载同一资源！！！
+                    if (mRequestMap[ab.ABName].assetBundle != null)
+                    {
+                        if (mRequestMap.ContainsKey(ab.ABName))
+                        {
+                            mRequestMap[ab.ABName].assetBundle.Unload(true);
+                        }
+                    }
+                }
+                string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
+                AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
+                mRequestMap.Add(ab.ABName, request);
+                yield return request;
+                mRequestMap.Remove(ab.ABName);
+                ab.AB = request.assetBundle;
+                ab.Status = LoadStatus.eLoaded;
             }
-            string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
-            AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
-            yield return request;
-            //WWW www = new WWW(url);
-            //yield return www;
-            mLoadingMap.Remove(ab.ABName);
-            ab.AB = request.assetBundle;
-            ab.Status = LoadStatus.eLoaded;
         }
         else if (ab.Status == LoadStatus.eLoading)
         {
-            while (ab.Status != LoadStatus.eLoaded)
+            if(isSync)
             {
-                yield return null;
+                if (mRequestMap.ContainsKey(ab.ABName))
+                {
+                    //打断，解释如上面的
+                    if (mRequestMap[ab.ABName].assetBundle != null)
+                    {
+                        if (mRequestMap.ContainsKey(ab.ABName))
+                        {
+                            mRequestMap[ab.ABName].assetBundle.Unload(true);
+                        }
+                    }
+                }
+
+                if(ab.AB == null)
+                {
+                    string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
+                    ab.AB = AssetBundle.LoadFromFile(url);
+                    ab.Status = LoadStatus.eLoaded;
+                }
+            }
+            else
+            {
+                while (ab.Status != LoadStatus.eLoaded)
+                {
+                    yield return null;
+                }
             }
         }
 

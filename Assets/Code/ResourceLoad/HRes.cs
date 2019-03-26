@@ -12,7 +12,6 @@ namespace AssetLoad
     {
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
         public static Dictionary<HAssetBundle, string> mRemoveMap = new Dictionary<HAssetBundle, string>();
-        protected List<Action<UnityEngine.Object>> mCallBackList = new List<Action<UnityEngine.Object>>();
 
         //最终加载出来的资源对象
         public UnityEngine.Object AssetObj
@@ -58,27 +57,32 @@ namespace AssetLoad
 
         public HRes(){}
 
-        public static string GetResName(string abName, string assetName)
+        public static string GetResName(string abName, string assetName, AssetType assetType)
         {
-            return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
+            switch(assetType)
+            {
+                case AssetType.eSprite:
+                    {
+                        return string.Format("{0}/{1}", abName, "*");
+                    }
+                default:
+                    {
+                        return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
+                    }
+            }
         }
 
-        public static T Get<T>(string abName, string assetName, Action<UnityEngine.Object> callback) where T : HRes, new()
+        public static T Get<T>(string abName, string assetName, AssetType assetType) where T : HRes, new()
         {
             HRes res = null;
             abName = abName.ToLower();
             assetName = assetName.ToLower();
-            string resName = GetResName(abName, assetName);
+            string resName = GetResName(abName, assetName, assetType);
             if (!mResMap.TryGetValue(resName, out res))
             {
                 res = new T();
                 mResMap.Add(resName, res);
                 res.Init(abName, assetName, resName);
-            }
-
-            if(callback != null)
-            {
-                res.mCallBackList.Add(callback);
             }
 
             res.RefCount++;
@@ -92,35 +96,49 @@ namespace AssetLoad
             ResName = resName;
         }
 
-        protected virtual void StartLoad(params object[] datas)
+        protected virtual void StartLoad(string assetName, bool isSync, Action<UnityEngine.Object> callback)
         {
-            ResourceManager.Instance.StartCoroutine(CoLoad());
+            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, isSync, callback));
         }
 
-        protected virtual IEnumerator CoLoad()
+        protected virtual IEnumerator CoLoad(string assetName, bool isSync, Action<UnityEngine.Object> callback)
         {
-            ABDep = Get<HAssetBundle>(ABName, "", null);
+            ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
+            //加载AB
             ABRequest abRequest = new ABRequest();
-            yield return abRequest.Load(ABDep);
+            abRequest.Load(ABDep, isSync);
+            while(!abRequest.IsComplete)
+            {
+                yield return null;
+            }
 
-            AssetRequest assetRequest = new AssetRequest();
-            yield return assetRequest.Load(ABDep.AB, AssetName);
-            OnCompleted(assetRequest.AssetObj);
+            if(AssetObj == null)
+            {
+                //资源还未加载过,那么加载AB中的资源
+                AssetRequest assetRequest = new AssetRequest();
+                assetRequest.Load(ABDep.AB, assetName, isSync);
+                while (!assetRequest.IsComplete)
+                {
+                    yield return null;
+                }
+
+                OnCompleted(assetRequest.AssetObj, callback);
+            }
+            else
+            {
+                //加载过了,那么直接返回
+                OnCompleted(AssetObj, callback);
+            }
         }
 
-        protected virtual void OnCompleted(UnityEngine.Object obj) 
+        protected virtual void OnCompleted(UnityEngine.Object obj, Action<UnityEngine.Object> callback) 
         {
             AssetObj = obj;
-        }
-
-        protected virtual void OnCallBack(UnityEngine.Object obj)
-        {
-            for (int i = 0; i < mCallBackList.Count; i++)
+            if(callback != null)
             {
-                mCallBackList[i](obj);
+                callback(AssetObj);
             }
-            mCallBackList.Clear();
         }
 
         public void ReleaseAll()

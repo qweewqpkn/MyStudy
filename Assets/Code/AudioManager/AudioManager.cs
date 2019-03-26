@@ -331,7 +331,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        ResourceManager.Instance.LoadAudioClip(name.ToLower(), name.ToLower(),
+        ResourceManager.Instance.LoadAudioClipAsync(name.ToLower(), name.ToLower(),
         (res) =>
         {
             onComplete(res);
@@ -343,7 +343,7 @@ public class AudioManager : MonoBehaviour
     {
         //if (mAudioClipDict.ContainsKey(name))
         {
-            ResourceManager.Instance.Release(name);
+            ResourceManager.Instance.Release(name, AssetType.eAudioClip);
             //mAudioClipDict.Remove(name);
         }
     }
@@ -474,7 +474,7 @@ public class AudioManager : MonoBehaviour
     {
         GetAudioClip(name, (audioClip) =>
         {
-            ResourceManager.Instance.Release(name);
+            ResourceManager.Instance.Release(name, AssetType.eAudioClip);
             float length = 0;
             if (audioClip != null)
             {

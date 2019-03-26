@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace AssetLoad
 {
@@ -10,49 +11,85 @@ namespace AssetLoad
     {
         private AssetBundleRequest mRequest;
 
+        private bool mIsComplete = false;
+        public bool IsComplete
+        {
+            get
+            {
+                return mIsComplete;
+            }
+
+            private set
+            {
+                mIsComplete = value;
+            }
+        }
+
         public UnityEngine.Object AssetObj
         {
             get;
             private set;
         }
 
+        public UnityEngine.Object[] AssetsList
+        {
+            get;
+            set;
+        }
+
         public AssetRequest(){}
 
-        public IEnumerator Load(AssetBundle ab, string assetName, bool isAll = false)
+        public void Load(AssetBundle ab, string assetName, bool isSync, bool isAll = false)
+        {
+            ResourceManager.Instance.StartCoroutine(CoLoad(ab, assetName, isSync, isAll));
+        }
+
+        public IEnumerator CoLoad(AssetBundle ab, string assetName, bool isSync, bool isAll = false)
         {
             if (ab == null)
             {
                 AssetObj = null;
+                IsComplete = true;
             }
             else
             {
                 if(string.IsNullOrEmpty(assetName))
                 {
                     AssetObj = null;
+                    IsComplete = true;
                     Debug.LogError("AssetRequest assetName is null");
                     yield break;
                 }
                 else
                 {
-                    if(isAll)
+                    if(isSync)
                     {
-                        mRequest = ab.LoadAllAssetsAsync();
-                        yield return mRequest;
-                        for(int i = 0; i < mRequest.allAssets.Length; i++)
+                        if(isAll)
                         {
-                            if(mRequest.allAssets[i].name.ToLower() == assetName.ToLower())
-                            {
-                                AssetObj = mRequest.allAssets[i];
-                                break;
-                            }
+                            AssetsList = ab.LoadAllAssets();
+                        }
+                        else
+                        {
+                            AssetObj = ab.LoadAsset(assetName);
                         }
                     }
                     else
                     {
-                        mRequest = ab.LoadAssetAsync(assetName);
-                        yield return mRequest;
-                        AssetObj = mRequest.asset;
+                        if (isAll)
+                        {
+                            mRequest = ab.LoadAllAssetsAsync();
+                            yield return mRequest;
+                            AssetsList = mRequest.allAssets;
+                        }
+                        else
+                        {
+                            mRequest = ab.LoadAssetAsync(assetName);
+                            yield return mRequest;
+                            AssetObj = mRequest.asset;
+                        }
                     }
+
+                    IsComplete = true;
                 }
             }
         }

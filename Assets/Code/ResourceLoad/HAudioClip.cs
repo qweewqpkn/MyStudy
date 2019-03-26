@@ -13,21 +13,26 @@ namespace AssetLoad
         { 
         }
 
-        public static void Load(string abName, string assetName, Action<AudioClip> callback)
+        public static void LoadAsync(string abName, string assetName, Action<AudioClip> callback)
         {
-            Action<UnityEngine.Object> tCallBack = (obj) =>
+            Action<UnityEngine.Object> tCallBack = null;
+            if (callback != null)
             {
-                callback(obj as AudioClip);
-            };
+                tCallBack = (obj) =>
+                {
+                    callback(obj as AudioClip);
+                };
+            }
 
-            HAudioCilp res = Get<HAudioCilp>(abName, assetName, tCallBack);
-            res.StartLoad();
+            HAudioCilp res = Get<HAudioCilp>(abName, assetName, AssetType.eAudioClip);
+            res.StartLoad(assetName, false, tCallBack);
         }
 
-        protected override void OnCompleted(UnityEngine.Object obj)
+        public static AudioClip Load(string abName, string assetName)
         {
-            base.OnCompleted(obj);
-            OnCallBack(AssetObj);
+            HAudioCilp res = Get<HAudioCilp>(abName, assetName, AssetType.eAudioClip);
+            res.StartLoad(assetName, true, null);
+            return res.AssetObj as AudioClip;
         }
     }
 }

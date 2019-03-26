@@ -13,21 +13,26 @@ namespace AssetLoad
         {
         }
 
-        public static void Load(string abName, string assetName, Action<Material> callback)
+        public static void LoadAsync(string abName, string assetName, Action<Material> callback)
         {
-            Action<UnityEngine.Object> tCallBack = (obj) =>
+            Action<UnityEngine.Object> tCallBack = null;
+            if (callback != null)
             {
-                callback(obj as Material);
-            };
+                tCallBack = (obj) =>
+                {
+                    callback(obj as Material);
+                };
+            }
 
-            HMaterial res = Get<HMaterial>(abName, assetName, tCallBack);
-            res.StartLoad();
+            HMaterial res = Get<HMaterial>(abName, assetName, AssetType.eMaterial);
+            res.StartLoad(assetName, false, tCallBack);
         }
 
-        protected override void OnCompleted(UnityEngine.Object obj)
+        public static Material Load(string abName, string assetName)
         {
-            base.OnCompleted(obj);
-            OnCallBack(AssetObj);
+            HMaterial res = Get<HMaterial>(abName, assetName, AssetType.eMaterial);
+            res.StartLoad(assetName, true, null);
+            return res.AssetObj as Material;
         }
     }
 }

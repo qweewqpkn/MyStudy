@@ -11,20 +11,26 @@ namespace AssetLoad
         {
         }
 
-        public static void Load(string abName, string assetName, Action<TextAsset> callback)
+        public static void LoadAsync(string abName, string assetName, Action<TextAsset> callback)
         {
-            Action<UnityEngine.Object> tCallBack = (obj) =>
+            Action<UnityEngine.Object> tCallBack = null;
+            if (callback != null)
             {
-                callback(obj as TextAsset);
-            };
-            HLua res = Get<HLua>(abName, assetName, tCallBack);
-            res.StartLoad();
+                tCallBack = (obj) =>
+                {
+                    callback(obj as TextAsset);
+                };
+            }
+
+            HLua res = Get<HLua>(abName, assetName, AssetType.eShader);
+            res.StartLoad(assetName, false, tCallBack);
         }
 
-        protected override void OnCompleted(UnityEngine.Object obj)
+        public static TextAsset Load(string abName, string assetName)
         {
-            base.OnCompleted(obj);
-            OnCallBack(AssetObj);
+            HLua res = Get<HLua>(abName, assetName, AssetType.eText);
+            res.StartLoad(assetName, true, null);
+            return res.AssetObj as TextAsset;
         }
     }
 }

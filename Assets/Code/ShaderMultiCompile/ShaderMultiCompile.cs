@@ -9,15 +9,12 @@ public class ShaderMultiCompile : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        ResourceManager.Instance.mInitComplete = () =>
+        ResourceManager.Instance.LoadShaderAsync("allshader", "NewUnlitShader", (shader) =>
         {
-            ResourceManager.Instance.LoadShader("allshader", "NewUnlitShader", (shader) =>
-            {
-                Material material = new Material(shader);
-                obj.GetComponent<MeshRenderer>().sharedMaterial = material;
-                material.EnableKeyword("ENABLE_COLOR");
-            });
-        };
+            Material material = new Material(shader);
+            obj.GetComponent<MeshRenderer>().sharedMaterial = material;
+            material.EnableKeyword("ENABLE_COLOR");
+        });
 	}
 	
 	// Update is called once per frame

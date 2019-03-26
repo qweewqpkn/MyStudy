@@ -22,9 +22,6 @@ namespace AssetLoad
 
     public class ResourceManager : MonoBehaviour
     {
-        private AssetRequestQueue mAssetRequestQueue = new AssetRequestQueue();
-        public Action mInitComplete = null;
-
         private static ResourceManager mInstance;
         public static ResourceManager Instance
         {
@@ -35,7 +32,6 @@ namespace AssetLoad
                     GameObject obj = new GameObject();
                     obj.name = "ResourceManager";
                     mInstance = obj.AddComponent<ResourceManager>();
-                    mInstance.Init();
                     DontDestroyOnLoad(obj);
                 }
 
@@ -43,72 +39,125 @@ namespace AssetLoad
             }
         }
 
-        private void Init()
+        //异步加载AB
+        public void LoadABAsync(string abName, Action<AssetBundle> callback)
         {
+            HAssetBundle.LoadAsync(abName, callback);
         }
 
-        //单独加载AB
-        public void LoadAB(string abName, Action<AssetBundle> callback)
+        //同步加载AB
+        public AssetBundle LoadAB(string abName)
         {
-            HAssetBundle.Load(abName, callback);
+            return HAssetBundle.Load(abName);
         }
 
-        //加载text
-        public void LoadText(string abName, string assetName, Action<TextAsset> callback)
+        //异步加载text
+        public void LoadTextAsync(string abName, string assetName, Action<TextAsset> callback)
         {
-            HText.Load(abName, assetName, callback);
-        }
-
-        //加载prefab
-        public void LoadPrefab(string abName, string assetName, Action<GameObject> callback)
-        {
-            HPrefab.Load(abName, assetName, callback);
-        }
-
-        //加载图集
-        public void LoadSprite(string abName, string assetName, Action<Sprite> callback)
-        {
-            HSprite.Load(abName, assetName, callback);
-        }
-
-        //加载贴图
-        public void LoadTexture(string abName, string assetName, Action<Texture> callback)
-        {
-            HTexture.Load(abName, assetName, callback);
-        }
-
-        //加载音频
-        public void LoadAudioClip(string abName, string assetName, Action<AudioClip> callback)
-        {
-            HAudioCilp.Load(abName, assetName, callback);
-        }
-
-        //加载材质
-        public void LoadMaterial(string abName, string assetName, Action<Material> callback)
-        {
-            HMaterial.Load(abName, assetName, callback);
+            HText.LoadAsync(abName, assetName, callback);
         }
         
-        public void LoadShader(string abName, string assetName, Action<Shader> callback)
+        //同步加载text
+        public TextAsset LoadText(string abName, string assetName)
         {
-            HShader.Load(abName, assetName, callback);
-        }
-        
-        public void LoadLua(string abName, string assetName, Action<TextAsset> callback)
-        {
-            HLua.Load(abName, assetName, callback);
+            return HText.Load(abName, assetName);
         }
 
-        public void Release(string name)
+        //异步加载prefab
+        public void LoadPrefabAsync(string abName, string assetName, Action<GameObject> callback)
         {
-            name = name.ToLower();
-            Release(name, name);
+            HPrefab.LoadAsync(abName, assetName, callback);
         }
 
-        public void Release(string abName, string assetName)
+        //同步加载prefab
+        public GameObject LoadPrefab(string abName, string assetName)
+        {
+            return HPrefab.Load(abName, assetName);
+        }
+
+        //异步加载图集
+        public void LoadSpriteAsync(string abName, string assetName, Action<Sprite> callback)
+        {
+            HSprite.LoadAsync(abName, assetName, callback);
+        }
+
+        //同步加载图集
+        public Sprite LoadSprite(string abName, string assetName)
+        {
+            return HSprite.Load(abName, assetName);
+        }
+
+        //异步加载贴图
+        public void LoadTextureAsync(string abName, string assetName, Action<Texture> callback)
+        {
+            HTexture.LoadAsync(abName, assetName, callback);
+        }
+
+        //同步加载贴图
+        public Texture LoadTexture(string abName, string assetName)
+        {
+            return HTexture.Load(abName, assetName);
+        }
+
+        //异步加载音频
+        public void LoadAudioClipAsync(string abName, string assetName, Action<AudioClip> callback)
+        {
+            HAudioCilp.LoadAsync(abName, assetName, callback);
+        }
+
+        //同步加载音频
+        public AudioClip LoadAudioClip(string abName, string assetName)
+        {
+            return HAudioCilp.Load(abName, assetName);
+        }
+
+        //异步加载材质
+        public void LoadMaterialAsync(string abName, string assetName, Action<Material> callback)
+        {
+            HMaterial.LoadAsync(abName, assetName, callback);
+        }
+
+        //同步加载材质
+        public Material LoadMaterial(string abName, string assetName)
+        {
+            return HMaterial.Load(abName, assetName);
+        }
+
+        //异步加载shader
+        public void LoadShaderAsync(string abName, string assetName, Action<Shader> callback)
+        {
+            HShader.LoadAsync(abName, assetName, callback);
+        }
+
+        //同步加载shader
+        public Shader LoadShader(string abName, string assetName)
+        {
+            return HShader.Load(abName, assetName);
+        }
+
+        //异步加载lua
+        public void LoadLuaAsync(string abName, string assetName, Action<TextAsset> callback)
+        {
+            HLua.LoadAsync(abName, assetName, callback);
+        }
+
+        //同步加载lua
+        public TextAsset LoadLua(string abName, string assetName)
+        {
+            return HLua.Load(abName, assetName);
+        }
+
+        public void Release(string name, AssetType assetType)
+        {
+            Release(name, name, assetType);
+        }
+
+        public void Release(string abName, string assetName, AssetType assetType)
         {
             HRes res;
-            string name = HRes.GetResName(abName.ToLower(), assetName.ToLower());
+            abName = abName.ToLower();
+            assetName = assetName.ToLower();
+            string name = HRes.GetResName(abName, assetName, assetType);
             if (HRes.mResMap.TryGetValue(name, out res))
             {
                 res.Release();
@@ -127,11 +176,6 @@ namespace AssetLoad
             {
                 resList[i].ReleaseAll();
             }
-        }
-
-        void Update()
-        {
-            mAssetRequestQueue.Update();
         }
     }
 }
