@@ -9,7 +9,7 @@ public class LoadLightMap : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        ResourceManager.Instance.LoadPrefabAsync("lightmaptest", "lightmaptest", (obj) =>
+        ResourceManager.Instance.LoadPrefabAsync("lightmaptest", "lightmaptest", (obj, args) =>
         {
         });
     }

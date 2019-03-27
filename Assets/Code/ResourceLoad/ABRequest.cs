@@ -8,22 +8,15 @@ public class ABRequest
     List<HAssetBundle> mABLoadList = new List<HAssetBundle>();
     static Dictionary<string, AssetBundleCreateRequest> mRequestMap = new Dictionary<string, AssetBundleCreateRequest>();
 
-    private bool mIsComplete = false;
     public bool IsComplete
     {
-        get
-        {
-            return mIsComplete;
-        }
-
-        private set
-        {
-            mIsComplete = value;
-        }
+        get;
+        private set;
     }
 
     public ABRequest()
-    { 
+    {
+        IsComplete = false;
     }
 
     public void Load(HAssetBundle ab, bool isSync)
@@ -88,7 +81,6 @@ public class ABRequest
                 if (ab.AB == null)
                 {
                     string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
-                    Debug.Log("url" + url);
                     ab.AB = AssetBundle.LoadFromFile(url);
                     ab.Status = LoadStatus.eLoaded;
                 }

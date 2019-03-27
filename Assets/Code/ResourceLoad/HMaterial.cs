@@ -25,14 +25,14 @@ namespace AssetLoad
             }
 
             HMaterial res = Get<HMaterial>(abName, assetName, AssetType.eMaterial);
-            res.StartLoad(assetName, false, tCallBack);
+            res.StartLoad(assetName, false, false, tCallBack);
         }
 
         public static Material Load(string abName, string assetName)
         {
             HMaterial res = Get<HMaterial>(abName, assetName, AssetType.eMaterial);
-            res.StartLoad(assetName, true, null);
-            return res.AssetObj as Material;
+            res.StartLoad(assetName, true, false, null);
+            return res.Asset as Material;
         }
     }
 }

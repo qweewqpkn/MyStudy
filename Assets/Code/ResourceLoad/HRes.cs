@@ -13,8 +13,27 @@ namespace AssetLoad
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
         public static Dictionary<HAssetBundle, string> mRemoveMap = new Dictionary<HAssetBundle, string>();
 
+
+        private Dictionary<string, UnityEngine.Object> AssetMap
+        {
+            get;
+            set;
+        }
+
+        private ABRequest ABRequest
+        {
+            get;
+            set;
+        }
+
+        private AssetRequest AssetRequest
+        {
+            get;
+            set;
+        }
+
         //最终加载出来的资源对象
-        public UnityEngine.Object AssetObj
+        public UnityEngine.Object Asset
         {
             get;
             set;
@@ -55,7 +74,12 @@ namespace AssetLoad
             set;
         }
 
-        public HRes(){}
+        public HRes()
+        {
+            AssetMap = new Dictionary<string, UnityEngine.Object>();
+            ABRequest = new ABRequest();
+            AssetRequest = new AssetRequest();
+        }
 
         public static string GetResName(string abName, string assetName, AssetType assetType)
         {
@@ -96,48 +120,76 @@ namespace AssetLoad
             ResName = resName;
         }
 
-        protected virtual void StartLoad(string assetName, bool isSync, Action<UnityEngine.Object> callback)
+        protected virtual void StartLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
         {
-            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, isSync, callback));
+            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, isSync, isAll, callback));
         }
 
-        protected virtual IEnumerator CoLoad(string assetName, bool isSync, Action<UnityEngine.Object> callback)
+        protected virtual IEnumerator CoLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
         {
             ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
             //加载AB
-            ABRequest abRequest = new ABRequest();
-            abRequest.Load(ABDep, isSync);
-            while(!abRequest.IsComplete)
+            ABRequest.Load(ABDep, isSync);
+            while(!ABRequest.IsComplete)
             {
                 yield return null;
             }
 
-            if(AssetObj == null)
+            if(isAll)
             {
-                //资源还未加载过,那么加载AB中的资源
-                AssetRequest assetRequest = new AssetRequest();
-                assetRequest.Load(ABDep.AB, assetName, isSync);
-                while (!assetRequest.IsComplete)
+                if(AssetMap.Count == 0)
                 {
-                    yield return null;
+                    //资源还未加载过,那么加载AB中的资源
+                    AssetRequest.Load(ABDep.AB, assetName, isSync, isAll);
+                    while (!AssetRequest.IsComplete)
+                    {
+                        yield return null;
+                    }
+
+                    //缓存AB中加载的所有资源，为了下次使用
+                    if (AssetRequest.AssetList != null)
+                    {
+                        for (int i = 0; i < AssetRequest.AssetList.Length; i++)
+                        {
+                            AssetMap[AssetRequest.AssetList[i].name.ToLower()] = AssetRequest.AssetList[i];
+                        }
+                    }
                 }
 
-                OnCompleted(assetRequest.AssetObj, callback);
+                if (AssetMap.ContainsKey(assetName))
+                {
+                    Asset = AssetMap[assetName];
+                }
+                else
+                {
+                    Asset = null;
+                }
             }
             else
             {
-                //加载过了,那么直接返回
-                OnCompleted(AssetObj, callback);
+                if(AssetName != assetName || Asset == null)
+                {
+                    AssetName = assetName;
+                    //资源还未加载过,那么加载AB中的资源
+                    AssetRequest.Load(ABDep.AB, assetName, isSync, isAll);
+                    while (!AssetRequest.IsComplete)
+                    {
+                        yield return null;
+                    }
+
+                    Asset = AssetRequest.Asset;
+                }
             }
+
+            OnCompleted(callback);
         }
 
-        protected virtual void OnCompleted(UnityEngine.Object obj, Action<UnityEngine.Object> callback) 
+        protected virtual void OnCompleted(Action<UnityEngine.Object> callback) 
         {
-            AssetObj = obj;
             if(callback != null)
             {
-                callback(AssetObj);
+                callback(Asset);
             }
         }
 
@@ -174,7 +226,7 @@ namespace AssetLoad
             //释放依赖的AB资源
             if(ABDep != null)
             {
-                ABDep.Release();
+                  ABDep.Release();
             }
         }
     }

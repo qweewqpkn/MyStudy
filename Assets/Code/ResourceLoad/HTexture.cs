@@ -23,14 +23,14 @@ namespace AssetLoad
             }
 
             HTexture res = Get<HTexture>(abName, assetName, AssetType.eTexture);
-            res.StartLoad(assetName, false, tCallBack);
+            res.StartLoad(assetName, false, false, tCallBack);
         }
 
         public static Texture Load(string abName, string assetName)
         {
             HTexture res = Get<HTexture>(abName, assetName, AssetType.eTexture);
-            res.StartLoad(assetName, true, null);
-            return res.AssetObj as Texture;
+            res.StartLoad(assetName, true, false, null);
+            return res.Asset as Texture;
         }
     }
 }

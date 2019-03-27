@@ -17,35 +17,33 @@ namespace AssetLoad
         {
         }
 
-        public static void LoadAsync(string abName, string assetName, Action<GameObject> callback)
+        public static void LoadAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
         {
             Action<UnityEngine.Object> tCallBack = null;
             if (callback != null)
             {
                 tCallBack = (obj) =>
                 {
-                    callback(obj as GameObject);
+                    callback(obj as GameObject, args);
                 };
             }
 
             HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(assetName, false, tCallBack);
+            res.StartLoad(assetName, false, false, tCallBack);
         }
 
         public static GameObject Load(string abName, string assetName)
         {
             HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(assetName, true, null);
+            res.StartLoad(assetName, true, false, null);
             return res.InstObj as GameObject;
         }
 
-        protected override void OnCompleted(UnityEngine.Object obj, Action<UnityEngine.Object> callback)
+        protected override void OnCompleted(Action<UnityEngine.Object> callback)
         {
-            AssetObj = obj;
-
-            if (obj != null)
+            if (Asset != null)
             {
-                InstObj = GameObject.Instantiate(obj as GameObject);
+                InstObj = GameObject.Instantiate(Asset as GameObject);
                 PrefabAutoDestroy autoDestroy = InstObj.AddComponent<PrefabAutoDestroy>();
                 autoDestroy.mRes = this;
                 if(callback != null)

@@ -9,35 +9,30 @@ namespace AssetLoad
 {
     public class AssetRequest
     {
-        private AssetBundleRequest mRequest;
-
-        private bool mIsComplete = false;
         public bool IsComplete
-        {
-            get
-            {
-                return mIsComplete;
-            }
-
-            private set
-            {
-                mIsComplete = value;
-            }
-        }
-
-        public UnityEngine.Object AssetObj
         {
             get;
             private set;
         }
 
-        public UnityEngine.Object[] AssetsList
+        public UnityEngine.Object Asset
+        {
+            get;
+            private set;
+        }
+
+        public UnityEngine.Object[] AssetList
         {
             get;
             set;
         }
 
-        public AssetRequest(){}
+        public AssetRequest()
+        {
+            Asset = null;
+            AssetList = null;
+            IsComplete = false;
+        }
 
         public void Load(AssetBundle ab, string assetName, bool isSync, bool isAll = false)
         {
@@ -48,14 +43,12 @@ namespace AssetLoad
         {
             if (ab == null)
             {
-                AssetObj = null;
                 IsComplete = true;
             }
             else
             {
                 if(string.IsNullOrEmpty(assetName))
                 {
-                    AssetObj = null;
                     IsComplete = true;
                     Debug.LogError("AssetRequest assetName is null");
                     yield break;
@@ -66,26 +59,26 @@ namespace AssetLoad
                     {
                         if(isAll)
                         {
-                            AssetsList = ab.LoadAllAssets();
+                            AssetList = ab.LoadAllAssets();
                         }
                         else
                         {
-                            AssetObj = ab.LoadAsset(assetName);
+                            Asset = ab.LoadAsset(assetName);
                         }
                     }
                     else
                     {
                         if (isAll)
                         {
-                            mRequest = ab.LoadAllAssetsAsync();
-                            yield return mRequest;
-                            AssetsList = mRequest.allAssets;
+                            AssetBundleRequest request = ab.LoadAllAssetsAsync();
+                            yield return request;
+                            AssetList = request.allAssets;
                         }
                         else
                         {
-                            mRequest = ab.LoadAssetAsync(assetName);
-                            yield return mRequest;
-                            AssetObj = mRequest.asset;
+                            AssetBundleRequest request = ab.LoadAssetAsync(assetName);
+                            yield return request;
+                            Asset = request.asset;
                         }
                     }
 

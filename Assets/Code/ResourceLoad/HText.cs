@@ -25,14 +25,14 @@ namespace AssetLoad
             }
 
             HText res = Get<HText>(abName, assetName, AssetType.eText);
-            res.StartLoad(assetName, false, tCallBack);
+            res.StartLoad(assetName, false, false, tCallBack);
         }
 
         public static TextAsset Load(string abName, string assetName)
         {
             HText res = Get<HText>(abName, assetName, AssetType.eText);
-            res.StartLoad(assetName, true, null);
-            return res.AssetObj as TextAsset;
+            res.StartLoad(assetName, true, false, null);
+            return res.Asset as TextAsset;
         }
     }
 }

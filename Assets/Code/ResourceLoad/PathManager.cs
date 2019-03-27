@@ -87,8 +87,17 @@ public class PathManager
                     result.Append("/IOS");
                 }
                 break;
-            case RuntimePlatform.WindowsEditor:
             case RuntimePlatform.WindowsPlayer:
+                {
+                    if (isWWW)
+                    {
+                        result.Append("file://");
+                    }
+                    result.Append(RES_STREAM_ROOT_PATH);
+                    result.Append("/Windows");
+                }
+                break;
+            case RuntimePlatform.WindowsEditor:
                 {
                     if (isWWW)
                     {

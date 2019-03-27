@@ -25,14 +25,14 @@ namespace AssetLoad
             }
 
             HShader res = Get<HShader>(abName, assetName, AssetType.eShader);
-            res.StartLoad(assetName, false, tCallBack);
+            res.StartLoad(assetName, false, false, tCallBack);
         }
 
         public static Shader Load(string abName, string assetName)
         {
             HShader res = Get<HShader>(abName, assetName, AssetType.eShader);
-            res.StartLoad(assetName, true, null);
-            return res.AssetObj as Shader;
+            res.StartLoad(assetName, true, false, null);
+            return res.Asset as Shader;
         }
     }
 }

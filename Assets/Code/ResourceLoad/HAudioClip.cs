@@ -25,14 +25,14 @@ namespace AssetLoad
             }
 
             HAudioCilp res = Get<HAudioCilp>(abName, assetName, AssetType.eAudioClip);
-            res.StartLoad(assetName, false, tCallBack);
+            res.StartLoad(assetName, false, false, tCallBack);
         }
 
         public static AudioClip Load(string abName, string assetName)
         {
             HAudioCilp res = Get<HAudioCilp>(abName, assetName, AssetType.eAudioClip);
-            res.StartLoad(assetName, true, null);
-            return res.AssetObj as AudioClip;
+            res.StartLoad(assetName, true, false, null);
+            return res.Asset as AudioClip;
         }
     }
 }

@@ -79,17 +79,17 @@ namespace AssetLoad
             }
 
             HAssetBundle res = Get<HAssetBundle>(abName, "", AssetType.eAB);
-            res.StartLoad("", false, tCallBack);
+            res.StartLoad("", false, false, tCallBack);
         }
 
         public static AssetBundle Load(string abName)
         {
             HAssetBundle res = Get<HAssetBundle>(abName, "", AssetType.eAB);
-            res.StartLoad("", true, null);
-            return res.AssetObj as AssetBundle;
+            res.StartLoad("", true, false, null);
+            return res.Asset as AssetBundle;
         }
 
-        protected override IEnumerator CoLoad(string assetName, bool isSync, Action<UnityEngine.Object> callback)
+        protected override IEnumerator CoLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
         {
             ABRequest abRequest = new ABRequest();
             abRequest.Load(this, isSync);
@@ -98,7 +98,8 @@ namespace AssetLoad
                 yield return null;
             }
 
-            OnCompleted(AB, callback);
+            Asset = AB;
+            OnCompleted(callback);
         }
 
         public override void AddRef()
@@ -160,6 +161,7 @@ namespace AssetLoad
                     if (AB != null)
                     {
                         AB.Unload(true);
+                        AB = null;
                     }
                 }
             }
