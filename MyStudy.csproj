@@ -499,6 +499,13 @@
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildAndroid\JenkinAndroid.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildIOS\JenkinIOS.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildPC\JenkinPC.txt" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\net20\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\netstandard1.3\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\netstandard2.0\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\net20\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\netstandard2.0\ExcelDataReader.DataSet.xml" />
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />

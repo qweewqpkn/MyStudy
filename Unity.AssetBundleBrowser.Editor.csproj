@@ -293,6 +293,15 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/P/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="ExcelDataReader.DataSet">
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/ExcelDataReader.DataSet.3.4.0/lib/net20/ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader">
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/ExcelDataReader.3.4.0/lib/net20/ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/System.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleBrowserMain.cs" />
@@ -328,6 +337,13 @@
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildAndroid\JenkinAndroid.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildIOS\JenkinIOS.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildPC\JenkinPC.txt" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\net20\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\netstandard1.3\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\netstandard2.0\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\net20\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\netstandard2.0\ExcelDataReader.DataSet.xml" />
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
