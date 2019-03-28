@@ -64,20 +64,24 @@ public class ABRequest
         if (ab.Status == LoadStatus.eNone)
         {
             ab.Status = LoadStatus.eLoading;
-            if(isSync)
+
+            if (mRequestMap.ContainsKey(ab.ABName))
             {
-                if (mRequestMap.ContainsKey(ab.ABName))
+                //mRequestMap[ab.ABName].assetBundle
+                //这句会让之前的异步加载立马完成，像Goto一样跳转到yield return request后面的逻辑执行，
+                //执行完之后协程的内容后，再回到这里继续执行。为了在同一帧支持同步加载和异步加载同一资源！！！
+                Debug.Log("资源异步加载还在进行中,但是调用了释放接口,然后又重新加载了该资源,所以走到这里了!!");
+                if (mRequestMap[ab.ABName].assetBundle != null)
                 {
-                    //打断，解释如下面的
-                    if (mRequestMap[ab.ABName].assetBundle != null)
+                    if (mRequestMap.ContainsKey(ab.ABName))
                     {
-                        if (mRequestMap.ContainsKey(ab.ABName))
-                        {
-                            mRequestMap[ab.ABName].assetBundle.Unload(true);
-                        }
+                        mRequestMap[ab.ABName].assetBundle.Unload(true);
                     }
                 }
+            }
 
+            if (isSync)
+            {
                 if (ab.AB == null)
                 {
                     string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
@@ -87,19 +91,6 @@ public class ABRequest
             }
             else
             {
-                if (mRequestMap.ContainsKey(ab.ABName))
-                {
-                    //打断异步加载，解释:这句会让之前的异步加载立马完成，像Goto一样跳转到yield return request后面的
-                    //逻辑执行，执行完之后协程的内容后，再回到这里继续执行。为了在同一帧支持
-                    //同步加载和异步加载同一资源！！！
-                    if (mRequestMap[ab.ABName].assetBundle != null)
-                    {
-                        if (mRequestMap.ContainsKey(ab.ABName))
-                        {
-                            mRequestMap[ab.ABName].assetBundle.Unload(true);
-                        }
-                    }
-                }
                 string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
                 AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
                 mRequestMap.Add(ab.ABName, request);
@@ -115,7 +106,7 @@ public class ABRequest
             {
                 if (mRequestMap.ContainsKey(ab.ABName))
                 {
-                    //打断，解释如上面的
+                    Debug.Log("提示:资源异步加载还在进行中,但是又调用了同步接口加载该资源!!!");
                     if (mRequestMap[ab.ABName].assetBundle != null)
                     {
                         if (mRequestMap.ContainsKey(ab.ABName))
