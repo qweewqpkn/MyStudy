@@ -118,18 +118,10 @@ public class PathManager
             case AssetType.eShader:
             case AssetType.eSprite:
             case AssetType.eTexture:
-                {
-                    result.Append("/Assetbundle");
-                }
-                break;
             case AssetType.eText:
-                {
-                    result.Append("/Config");
-                }
-                break;
             case AssetType.eLua:
                 {
-                    result.Append("/Lua");
+                    result.Append("/Assetbundle");
                 }
                 break;
         }

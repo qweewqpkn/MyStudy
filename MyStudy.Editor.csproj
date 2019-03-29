@@ -266,6 +266,15 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data">
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/Library/System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader">
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/Library/ExcelDataReader.3.4.0/lib/net20/ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet">
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/Library/ExcelDataReader.DataSet.3.4.0/lib/net20/ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
     <Reference Include="TexturePackerImporter">
       <HintPath>Assets/Editor/TexturePacker/Editor/TexturePackerImporter.dll</HintPath>
     </Reference>
@@ -292,15 +301,6 @@
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/P/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="ExcelDataReader.DataSet">
-      <HintPath>Assets/Editor/CustomTools/ExportExcel/ExcelDataReader.DataSet.3.4.0/lib/net20/ExcelDataReader.DataSet.dll</HintPath>
-    </Reference>
-    <Reference Include="ExcelDataReader">
-      <HintPath>Assets/Editor/CustomTools/ExportExcel/ExcelDataReader.3.4.0/lib/net20/ExcelDataReader.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data">
-      <HintPath>Assets/Editor/CustomTools/ExportExcel/System.Data.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -344,8 +344,9 @@
     <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\ProjectCapabilityManager.cs" />
     <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\XcScheme.cs" />
     <Compile Include="Assets\Editor\CustomTools\BuildRes\BuildRes.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ExportExcel\ExportExcelToLua.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ExportExcel\ExportExcelUtility.cs" />
+    <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToCS.cs" />
+    <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToLua.cs" />
+    <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelUtility.cs" />
     <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_EventObject.cs" />
     <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaConstructor.cs" />
     <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaField.cs" />
@@ -382,18 +383,17 @@
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildAndroid\JenkinAndroid.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildIOS\JenkinIOS.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildPC\JenkinPC.txt" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\net20\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\netstandard1.3\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.3.4.0\lib\netstandard2.0\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\net20\ExcelDataReader.DataSet.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelDataReader.DataSet.3.4.0\lib\netstandard2.0\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\net20\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\netstandard1.3\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\netstandard2.0\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.DataSet.3.4.0\lib\net20\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.DataSet.3.4.0\lib\netstandard2.0\ExcelDataReader.DataSet.xml" />
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Export\Shader\Testlala.shader" />
-    <None Include="Assets\Export\Text\TestConfig.txt" />
     <None Include="Assets\Export\Texture\Shader\ShaderTest.shader" />
     <None Include="Assets\Shader\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Shader\BillBoard\BillBoard.shader" />

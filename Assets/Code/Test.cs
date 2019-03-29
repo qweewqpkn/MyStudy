@@ -1,4 +1,5 @@
 ﻿using AssetLoad;
+using BinaryConfig;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -23,29 +24,36 @@ public class Test : MonoBehaviour {
             ResourceManager.Instance.ReleaseAll();
         });
 
-        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
-        {
-            if (Obj1 != null)
-                Obj1.name = "test4";
-        });
-        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
-        {
-            if (Obj1 != null)
-                Obj1.name = "test2";
-        });
-        ResourceManager.Instance.ReleaseAll();
-        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
-        {
-            if (Obj1 != null)
-                Obj1.name = "test3";
-        });
-        ResourceManager.Instance.ReleaseAll();
+        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        //{
+        //    if (Obj1 != null)
+        //        Obj1.name = "test4";
+        //});
+        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        //{
+        //    if (Obj1 != null)
+        //        Obj1.name = "test2";
+        //});
+        //ResourceManager.Instance.ReleaseAll();
+        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        //{
+        //    if (Obj1 != null)
+        //        Obj1.name = "test3";
+        //});
+        //ResourceManager.Instance.ReleaseAll();
         //GameObject objN = ResourceManager.Instance.LoadPrefab("cube", "cube");
         //objN.name = "test2x";
-        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        //{
+        //    if (Obj1 != null)
+        //        Obj1.name = "testN";
+        //});
+
+        BinaryConfigManager.Instance.LoadAllBinaryData("config", ()=>
         {
-            if (Obj1 != null)
-                Obj1.name = "testN";
+            //加载完成
+            BinaryConfigManager.Instance.LoadBinaryData<TestConfig>("TestConfig");
+            BinaryConfigManager.Instance.LoadBinaryData<AchieveConfig>("AchieveConfig");
         });
     }
 
