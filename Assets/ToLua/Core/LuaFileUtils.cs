@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Collections;
 using System.Text;
-using AssetLoad;
 
 namespace LuaInterface
 {
@@ -168,25 +167,6 @@ namespace LuaInterface
 #else
                     throw new LuaException("can't run in web platform, please switch to other platform");
 #endif
-
-                    fileName = fileName.Replace("/", "_");
-                    if(!fileName.Contains(".lua"))
-                    {
-                        fileName += ".lua";
-                    }
-
-                    TextAsset luaTA = null;
-
-                    luaTA = ResourceManager.Instance.LoadLua("tolua", fileName);
-                    if (luaTA == null)
-                    {
-                        luaTA = ResourceManager.Instance.LoadLua("lobby", fileName);
-                    }
-
-                    if(luaTA != null)
-                    {
-                        str = luaTA.bytes;
-                    }
                 }
 
                 return str;
