@@ -172,14 +172,11 @@ namespace AssetLoad
                 resList.Add(item.Value);
             }
 
-
-            Debug.Log("stop load AB : " + Time.frameCount);
             //停止掉正在加载的AB
             ABRequest.StopAllRequest();
             //停止掉正在加载的AB中的资源
             AssetRequest.StopAllRequest();
 
-            Debug.Log("release AB : " + Time.frameCount);
             //释放AB资源
             for (int i = 0; i < resList.Count; i++)
             {

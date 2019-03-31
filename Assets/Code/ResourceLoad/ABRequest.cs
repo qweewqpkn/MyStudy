@@ -83,7 +83,6 @@ public class ABRequest
                 mRequestMap.Remove(ab.ABName);
                 ab.AB = request.assetBundle;
                 ab.Status = LoadStatus.eLoaded;
-                Debug.Log("load AB  return : " + Time.frameCount);
             }
         }
         else if (ab.Status == LoadStatus.eLoading)

@@ -127,8 +127,6 @@ namespace AssetLoad
         {
             ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
-            Debug.Log("start Load asset : " + Time.frameCount);
-
             //加载AB
             ABRequest.Load(ABDep, isSync);
             while(!ABRequest.IsComplete)
@@ -136,8 +134,6 @@ namespace AssetLoad
                 yield return null;
             }
 
-
-            Debug.Log("ready Load asset : " + Time.frameCount);
             if(isAll)
             {
                 if(AssetMap.Count == 0)

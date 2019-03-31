@@ -25,7 +25,6 @@ public class Test : MonoBehaviour {
             ResourceManager.Instance.ReleaseAll();
         });
 
-        LoadTest8();
         //BinaryConfigManager.Instance.LoadAllBinaryData("config", ()=>
         //{
         //    //加载完成
@@ -190,7 +189,22 @@ public class Test : MonoBehaviour {
 
     void LoadTest9()
     {
-
+        ResourceManager.Instance.LoadAB("cube");
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (res, args) =>
+        {
+            if (res != null)
+                res.name = "test2";
+        });
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (res, args) =>
+        {
+            if (res != null)
+                res.name = "test3";
+        });
+        ResourceManager.Instance.ReleaseAll();
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (res, args) =>
+        {
+            res.name = "test1";
+        });
     }
 
 
