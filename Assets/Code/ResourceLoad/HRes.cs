@@ -11,8 +11,6 @@ namespace AssetLoad
     public class HRes
     {
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
-        public static Dictionary<HAssetBundle, string> mRemoveMap = new Dictionary<HAssetBundle, string>();
-
 
         private Dictionary<string, UnityEngine.Object> AssetMap
         {
@@ -129,6 +127,8 @@ namespace AssetLoad
         {
             ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
+            Debug.Log("start Load asset : " + Time.frameCount);
+
             //加载AB
             ABRequest.Load(ABDep, isSync);
             while(!ABRequest.IsComplete)
@@ -136,6 +136,8 @@ namespace AssetLoad
                 yield return null;
             }
 
+
+            Debug.Log("ready Load asset : " + Time.frameCount);
             if(isAll)
             {
                 if(AssetMap.Count == 0)

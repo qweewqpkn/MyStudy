@@ -65,21 +65,6 @@ public class ABRequest
         {
             ab.Status = LoadStatus.eLoading;
 
-            if (mRequestMap.ContainsKey(ab.ABName))
-            {
-                //mRequestMap[ab.ABName].assetBundle
-                //这句会让之前的异步加载立马完成，像Goto一样跳转到yield return request后面的逻辑执行，
-                //执行完之后协程的内容后，再回到这里继续执行。为了在同一帧支持同步加载和异步加载同一资源！！！
-                Debug.Log("资源异步加载还在进行中,但是调用了释放接口,然后又重新加载了该资源,所以走到这里了!!");
-                if (mRequestMap[ab.ABName].assetBundle != null)
-                {
-                    if (mRequestMap.ContainsKey(ab.ABName))
-                    {
-                        mRequestMap[ab.ABName].assetBundle.Unload(true);
-                    }
-                }
-            }
-
             if (isSync)
             {
                 if (ab.AB == null)
@@ -98,6 +83,7 @@ public class ABRequest
                 mRequestMap.Remove(ab.ABName);
                 ab.AB = request.assetBundle;
                 ab.Status = LoadStatus.eLoaded;
+                Debug.Log("load AB  return : " + Time.frameCount);
             }
         }
         else if (ab.Status == LoadStatus.eLoading)
@@ -131,16 +117,23 @@ public class ABRequest
                 }
             }
         }
+    }
 
-        //当加载完成时外部已标记为删除，这里卸载AB
-        if (HRes.mRemoveMap.ContainsKey(ab))
+    public static void StopAllRequest()
+    {
+        List<AssetBundleCreateRequest> requestList = new List<AssetBundleCreateRequest>();
+        foreach (var item in mRequestMap)
         {
-            if (ab.AB != null)
-            {
-                ab.AB.Unload(true);
-                ab.AB = null;
-            }
-            HRes.mRemoveMap.Remove(ab);
+            requestList.Add(item.Value);
         }
+
+        //访问AssetBundleCreateRequest异步请求的assetbundle会导致该ab的异步加载立马返回，相当于变为同步加载
+        //这句会让之前的异步加载立马完成，像Goto一样跳转到yield return request后面的逻辑执行，执行完后再回到这里执行
+        for (int i = 0; i < requestList.Count; i++)
+        {
+            AssetBundle ab = requestList[i].assetBundle;
+        }
+
+        mRequestMap.Clear();
     }
 }

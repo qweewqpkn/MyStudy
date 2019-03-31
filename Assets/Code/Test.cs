@@ -1,5 +1,6 @@
 ﻿using AssetLoad;
 using BinaryConfig;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -24,38 +25,174 @@ public class Test : MonoBehaviour {
             ResourceManager.Instance.ReleaseAll();
         });
 
-        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        LoadTest8();
+        //BinaryConfigManager.Instance.LoadAllBinaryData("config", ()=>
         //{
-        //    if (Obj1 != null)
-        //        Obj1.name = "test4";
+        //    //加载完成
+        //    BinaryConfigManager.Instance.LoadBinaryData<TestConfig>("TestConfig");
+        //    BinaryConfigManager.Instance.LoadBinaryData<AchieveConfig>("AchieveConfig");
         //});
-        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
-        //{
-        //    if (Obj1 != null)
-        //        Obj1.name = "test2";
-        //});
-        //ResourceManager.Instance.ReleaseAll();
-        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
-        //{
-        //    if (Obj1 != null)
-        //        Obj1.name = "test3";
-        //});
-        //ResourceManager.Instance.ReleaseAll();
-        //GameObject objN = ResourceManager.Instance.LoadPrefab("cube", "cube");
-        //objN.name = "test2x";
-        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
-        //{
-        //    if (Obj1 != null)
-        //        Obj1.name = "testN";
-        //});
+    }
 
-        BinaryConfigManager.Instance.LoadAllBinaryData("config", ()=>
+    void LoadTest1()
+    {
+        //测试1
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
         {
-            //加载完成
-            BinaryConfigManager.Instance.LoadBinaryData<TestConfig>("TestConfig");
-            BinaryConfigManager.Instance.LoadBinaryData<AchieveConfig>("AchieveConfig");
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test2";
+        });
+        ResourceManager.Instance.ReleaseAll();
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test3";
         });
     }
+
+    void LoadTest2()
+    {
+        //测试2
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test2";
+        });
+    }
+
+    void LoadTest3()
+    {
+        //测试3
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        ResourceManager.Instance.ReleaseAll();
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test2";
+        });
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test3";
+        });
+    }
+
+    void LoadTest4()
+    {
+        //测试4
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        GameObject objN = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        objN.name = "test2x";
+    }
+
+    void LoadTest5()
+    {
+        //测试5
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test2";
+        });
+        GameObject objN = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        objN.name = "test2x";
+    }
+
+    void LoadTest6()
+    {
+        //测试6
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test2";
+        });
+        GameObject objN2 = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        objN2.name = "test2x";
+        ResourceManager.Instance.ReleaseAll();
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test3";
+        });
+        GameObject objN3 = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        objN3.name = "test3x";
+    }
+
+    void LoadTest7()
+    {
+        //测试7
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        GameObject objN4 = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        objN4.name = "test2x";
+        ResourceManager.Instance.ReleaseAll();
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test3";
+        });
+        GameObject objN5 = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        objN5.name = "test3x";
+    }
+
+    void LoadTest8()
+    {
+        //测试8
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+        ResourceManager.Instance.ReleaseAll();
+        GameObject objN6 = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        objN6.name = "test3x";
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test3";
+        });
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test4";
+        });
+    }
+
+    void LoadTest9()
+    {
+
+    }
+
 
     // Update is called once per frame
     void Update () {
@@ -63,7 +200,7 @@ public class Test : MonoBehaviour {
         {
             if(mFrame == 0)
             {
-                ResourceManager.Instance.ReleaseAll();
+                //ResourceManager.Instance.ReleaseAll();
             }
             mFrame--;
         }

@@ -149,12 +149,6 @@ namespace AssetLoad
                 {
                     if (mResMap.ContainsKey(ResName))
                     {
-                        HAssetBundle hab = mResMap[ResName] as HAssetBundle;
-                        //如果还在加载中，那么加入移除列表，等待加载完成后移除资源
-                        if(hab.Status == LoadStatus.eLoading)
-                        {
-                            mRemoveMap.Add(hab, hab.ResName);
-                        }
                         mResMap.Remove(ResName);
                     }
 

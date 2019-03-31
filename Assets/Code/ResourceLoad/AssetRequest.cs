@@ -9,6 +9,8 @@ namespace AssetLoad
 {
     public class AssetRequest
     {
+        static List<AssetBundleRequest> mRequestList= new List<AssetBundleRequest>();
+
         public bool IsComplete
         {
             get;
@@ -71,13 +73,17 @@ namespace AssetLoad
                         if (isAll)
                         {
                             AssetBundleRequest request = ab.LoadAllAssetsAsync();
+                            mRequestList.Add(request);
                             yield return request;
+                            mRequestList.Remove(request);
                             AssetList = request.allAssets;
                         }
                         else
                         {
                             AssetBundleRequest request = ab.LoadAssetAsync(assetName);
+                            mRequestList.Add(request);
                             yield return request;
+                            mRequestList.Remove(request);
                             Asset = request.asset;
                         }
                     }
@@ -85,6 +91,23 @@ namespace AssetLoad
                     IsComplete = true;
                 }
             }
+        }
+
+        public static void StopAllRequest()
+        {
+            List<AssetBundleRequest> requestList = new List<AssetBundleRequest>();
+            for (int i = 0; i < mRequestList.Count; i++)
+            {
+                requestList.Add(mRequestList[i]);
+            }
+
+            //访问AssetBundleRequest 异步请求的allAssets会导致该ab的加载立马返回，相当于变为同步加载
+            for (int i = 0; i < requestList.Count; i++)
+            {
+                UnityEngine.Object[] assets = requestList[i].allAssets;
+            }
+
+            mRequestList.Clear();
         }
     }
 }
