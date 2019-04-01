@@ -7,6 +7,8 @@ public class ABRequest
 {
     List<HAssetBundle> mABLoadList = new List<HAssetBundle>();
     static Dictionary<string, AssetBundleCreateRequest> mRequestMap = new Dictionary<string, AssetBundleCreateRequest>();
+    private AssetType mAssetType; //目标资源类型
+    private bool mIsSync; //是否是同步请求
 
     public bool IsComplete
     {
@@ -19,12 +21,14 @@ public class ABRequest
         IsComplete = false;
     }
 
-    public void Load(HAssetBundle ab, bool isSync)
+    public void Load(HAssetBundle ab, bool isSync, AssetType assetType)
     {
-        ResourceManager.Instance.StartCoroutine(CoLoad(ab, isSync));
+        mAssetType = assetType;
+        mIsSync = isSync;
+        ResourceManager.Instance.StartCoroutine(CoLoad(ab));
     }
 
-    public IEnumerator CoLoad(HAssetBundle ab, bool isSync = false)
+    public IEnumerator CoLoad(HAssetBundle ab)
     {
         if (ab == null)
         {
@@ -44,7 +48,7 @@ public class ABRequest
         //开启所有加载
         for (int i = 0; i < mABLoadList.Count; i++)
         {
-            ResourceManager.Instance.StartCoroutine(OnLoad(mABLoadList[i], isSync));
+            ResourceManager.Instance.StartCoroutine(OnLoad(mABLoadList[i]));
         }
 
         //等待加载完成
@@ -59,24 +63,24 @@ public class ABRequest
         IsComplete = true;
     }
 
-    private IEnumerator OnLoad(HAssetBundle ab, bool isSync)
+    private IEnumerator OnLoad(HAssetBundle ab)
     {
         if (ab.Status == LoadStatus.eNone)
         {
             ab.Status = LoadStatus.eLoading;
 
-            if (isSync)
+            if (mIsSync)
             {
                 if (ab.AB == null)
                 {
-                    string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
+                    string url = PathManager.URL(ab.ABName, mAssetType, false);
                     ab.AB = AssetBundle.LoadFromFile(url);
                     ab.Status = LoadStatus.eLoaded;
                 }
             }
             else
             {
-                string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
+                string url = PathManager.URL(ab.ABName, mAssetType, false);
                 AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
                 mRequestMap.Add(ab.ABName, request);
                 yield return request;
@@ -87,7 +91,7 @@ public class ABRequest
         }
         else if (ab.Status == LoadStatus.eLoading)
         {
-            if(isSync)
+            if(mIsSync)
             {
                 if (mRequestMap.ContainsKey(ab.ABName))
                 {
@@ -103,7 +107,7 @@ public class ABRequest
 
                 if(ab.AB == null)
                 {
-                    string url = PathManager.URL(ab.ABName, AssetType.eAB, false);
+                    string url = PathManager.URL(ab.ABName, mAssetType, false);
                     ab.AB = AssetBundle.LoadFromFile(url);
                     ab.Status = LoadStatus.eLoaded;
                 }

@@ -58,45 +58,27 @@ public class PathManager
     public static string URL(string abName, AssetType type, bool isWWW = true)
     {
         StringBuilder result = new StringBuilder();
+
+        //不同平台基本路径
         switch (Application.platform)
         {
             case RuntimePlatform.Android:
                 {
                     result.Append(RES_STREAM_ROOT_PATH);
-                    result.Append("/Android");
                 }
                 break;
             case RuntimePlatform.IPhonePlayer:
             case RuntimePlatform.OSXPlayer:
+            case RuntimePlatform.WindowsPlayer:
                 {
                     if(isWWW)
                     {
                         result.Append("file://");
                     }
                     result.Append(RES_STREAM_ROOT_PATH);
-                    result.Append("/IOS");
                 }
                 break;
             case RuntimePlatform.OSXEditor:
-                {
-                    if (isWWW)
-                    {
-                        result.Append("file://");
-                    }
-                    result.Append(RES_LOCAL_ROOT_PATH);
-                    result.Append("/IOS");
-                }
-                break;
-            case RuntimePlatform.WindowsPlayer:
-                {
-                    if (isWWW)
-                    {
-                        result.Append("file://");
-                    }
-                    result.Append(RES_STREAM_ROOT_PATH);
-                    result.Append("/Windows");
-                }
-                break;
             case RuntimePlatform.WindowsEditor:
                 {
                     if (isWWW)
@@ -104,11 +86,14 @@ public class PathManager
                         result.Append("file://");
                     }
                     result.Append(RES_LOCAL_ROOT_PATH);
-                    result.Append("/Windows");
                 }
                 break;
         }
 
+        //特定平台
+        result.Append(GetPlatform());
+
+        //特定资源
         switch (type)
         {
             case AssetType.eAB:
@@ -118,10 +103,18 @@ public class PathManager
             case AssetType.eShader:
             case AssetType.eSprite:
             case AssetType.eTexture:
-            case AssetType.eText:
-            case AssetType.eLua:
                 {
                     result.Append("/Assetbundle");
+                }
+                break;
+            case AssetType.eText:
+                {
+                    result.Append("/Config");
+                }
+                break;
+            case AssetType.eLua:
+                {
+                    result.Append("/Lua");
                 }
                 break;
         }

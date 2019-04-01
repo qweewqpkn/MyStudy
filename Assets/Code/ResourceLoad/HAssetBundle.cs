@@ -53,9 +53,9 @@ namespace AssetLoad
         {
         }
 
-        protected override void Init(string abName, string assetName, string resName)
+        protected override void Init(string abName, string assetName, string resName, AssetType assetType)
         {
-            base.Init(abName, assetName, resName);
+            base.Init(abName, assetName, resName, assetType);
             if (DepList == null)
             {
                 DepList = new List<string>();
@@ -92,7 +92,7 @@ namespace AssetLoad
         protected override IEnumerator CoLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
         {
             ABRequest abRequest = new ABRequest();
-            abRequest.Load(this, isSync);
+            abRequest.Load(this, isSync, AssetType);
             while(!abRequest.IsComplete)
             {
                 yield return null;
