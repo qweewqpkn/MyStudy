@@ -22,14 +22,14 @@ namespace AssetLoad
                 };
             }
 
-            HLua res = Get<HLua>(abName, assetName, AssetType.eShader);
-            res.StartLoad(assetName, false, false, tCallBack);
+            HLua res = Get<HLua>(abName, assetName, AssetType.eLua);
+            res.StartLoad(assetName, false, true, tCallBack);
         }
 
         public static TextAsset Load(string abName, string assetName)
         {
-            HLua res = Get<HLua>(abName, assetName, AssetType.eText);
-            res.StartLoad(assetName, true, false, null);
+            HLua res = Get<HLua>(abName, assetName, AssetType.eLua);
+            res.StartLoad(assetName, true, true, null);
             return res.Asset as TextAsset;
         }
     }

@@ -51,7 +51,7 @@ public class BuildRes
     static void BuildLua()
     {
         FileUtility.CopyTo(Application.dataPath + "/Lua", Application.dataPath + "/LuaTemp", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
-        FileUtility.CopyTo(Application.dataPath + "/ToLua/Lua", Application.dataPath + "/LuaTemp/ToLua", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
+        //FileUtility.CopyTo(Application.dataPath + "/ToLua/Lua", Application.dataPath + "/LuaTemp/ToLua", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
         AssetDatabase.Refresh();
 
         //获取lua根目录下的各个模块名和对应模块的lua文件
