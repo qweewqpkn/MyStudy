@@ -278,12 +278,6 @@
     <Reference Include="TexturePackerImporter">
       <HintPath>Assets/Editor/TexturePacker/Editor/TexturePackerImporter.dll</HintPath>
     </Reference>
-    <Reference Include="CString">
-      <HintPath>Assets/Plugins/CString.dll</HintPath>
-    </Reference>
-    <Reference Include="Debugger">
-      <HintPath>Assets/Plugins/Debugger.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/monk/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -383,10 +377,6 @@
     <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Normal-VertexLit.shader" />
     <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Add.shader" />
     <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Alpha Blend.shader" />
-    <None Include="Assets\ToLua\Injection\InjectionBlackList.txt" />
-    <None Include="Assets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
-    <None Include="Assets\ToLua\Injection\LuaInjectionSkipPaths.txt" />
-    <None Include="Assets\ToLua\readme.txt" />
     <None Include="Assets\link.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -278,12 +278,6 @@
     <Reference Include="TexturePackerImporter">
       <HintPath>Assets/Editor/TexturePacker/Editor/TexturePackerImporter.dll</HintPath>
     </Reference>
-    <Reference Include="CString">
-      <HintPath>Assets/Plugins/CString.dll</HintPath>
-    </Reference>
-    <Reference Include="Debugger">
-      <HintPath>Assets/Plugins/Debugger.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/monk/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -319,7 +313,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Code\UI\Editor\UIComponentBindEditor.cs" />
-    <Compile Include="Assets\Editor\Custom\CustomSettings.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\AnimationSplit.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\OptmizeAnimationClip.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\RenderCubeMap.cs" />
@@ -347,27 +340,6 @@
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToCS.cs" />
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToLua.cs" />
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelUtility.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_EventObject.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaConstructor.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaField.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaMethod.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_LuaInterface_LuaProperty.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Delegate.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Enum.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Object.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_String.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_System_Type.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_UnityEngine_GameObject.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_UnityEngine_Input.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_UnityEngine_Object.cs" />
-    <Compile Include="Assets\ToLua\Editor\Extend\ToLua_UnityEngine_RectTransform.cs" />
-    <Compile Include="Assets\ToLua\Editor\ToLuaExport.cs" />
-    <Compile Include="Assets\ToLua\Editor\ToLuaMenu.cs" />
-    <Compile Include="Assets\ToLua\Editor\ToLuaTree.cs" />
-    <Compile Include="Assets\ToLua\Injection\Editor\ToLuaInjection.cs" />
-    <Compile Include="Assets\ToLua\Injection\Editor\ToluaInjectionBlackListPanel.cs" />
-    <Compile Include="Assets\ToLua\Injection\Editor\ToLuaInjectionHelper.cs" />
-    <Compile Include="Assets\ToLua\Injection\Editor\ToLuaText.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Code\AudioManager\音频优化规则.txt" />
@@ -437,10 +409,6 @@
     <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Normal-VertexLit.shader" />
     <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Add.shader" />
     <None Include="Assets\Shader\builtin_shaders\DefaultResourcesExtra\Particle Alpha Blend.shader" />
-    <None Include="Assets\ToLua\Injection\InjectionBlackList.txt" />
-    <None Include="Assets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
-    <None Include="Assets\ToLua\Injection\LuaInjectionSkipPaths.txt" />
-    <None Include="Assets\ToLua\readme.txt" />
     <None Include="Assets\link.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
