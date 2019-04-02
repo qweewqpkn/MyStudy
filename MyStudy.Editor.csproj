@@ -267,13 +267,13 @@
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="System.Data">
-      <HintPath>Assets/Editor/CustomTools/ExportExcel/Library/System.Data.dll</HintPath>
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/ExcelLibrary/System.Data.dll</HintPath>
     </Reference>
     <Reference Include="ExcelDataReader">
-      <HintPath>Assets/Editor/CustomTools/ExportExcel/Library/ExcelDataReader.3.4.0/lib/net20/ExcelDataReader.dll</HintPath>
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/ExcelLibrary/ExcelDataReader.3.4.0/lib/net20/ExcelDataReader.dll</HintPath>
     </Reference>
     <Reference Include="ExcelDataReader.DataSet">
-      <HintPath>Assets/Editor/CustomTools/ExportExcel/Library/ExcelDataReader.DataSet.3.4.0/lib/net20/ExcelDataReader.DataSet.dll</HintPath>
+      <HintPath>Assets/Editor/CustomTools/ExportExcel/ExcelLibrary/ExcelDataReader.DataSet.3.4.0/lib/net20/ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
     <Reference Include="TexturePackerImporter">
       <HintPath>Assets/Editor/TexturePacker/Editor/TexturePackerImporter.dll</HintPath>
@@ -383,13 +383,13 @@
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildAndroid\JenkinAndroid.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildIOS\JenkinIOS.txt" />
     <None Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildPC\JenkinPC.txt" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\net20\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\netstandard1.3\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.3.4.0\lib\netstandard2.0\ExcelDataReader.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.DataSet.3.4.0\lib\net20\ExcelDataReader.DataSet.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.xml" />
-    <None Include="Assets\Editor\CustomTools\ExportExcel\Library\ExcelDataReader.DataSet.3.4.0\lib\netstandard2.0\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelLibrary\ExcelDataReader.3.4.0\lib\net20\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelLibrary\ExcelDataReader.3.4.0\lib\net45\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelLibrary\ExcelDataReader.3.4.0\lib\netstandard1.3\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelLibrary\ExcelDataReader.3.4.0\lib\netstandard2.0\ExcelDataReader.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelLibrary\ExcelDataReader.DataSet.3.4.0\lib\net20\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelLibrary\ExcelDataReader.DataSet.3.4.0\lib\net45\ExcelDataReader.DataSet.xml" />
+    <None Include="Assets\Editor\CustomTools\ExportExcel\ExcelLibrary\ExcelDataReader.DataSet.3.4.0\lib\netstandard2.0\ExcelDataReader.DataSet.xml" />
     <None Include="Assets\Editor\TexturePacker\Editor\SettingsTexturePackerImporter.txt" />
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
@@ -441,6 +441,7 @@
     <None Include="Assets\ToLua\Injection\InjectionBridgeEditorInfo.xml" />
     <None Include="Assets\ToLua\Injection\LuaInjectionSkipPaths.txt" />
     <None Include="Assets\ToLua\readme.txt" />
+    <None Include="Assets\link.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

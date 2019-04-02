@@ -65,6 +65,13 @@ namespace AssetLoad
             set;
         }
 
+        //资源类型
+        public AssetType AssetType
+        {
+            get;
+            set;
+        }
+
         //该资源加载次数
         public int RefCount
         {
@@ -104,22 +111,24 @@ namespace AssetLoad
             {
                 res = new T();
                 mResMap.Add(resName, res);
-                res.Init(abName, assetName, resName);
+                res.Init(abName, assetName, resName, assetType);
             }
 
             res.RefCount++;
             return res as T;
         }
 
-        protected virtual void Init(string abName, string assetName, string resName)
+        protected virtual void Init(string abName, string assetName, string resName, AssetType assetType)
         {
             ABName = abName;
             AssetName = assetName;
             ResName = resName;
+            AssetType = assetType;
         }
 
         protected virtual void StartLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
         {
+            assetName = assetName.ToLower();
             ResourceManager.Instance.StartCoroutine(CoLoad(assetName, isSync, isAll, callback));
         }
 
@@ -128,7 +137,7 @@ namespace AssetLoad
             ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
             //加载AB
-            ABRequest.Load(ABDep, isSync);
+            ABRequest.Load(ABDep, isSync, AssetType);
             while(!ABRequest.IsComplete)
             {
                 yield return null;

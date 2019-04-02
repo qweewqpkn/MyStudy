@@ -25,12 +25,18 @@ public class Test : MonoBehaviour {
             ResourceManager.Instance.ReleaseAll();
         });
 
-        //BinaryConfigManager.Instance.LoadAllBinaryData("config", ()=>
-        //{
-        //    //加载完成
-        //    BinaryConfigManager.Instance.LoadBinaryData<TestConfig>("TestConfig");
-        //    BinaryConfigManager.Instance.LoadBinaryData<AchieveConfig>("AchieveConfig");
-        //});
+        LoadTest9();
+        LoadConfig();
+    }
+
+    void LoadConfig()
+    {
+        BinaryConfigManager.Instance.LoadAllBinaryData("config", ()=>
+        {
+            //加载完成
+            BinaryConfigManager.Instance.LoadBinaryData<TestConfig>("TestConfig");
+            BinaryConfigManager.Instance.LoadBinaryData<AchieveConfig>("AchieveConfig");
+        });
     }
 
     void LoadTest1()
