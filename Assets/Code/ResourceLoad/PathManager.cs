@@ -15,6 +15,8 @@ public class PathManager
     public static string RES_PERSISTENT_ROOT_PATH = Application.persistentDataPath + "/ClientRes";
     //服务器资源路径
     public static string RES_SERVER_ROOT_PATH = "";
+    //Lua根路径
+    public static string LUA_ROOT_PATH = Application.dataPath + "/Lua/LuaMain";
 
     public static string GetServerURL(string name)
     {
@@ -103,13 +105,9 @@ public class PathManager
             case AssetType.eShader:
             case AssetType.eSprite:
             case AssetType.eTexture:
-                {
-                    result.Append("/Assetbundle");
-                }
-                break;
             case AssetType.eText:
                 {
-                    result.Append("/Config");
+                    result.Append("/Assetbundle");
                 }
                 break;
             case AssetType.eLua:

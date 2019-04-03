@@ -29,26 +29,34 @@ class ExportExcelToCS
         FileStream fs = File.Open(mBinaryPath + "Config.bytes", FileMode.Create, FileAccess.ReadWrite);
         mMergeBinaryWriter = new BinaryWriter(fs);
 
-        //所有excel配置
-        string[] allExcelPath = Directory.GetFiles(mExcelPath);
-        for (int i = 0; i < allExcelPath.Length; i++)
+        try
         {
-            string extensionName = Path.GetExtension(allExcelPath[i]);
-            if (extensionName == ".xlsx")
+            //所有excel配置
+            string[] allExcelPath = Directory.GetFiles(mExcelPath);
+            for (int i = 0; i < allExcelPath.Length; i++)
             {
-                FileStream excelFS = File.Open(allExcelPath[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                IExcelDataReader reader = ExcelReaderFactory.CreateReader(excelFS);
-                DataSet book = reader.AsDataSet();
-                ExportCode(book.Tables[0], allExcelPath[i]);
-                byte[] bytes = ExportByte(book.Tables[0], allExcelPath[i]);
-                MergeByteToOne(bytes, allExcelPath[i]);
-                excelFS.Close();
+                string extensionName = Path.GetExtension(allExcelPath[i]);
+                if (extensionName == ".xlsx")
+                {
+                    FileStream excelFS = File.Open(allExcelPath[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    IExcelDataReader reader = ExcelReaderFactory.CreateReader(excelFS);
+                    DataSet book = reader.AsDataSet();
+                    ExportCode(book.Tables[0], allExcelPath[i]);
+                    byte[] bytes = ExportByte(book.Tables[0], allExcelPath[i]);
+                    MergeByteToOne(bytes, allExcelPath[i]);
+                    excelFS.Close();
+                }
             }
-        }
 
-        mMergeBinaryWriter.Close();
-        AssetDatabase.Refresh();
-        Debug.Log("导出成功!");
+            mMergeBinaryWriter.Close();
+
+            AssetDatabase.Refresh();
+            Debug.Log("导出成功!");
+        }
+        catch (SystemException e)
+        {
+            mMergeBinaryWriter.Close();
+        }
     }
 
     static void MergeByteToOne(byte[] bytes, string path)
@@ -145,6 +153,7 @@ class ExportExcelToCS
                                 else
                                 {
                                     bool value = false;
+                                    strValue = strValue.ToLower();
                                     if (strValue == "false")
                                     {
                                         value = false;

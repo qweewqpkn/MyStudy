@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ISingleton
-{
-    void Init();
-}
-
-public class Singleton<T> : ISingleton where T : ISingleton, new() {
+public class Singleton<T> where T : new() {
     private static T mInstance;
 
     public static T Instance
@@ -17,6 +12,26 @@ public class Singleton<T> : ISingleton where T : ISingleton, new() {
             if (mInstance == null)
             {
                 mInstance = new T();
+            }
+
+            return mInstance;
+        }
+    }
+}
+
+public class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T>
+{
+    private static T mInstance;
+
+    public static T Instance
+    {
+        get
+        {
+            if (mInstance == null)
+            {
+                GameObject obj = new GameObject(typeof(T).Name);
+                mInstance = obj.AddComponent<T>();
+                DontDestroyOnLoad(obj);
                 mInstance.Init();
             }
 
@@ -24,7 +39,7 @@ public class Singleton<T> : ISingleton where T : ISingleton, new() {
         }
     }
 
-    public virtual void Init()
+    protected virtual void Init()
     {
 
     }

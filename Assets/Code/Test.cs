@@ -25,7 +25,7 @@ public class Test : MonoBehaviour {
             ResourceManager.Instance.ReleaseAll();
         });
 
-        LoadTest9();
+        //LoadTest9();
         LoadConfig();
     }
 
@@ -35,6 +35,7 @@ public class Test : MonoBehaviour {
         {
             //加载完成
             BinaryConfigManager.Instance.LoadBinaryData<TestConfig>("TestConfig");
+            BinaryConfigManager.Instance.LoadBinaryData<TestOtherConfig>("TestOtherConfig");
             BinaryConfigManager.Instance.LoadBinaryData<AchieveConfig>("AchieveConfig");
         });
     }

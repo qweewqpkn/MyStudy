@@ -50,6 +50,7 @@ public class BuildRes
     [MenuItem("Tools/打包Lua")]
     static void BuildLua()
     {
+        //为了增加.bytes后缀
         FileUtility.CopyTo(Application.dataPath + "/Lua", Application.dataPath + "/LuaTemp", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
         //FileUtility.CopyTo(Application.dataPath + "/ToLua/Lua", Application.dataPath + "/LuaTemp/ToLua", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
         AssetDatabase.Refresh();

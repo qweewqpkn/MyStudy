@@ -91,6 +91,7 @@ namespace AssetLoad
             switch(assetType)
             {
                 case AssetType.eSprite:
+                case AssetType.eLua:
                     {
                         return string.Format("{0}/{1}", abName, "*");
                     }
