@@ -7,13 +7,11 @@ using UnityEngine;
 
 public class BuildRes
 {
-    [MenuItem("Tools/AssetBundle/打包资源")]
+    [MenuItem("Tools/AssetBundle/打包所有资源")]
     public static void Build()
     {
-        BuildABAll();
+        BuildABAdd();
         BuildLua();
-        MD5Res();
-        CopyResToStreamingAssets();
     }
 
     [MenuItem("Tools/AssetBundle/增量打包AB")]
@@ -30,6 +28,7 @@ public class BuildRes
 
     static void BuildAB(bool isALL)
     {
+        SetAllABName();
         string path = GetRootPath(RootPathType.eLocal, "Assetbundle");
         if(isALL)
         {
@@ -47,22 +46,22 @@ public class BuildRes
         Debug.Log("打包完成");
     }
 
-    [MenuItem("Tools/打包Lua")]
+    [MenuItem("Tools/AssetBundle/打包Lua")]
     static void BuildLua()
     {
-        //为了增加.bytes后缀
-        FileUtility.CopyTo(Application.dataPath + "/Lua", Application.dataPath + "/LuaTemp", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
-        //FileUtility.CopyTo(Application.dataPath + "/ToLua/Lua", Application.dataPath + "/LuaTemp/ToLua", "*.lua", "bytes", Application.dataPath + "/LuaTemp");
+        //从lua原始目录拷贝到目标目录并加上.bytes后缀
+        string source_path = Application.dataPath + "/Lua";
+        string target_path = Application.dataPath + "/LuaTemp";
+        FileUtility.CopyTo(source_path, target_path, "*.lua", "bytes", target_path);
         AssetDatabase.Refresh();
 
-        //获取lua根目录下的各个模块名和对应模块的lua文件
-        string luaRootPath = Application.dataPath + "/LuaTemp";
+        //以目标lua目录下的文件作为模块，打包成不同的AB中
         Dictionary<string, List<string>> abbDict = new Dictionary<string, List<string>>();
-        string[] Directories = Directory.GetDirectories(luaRootPath, "*");
+        string[] Directories = Directory.GetDirectories(target_path, "*");
         for(int i = 0; i < Directories.Length; i++)
         {
             //模块名
-            string moduleName = Directories[i].Replace("\\", "/").Replace(luaRootPath + "/", "").Split('/')[0];
+            string moduleName = Directories[i].Replace("\\", "/").Replace(target_path + "/", "").Split('/')[0];
             if(!abbDict.ContainsKey(moduleName))
             {
                 abbDict[moduleName] = new List<string>();
@@ -86,40 +85,15 @@ public class BuildRes
             abbList.Add(abb);
         }
 
-        string path = GetRootPath(RootPathType.eLocal,"Lua");
-        if(Directory.Exists(path))
+        string output_path = GetRootPath(RootPathType.eLocal, "Lua");
+        if(Directory.Exists(output_path))
         {
-            Directory.Delete(path, true);
+            Directory.Delete(output_path, true);
         }
-        FileUtility.CreateDirectory(path);
-        BuildPipeline.BuildAssetBundles(path, abbList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+        FileUtility.CreateDirectory(output_path);
+        BuildPipeline.BuildAssetBundles(output_path, abbList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
     }
 
-    //移除无用的AB
-    static void RemoveUnUseAB(string path)
-    {
-        string[] curABNameList = AssetDatabase.GetAllAssetBundleNames();
-        string[] unuseABNameList = AssetDatabase.GetUnusedAssetBundleNames();
-        for(int i = 0; i < unuseABNameList.Length; i++)
-        {
-            ArrayUtility.Remove(ref curABNameList, unuseABNameList[i]);
-        }
-        string[] buildABList = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
-        for(int i = 0; i < buildABList.Length; i++)
-        {
-            string name = buildABList[i].Replace("\\", "/").Replace(path + "/", "").Split('.')[0];
-            bool isHave = ArrayUtility.Contains(curABNameList, name);
-            if (!isHave)
-            {
-                File.Delete(buildABList[i]);
-                Debug.Log("delete unuse ab : " + name);
-            }
-        }
-
-        FileUtility.ClearEmptyDirectory(path);
-    }
-
-    [MenuItem("Tools/生成资源MD5")]
     static void MD5Res()
     {
         string path = GetRootPath(RootPathType.eLocal);
@@ -149,7 +123,6 @@ public class BuildRes
         Debug.Log("生成MD5成功!");
     }
 
-    [MenuItem("Tools/AssetBundle/拷贝资源到StreamingAssets")]
     public static void CopyResToStreamingAssets()
     {
         if(EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows)
@@ -160,12 +133,56 @@ public class BuildRes
         }
     }
 
-    [MenuItem("Tools/AssetBundle/设置所有AB Name")]
+    //移除无用的AB
+    static void RemoveUnUseAB(string path)
+    {
+        if(!Directory.Exists(path))
+        {
+            return;
+        }
+
+        string[] curABNameList = AssetDatabase.GetAllAssetBundleNames();
+        string[] unuseABNameList = AssetDatabase.GetUnusedAssetBundleNames();
+        for (int i = 0; i < unuseABNameList.Length; i++)
+        {
+            ArrayUtility.Remove(ref curABNameList, unuseABNameList[i]);
+        }
+        string[] buildABList = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+        for (int i = 0; i < buildABList.Length; i++)
+        {
+            string name = buildABList[i].Replace("\\", "/").Replace(path + "/", "").Split('.')[0];
+            bool isHave = ArrayUtility.Contains(curABNameList, name);
+            if (!isHave)
+            {
+                File.Delete(buildABList[i]);
+                Debug.Log("delete unuse ab : " + name);
+            }
+        }
+
+        FileUtility.ClearEmptyDirectory(path);
+    }
+
+    //设置AB的名字
     static void SetAllABName()
     {
         string[] files = Directory.GetFiles(PathManager.RES_EXPORT_ROOT_PATH, "*.*", SearchOption.AllDirectories);
-        if(files != null)
+
+        if (files != null)
         {
+            Dictionary<string, string> resMap = new Dictionary<string, string>();
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (resMap.ContainsKey(files[i]))
+                {
+                    Debug.LogError("重名资源,请检测!路径 : " + files[i]);
+                    return;
+                }
+                else
+                {
+                    resMap.Add(files[i], files[i]);
+                }
+            }
+
             for (int i = 0; i < files.Length; i++)
             {
                 string ext = Path.GetExtension(files[i]);
@@ -191,7 +208,7 @@ public class BuildRes
 ;       }
     }
 
-    [MenuItem("Tools/AssetBundle/重置所有AB Name")]
+    //重置AB的名字
     static void ResetAllABName()
     {
         string[] files = Directory.GetFiles(PathManager.RES_EXPORT_ROOT_PATH, "*.*", SearchOption.AllDirectories);
@@ -239,7 +256,9 @@ public class BuildRes
                 }
                 break;
             case BuildTarget.iOS:
-            case BuildTarget.StandaloneOSX:
+            case BuildTarget.StandaloneOSXIntel:
+            case BuildTarget.StandaloneOSXIntel64:
+            //case BuildTarget.StandaloneOSXUniversal:
                 {
                     result.Append("/IOS");
                 }

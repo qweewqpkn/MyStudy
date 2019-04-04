@@ -9,6 +9,18 @@ public class LuaManager : SingletonMono<LuaManager> {
     LuaEnv mLuaEnv;
     private static string LUA_AB_NAME = "luamain";
 
+    public LuaEnv _LuaEnv
+    {
+        get
+        {
+            return mLuaEnv;
+        }
+        private set
+        {
+            mLuaEnv = value;
+        }
+    }
+
     protected override void Init()
     {
         mLuaEnv = new LuaEnv();
