@@ -1,0 +1,5 @@
+require "Framework.Common.Class"
+Singleton = require "Framework.Common.Singleton"
+UIManager = require "Framework.UI.UIManager"
+SceneManager = require "Framework.Scene.SceneManager"
+UIBase = require "Framework.UI.UIBase"
