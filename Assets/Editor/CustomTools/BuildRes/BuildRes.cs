@@ -28,22 +28,29 @@ public class BuildRes
 
     static void BuildAB(bool isALL)
     {
-        SetAllABName();
-        string path = GetRootPath(RootPathType.eLocal, "Assetbundle");
-        if(isALL)
+        bool isOk = SetAllABName();
+        if(isOk)
         {
-            if(Directory.Exists(path))
+            string path = GetRootPath(RootPathType.eLocal, "Assetbundle");
+            if (isALL)
             {
-                Directory.Delete(path, true);
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
             }
+            else
+            {
+                RemoveUnUseAB(path);
+            }
+            FileUtility.CreateDirectory(path);
+            BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+            Debug.Log("打包完成");
         }
         else
         {
-            RemoveUnUseAB(path);
+            Debug.Log("打包失败");
         }
-        FileUtility.CreateDirectory(path);
-        BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-        Debug.Log("打包完成");
     }
 
     [MenuItem("Tools/AssetBundle/打包Lua")]
@@ -163,7 +170,7 @@ public class BuildRes
     }
 
     //设置AB的名字
-    static void SetAllABName()
+    static bool SetAllABName()
     {
         string[] files = Directory.GetFiles(PathManager.RES_EXPORT_ROOT_PATH, "*.*", SearchOption.AllDirectories);
 
@@ -172,14 +179,19 @@ public class BuildRes
             Dictionary<string, string> resMap = new Dictionary<string, string>();
             for (int i = 0; i < files.Length; i++)
             {
-                if (resMap.ContainsKey(files[i]))
+                string ext = Path.GetExtension(files[i]);
+                if (ext != ".meta")
                 {
-                    Debug.LogError("重名资源,请检测!路径 : " + files[i]);
-                    return;
-                }
-                else
-                {
-                    resMap.Add(files[i], files[i]);
+                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                    if (resMap.ContainsKey(fileName))
+                    {
+                        Debug.LogError(string.Format("重名资源{0},请检测Export下的文件!", fileName));
+                        return false;
+                    }
+                    else
+                    {
+                        resMap.Add(fileName, fileName);
+                    }
                 }
             }
 
@@ -201,10 +213,13 @@ public class BuildRes
                     }
                 }
             }
+
+            return true;
         }
         else
         {
             Debug.LogError(string.Format("目录{0}资源为空,请确认!", PathManager.RES_EXPORT_ROOT_PATH));
+            return false;
 ;       }
     }
 
