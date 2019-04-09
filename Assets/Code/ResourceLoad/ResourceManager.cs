@@ -20,25 +20,8 @@ namespace AssetLoad
         eMaterial,
     }
 
-    public class ResourceManager : MonoBehaviour
+    public class ResourceManager : SingletonMono<ResourceManager>
     {
-        private static ResourceManager mInstance;
-        public static ResourceManager Instance
-        {
-            get
-            {
-                if (mInstance == null)
-                {
-                    GameObject obj = new GameObject();
-                    obj.name = "ResourceManager";
-                    mInstance = obj.AddComponent<ResourceManager>();
-                    DontDestroyOnLoad(obj);
-                }
-
-                return mInstance;
-            }
-        }
-
         //异步加载AB
         public void LoadABAsync(string abName, Action<AssetBundle> callback)
         {

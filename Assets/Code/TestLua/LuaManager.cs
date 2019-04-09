@@ -7,6 +7,7 @@ using XLua;
 public class LuaManager : SingletonMono<LuaManager> {
 
     LuaEnv mLuaEnv;
+    LuaUpdater mLuaUpdater;
     private static string LUA_AB_NAME = "luamain";
 
     public LuaEnv _LuaEnv
@@ -85,6 +86,13 @@ public class LuaManager : SingletonMono<LuaManager> {
     {
         LoadLua("Main");
         DoString("Main.Start()");
+        InitUpdate();
+    }
+
+    void InitUpdate()
+    {
+        mLuaUpdater = gameObject.AddComponent<LuaUpdater>();
+        mLuaUpdater.Init(mLuaEnv);
     }
 	
 	// Update is called once per frame

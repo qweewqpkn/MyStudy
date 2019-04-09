@@ -1,11 +1,16 @@
 --[[
     ---------------------------页面管理器-----------------------------------------
 ]]
-local UIRoot = require "ui.ui_root"
-local UIManager = Class(Singleton)
+local UIManager = BaseClass("UIManager", Singleton)
+local Stack = require("Framework.Common.Stack")
 
-function UIManager:ctor(...)
-    self.mUIRoot = UIRoot.New()
+function UIManager:__init(...)
+    --获取默认的根节点
+    self.mUIRoot = CS.UnityEngine.GameObject.Find("UIRoot").transform
+    self.mLayerBG = self.mUIRoot:Find("LayerBG") --背景层
+    self.mLayerWindow = self.mUIRoot:Find("LayerWindow") --窗口层
+    self.mLayerGuide = self.mUIRoot:Find("LayerGuide") --引导层
+    self.mLayerAlert = self.mUIRoot:Find("LayerAlert") --警告层
     self.mViewList = {} --存放所有打开的界面(不论隐藏与否)
     self.mCreateUIFuncList = {}
     self.mCurrentView = nil
@@ -25,7 +30,6 @@ function UIManager:RegisterCreateFunc(uiName,func)
     self.mCreateUIFuncList[uiName] = tab
 end
 
-
 function UIManager:OpenPanel(uiName, data)
     local ret = self:GetPanel(uiName,false)
     if nil == ret then
@@ -40,6 +44,7 @@ function UIManager:OpenPanel(uiName, data)
         if ret.IsMainUI then
             self.mMainUI = ret
         end
+
 
         self:SetCurrentView(ret)
         ret:OpenPanel(data)
@@ -209,13 +214,13 @@ end
 
 function UIManager:AddLayer(ui)
     if ui.mLayer == 1 then
-        self.mUIRoot:add_bg(ui.PanelObj)
+        ui.PanelObj.transform:SetParent(self.mLayerBG, false)
     elseif ui.mLayer ==2 then
-        self.mUIRoot:add_window(ui.PanelObj)
+        ui.PanelObj.transform:SetParent(self.mLayerWindow, false)
     elseif ui.mLayer ==3 then
-        self.mUIRoot:add_alert(ui.PanelObj)
+        ui.PanelObj.transform:SetParent(self.mLayerAlert, false)
     elseif ui.mLayer == 4 then
-        self.mUIRoot:add_guide(ui.PanelObj)
+        ui.PanelObj.transform:SetParent(self.mLayerGuide, false)
     end
 end
 

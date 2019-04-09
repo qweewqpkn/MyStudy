@@ -1,5 +1,6 @@
-local UIBase = class("UIBase")
-function UIBase:ctor( ... )
+local UIBase = BaseClass("UIBase")
+
+function UIBase:__init(...)
     self.mAbPath = "" --ab资源路径
     self.mLayer = 1 --界面层级
     self.mUIName = "" --界面名字
@@ -18,8 +19,7 @@ function UIBase:OpenPanel(data)
     self.PanelData = data
     if self.PanelState == 0 then
         self.PanelState = 1
-		HPrefabPacker.PackPrefab(self.mAbPath ,
-		function(obj)
+        CS.AssetLoad.ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
 			if self.PanelState == 0 then
                 self:RealClosePanel()
                 return
@@ -32,16 +32,16 @@ function UIBase:OpenPanel(data)
 
             --处理栈逻辑
             if self.IsStack then
-                local view = UIManager.GetInstance().mViewStack:Peek()
+                local view = UIManager:GetInstance().mViewStack:Peek()
                 if view ~= nil then
                     if(self.IsFullScreen)then
                         view:HidePanel()
                     end
                 end
-                UIManager.GetInstance().mViewStack:Push(self)
-                if UIManager.GetInstance():IsStackHaveFullScreen() then
-                    if UIManager.GetInstance().mMainUI ~= nil then
-                        UIManager.GetInstance().mMainUI:HidePanel()
+                UIManager:GetInstance().mViewStack:Push(self)
+                if UIManager:GetInstance():IsStackHaveFullScreen() then
+                    if UIManager:GetInstance().mMainUI ~= nil then
+                        UIManager:GetInstance().mMainUI:HidePanel()
                     end
                 end
             end
@@ -49,9 +49,9 @@ function UIBase:OpenPanel(data)
             --缓存对象
             self.PanelObj = obj
             --绑定ui的控件
-            UIComponentBind.BindToLua(obj, self)
+            --UIComponentBind.BindToLua(obj, self)
             --把界面加载指定层级
-            UIManager.GetInstance():AddLayer(self)
+            UIManager:GetInstance():AddLayer(self)
             --绑定
             self:OnBind()
             --显示界面
@@ -121,26 +121,26 @@ function UIBase:SetCanvas()
     if(self.UseSelfSorting)then
         return
     end
-    local canvas = GetComponent(self.PanelObj, "Canvas")
+    local canvas = self.PanelObj:GetComponent( "Canvas")
     if(canvas == nil)then
         return
     end
     canvas.overrideSorting = true
     if(self.IsMainUI)then
-        UIManager.GetInstance().mPanelSortingOrder = 0
+        UIManager:GetInstance().mPanelSortingOrder = 0
         canvas.sortingOrder = 0
-        UIManager.GetInstance().mPanelSortingOrder = UIManager.GetInstance().mPanelSortingOrder + self.useLayer
+        UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.useLayer
         return
     end
 
-    canvas.sortingOrder = UIManager.GetInstance().mPanelSortingOrder + 1
-    UIManager.GetInstance().mPanelSortingOrder = UIManager.GetInstance().mPanelSortingOrder + self.useLayer
-    --canvas.sortingOrder = UIManager.GetInstance().mPanelSortingOrder
+    canvas.sortingOrder = UIManager:GetInstance().mPanelSortingOrder + 1
+    UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.useLayer
+    --canvas.sortingOrder = UIManager:GetInstance().mPanelSortingOrder
 end
 
 --界面显示调用(为了让子类重写)
 function UIBase:OnShow(data)
-
+    print("uibase onshow")
 end
 
 --界面隐藏调用(为了让子类重写)
@@ -239,3 +239,5 @@ function UIBase:AnimationOut()
     end, t_aniamtion_state.length, 1, true, self)
     self.m_timer:Start()
 end
+
+return UIBase
