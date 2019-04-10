@@ -13,7 +13,7 @@ public class AutoBuildAndroid {
     {
         InitArg();
         InitPlayerSetting();
-        BuildRes.Build();
+        BuildRes.BuildAll();
         string[] level = GetBuildScene();
         string path = argDic["output_path"].Replace("\\", "/");
         path = string.Format("{0}/{1}_{2}.apk", path, "monk", string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));

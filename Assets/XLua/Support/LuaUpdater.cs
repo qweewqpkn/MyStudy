@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using XLua;
-using Debug = UnityEngine.Debug;
 
 [Hotfix]
 public class LuaUpdater : MonoBehaviour
@@ -14,6 +13,7 @@ public class LuaUpdater : MonoBehaviour
 
 #if UNITY_EDITOR
 #pragma warning disable 0414
+    // added by wsh @ 2017-12-29
     [SerializeField]
     long updateElapsedMilliseconds = 0;
     [SerializeField]
@@ -24,7 +24,7 @@ public class LuaUpdater : MonoBehaviour
     Stopwatch sw = new Stopwatch();
 #endif
 
-    public void Init(LuaEnv luaEnv)
+    public void OnInit(LuaEnv luaEnv)
     {
 #if UNITY_EDITOR
         sw.Start();
@@ -52,7 +52,7 @@ public class LuaUpdater : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.LogError("luaUpdate err : " + ex.Message + "\n" + ex.StackTrace);
+                UnityEngine.Debug.LogError("luaUpdate err : " + ex.Message + "\n" + ex.StackTrace);
             }
 #if UNITY_EDITOR
             updateElapsedMilliseconds = sw.ElapsedMilliseconds - start;
@@ -73,7 +73,7 @@ public class LuaUpdater : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.LogError("luaLateUpdate err : " + ex.Message + "\n" + ex.StackTrace);
+                UnityEngine.Debug.LogError("luaLateUpdate err : " + ex.Message + "\n" + ex.StackTrace);
             }
 #if UNITY_EDITOR
             lateUpdateElapsedMilliseconds = sw.ElapsedMilliseconds - start;
@@ -94,7 +94,7 @@ public class LuaUpdater : MonoBehaviour
             }
             catch (Exception ex)
             {
-                Debug.LogError("luaFixedUpdate err : " + ex.Message + "\n" + ex.StackTrace);
+                UnityEngine.Debug.LogError("luaFixedUpdate err : " + ex.Message + "\n" + ex.StackTrace);
             }
 #if UNITY_EDITOR
             fixedUpdateElapsedMilliseconds = sw.ElapsedMilliseconds - start;
@@ -108,7 +108,7 @@ public class LuaUpdater : MonoBehaviour
         luaLateUpdate = null;
         luaFixedUpdate = null;
     }
-
+    
     void OnDestroy()
     {
         OnDispose();

@@ -4,10 +4,10 @@ function UIBase:__init(...)
     self.mAbPath = "" --ab资源路径
     self.mLayer = 1 --界面层级
     self.mUIName = "" --界面名字
-    self.IsFullScreen = false --是否是全屏界面
-    self.IsStack = false --是否进栈界面
+    self.IsFullScreen = false --是否是全屏界面,全屏界面会隐藏之前的界面
+    self.IsStack = false --是否进栈界面,为了支持返回时能返回之前的界面
     self.IsMainUI = false --是否是主界面
-    self.IsDontDestroy = false --关闭界面是否要销毁掉还是隐藏而已
+    self.IsDontDestroy = false --关闭界面是否要销毁掉还是隐藏
     self.PanelState = 0 --0未打开 1加载ab中 2打开完成 3隐藏
     self.PanelData = nil --界面缓存外部传入的数据
     self.IsRestore = false --战斗返回需要恢复的界面
@@ -15,16 +15,20 @@ function UIBase:__init(...)
     self.useLayer = 1 --界面使用了多少层级，默认为1
 end
 
-function UIBase:OpenPanel(data)
-    self.PanelData = data
+function UIBase:OpenPanel(...)
+    self.PanelData = SafePack(...)
     if self.PanelState == 0 then
         self.PanelState = 1
-        CS.AssetLoad.ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
+
+        --加载界面资源
+        ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
+            --加载完成后，界面被标记为关闭
 			if self.PanelState == 0 then
                 self:RealClosePanel()
                 return
             end
 
+            --加载完成后，界面被标记为隐藏
             if self.PanelState == 3 then
                 self:HidePanel()
                 return
@@ -32,12 +36,13 @@ function UIBase:OpenPanel(data)
 
             --处理栈逻辑
             if self.IsStack then
-                local view = UIManager:GetInstance().mViewStack:Peek()
-                if view ~= nil then
-                    if(self.IsFullScreen)then
+                if(self.IsFullScreen)then
+                    local view = UIManager:GetInstance().mViewStack:Peek()
+                    if view ~= nil then
                         view:HidePanel()
                     end
                 end
+
                 UIManager:GetInstance().mViewStack:Push(self)
                 if UIManager:GetInstance():IsStackHaveFullScreen() then
                     if UIManager:GetInstance().mMainUI ~= nil then
@@ -46,58 +51,58 @@ function UIBase:OpenPanel(data)
                 end
             end
 
-            --缓存对象
-            self.PanelObj = obj
             --绑定ui的控件
-            --UIComponentBind.BindToLua(obj, self)
+            CS.UIComponentBind.BindToLua(obj, self)
             --把界面加载指定层级
             UIManager:GetInstance():AddLayer(self)
             --绑定
             self:OnBind()
+            --初始化
+            self:OnInit()
             --显示界面
-            self:ShowPanel(data)
+            self:ShowPanel(SafeUnpack(self.PanelData))
         end)
     elseif self.PanelState == 3 then
-        self:ShowPanel(data)
+        self:ShowPanel(...)
     end
 end
 
 --显示界面
-function UIBase:ShowPanel(data)
-    if self.PanelObj ~= nil then
-        self.PanelObj:SetActive(true)
+function UIBase:ShowPanel(...)
+    if self.gameObject ~= nil then
+        self.gameObject:SetActive(true)
     end
     self.PanelState = 2
-    --self:AnimationIn()
+    self:AnimationIn()
     self:SetCanvas()
-    self:OnShow(data)
+    self:OnShow(...)
 end
 
 --隐藏界面
 function UIBase:HidePanel()
     self.PanelState = 3
-    if nil ~= self.PanelObj then
-        self.PanelObj:SetActive(false)
+    if nil ~= self.gameObject then
+        self.gameObject:SetActive(false)
     end
     self:OnHide()
 end
 
 --真正关闭界面
 function UIBase:RealClosePanel()
-    if self.PanelObj ~= nil then
-        Object.Destroy(self.PanelObj)
+    if self.gameObject ~= nil then
+        CS.UnityEngine.Object.Destroy(self.gameObject)
     end
 
-    UIUnionManager.GetInstance():RemoveMsgWithTarget(self)
+    --UIUnionManager.GetInstance():RemoveMsgWithTarget(self)
     self:OnClose()
-    self.PanelObj = nil
+    self.gameObject = nil
     self.PanelState = 0
 end
 
 --关闭页面
 function UIBase:ClosePanel()
     local isDestroy = true
-    if self.PanelObj ~= nil then
+    if self.gameObject ~= nil then
         if self.IsDontDestroy then
             self:HidePanel()
             isDestroy = false
@@ -121,7 +126,7 @@ function UIBase:SetCanvas()
     if(self.UseSelfSorting)then
         return
     end
-    local canvas = self.PanelObj:GetComponent( "Canvas")
+    local canvas = self.gameObject:GetComponent( "Canvas")
     if(canvas == nil)then
         return
     end
@@ -138,9 +143,19 @@ function UIBase:SetCanvas()
     --canvas.sortingOrder = UIManager:GetInstance().mPanelSortingOrder
 end
 
+--绑定各种事情(为了让子类重写)
+function UIBase:OnBind()
+
+end
+
+--界面初始化调用(为了让子类重写)
+function UIBase:OnInit()
+
+end
+
 --界面显示调用(为了让子类重写)
-function UIBase:OnShow(data)
-    print("uibase onshow")
+function UIBase:OnShow(...)
+
 end
 
 --界面隐藏调用(为了让子类重写)
@@ -150,11 +165,6 @@ end
 
 --界面关闭调用(为了让子类重写)
 function UIBase:OnClose()
-
-end
-
---绑定各种事情
-function UIBase:OnBind()
 
 end
 
@@ -169,9 +179,11 @@ function UIBase:OnReconect()
 end
 
 function UIBase:AnimationIn()
-    local t_animation = GetComponent(self.PanelObj, "Animation")
-    if(t_animation == nil)then
+    local t_animation = self.gameObject:GetComponent("Animation")
+    if(IsNull(t_animation))then
         return
+    else
+        Logger.Log(t_animation)
     end
     local animation_name = "ui_anim_"..string.lower(self.mUIName)
     local t_animation_clip = t_animation:GetClip(animation_name)
@@ -191,8 +203,8 @@ function UIBase:AnimationIn()
 end
 
 function UIBase:AnimationOut()
-    local t_animation = GetComponent(self.PanelObj, "Animation")
-    if(t_animation == nil)then
+    local t_animation = self.gameObject:GetComponent("Animation")
+    if(IsNull(t_animation))then
         self:RealClosePanel()
         return
     end

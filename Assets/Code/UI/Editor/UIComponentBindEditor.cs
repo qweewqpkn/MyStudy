@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -139,118 +140,137 @@ public class UIComponentBindEditor {
     private static void GenerateLuaCode(GameObject obj)
     {
         string name = obj.name;
-        string luaPath = Application.dataPath + "/../../ClientRes/Lua/";
-        FileInfo fileInfo = GetTargetFile(luaPath, name);
+        string luaPath = PathManager.LUA_ROOT_PATH;
+        string filePath = "";
         FileStream fs;
-        if (fileInfo == null)
+        bool isExist = FileUtility.ExistFile(luaPath, name, out filePath);
+        if (isExist)
         {
-            fs = File.Open(luaPath + name + ".lua", FileMode.CreateNew, FileAccess.ReadWrite, FileShare.ReadWrite);
+            fs = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
         }
         else
         {
-            fs = fileInfo.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            fs = File.Open(luaPath + "/" + name + ".lua", FileMode.CreateNew, FileAccess.ReadWrite, FileShare.ReadWrite);
         }
+
 
         StreamReader sr = new StreamReader(fs);
         StreamWriter sw = new StreamWriter(fs);
-        string content = sr.ReadToEnd();
-        if (string.IsNullOrEmpty(content))
+        if (isExist)
         {
-            content = string.Format("local {0} = class(\"{1}\",UIBase)\r\n", name, name);
-        }
-
-        //首先寻找是否已经自动写入过
-        int startFlagIndex = content.IndexOf("--@start");
-        int endFlagIndex = content.IndexOf("--@end");
-        if (startFlagIndex != -1 && endFlagIndex != -1)
-        {
-            content = content.Remove(startFlagIndex, endFlagIndex - startFlagIndex + 6);
-        }
-
-        //在指定位置开始写入
-        string startContent;
-        string endContent;
-        int index = content.IndexOf("class(\"" + name);
-        if (index != -1)
-        {
-            index = content.IndexOf("\r\n", index);
-            startContent = content.Substring(0, index + 2);
-            endContent = content.Substring(index + 2);
-            endContent = endContent.TrimStart('\r', '\n');
-
-            fs.Seek(0, SeekOrigin.Begin);
-            fs.SetLength(0);
-
-            //写入开始内容
-            sw.Write(startContent);
-            sw.WriteLine("");
-            //写入插入的
-            sw.WriteLine("--@start 自动绑定ui组件,请勿手动修改");
-            UIComponentBind[] bindDatas = Selection.activeGameObject.GetComponentsInChildren<UIComponentBind>(true);
-
-           for (int i = 0; i < bindDatas[0].mComponentDataList.Count; i++)
-           {
-               UIComponentBind.ComponentData data = bindDatas[0].mComponentDataList[i];
-               sw.WriteLine(string.Format("local {0} --{1}", data.name, data.type));
-           }
-
-            for(int i = 1; i < bindDatas.Length; i++)
+            //存在了
+            string content = sr.ReadToEnd();
+            //移除自动导出的组件绑定信息
+            int startFlagIndex = content.IndexOf("--@start");
+            int endFlagIndex = content.IndexOf("--@end");
+            if (startFlagIndex != -1 && endFlagIndex != -1)
             {
-                sw.WriteLine("");
-                sw.WriteLine(string.Format("--{0}的导出的子元素", bindDatas[i].mObjName));
-                for(int j = 0; j < bindDatas[i].mComponentDataList.Count; j++)
-                {
-                    UIComponentBind.ComponentData data = bindDatas[i].mComponentDataList[j];
-                    sw.WriteLine(string.Format("--{0} {1}", data.name, data.type));
-                }
+                content = content.Remove(startFlagIndex, endFlagIndex - startFlagIndex + 6);
             }
 
-            sw.WriteLine("");
-            sw.WriteLine(string.Format("function {0}:BindUI()", name));
-            for (int i = 0; i < bindDatas[0].mComponentDataList.Count; i++)
+            //在指定位置开始写入
+            string startContent;
+            string endContent;
+            int index = content.IndexOf("BaseClass(\"" + name);
+            if (index != -1)
             {
-                UIComponentBind.ComponentData data = bindDatas[0].mComponentDataList[i];
-                sw.WriteLine(string.Format("{0} = self.{1}", data.name, data.name));
+                index = content.IndexOf("\r\n", index);
+                startContent = content.Substring(0, index + 2);
+                endContent = content.Substring(index + 2).TrimStart('\r', '\n');
+
+                fs.Seek(0, SeekOrigin.Begin);
+                fs.SetLength(0);
+
+                sw.Write(startContent);
+                GenerateBindComponentCode(sw, name);
+                sw.Write(endContent);
             }
-
-            sw.WriteLine("end");
-            sw.WriteLine("--@end");
-            sw.WriteLine("");
-
-            //写入后面内容
-            sw.Write(endContent);
         }
+        else
+        {
+            //不存在
+            sw.WriteLine(string.Format("local {0} = BaseClass(\"{1}\", UIBase)", name, name));
+            GenerateBindComponentCode(sw, name);
+            sw.Write(@"--构造函数
+function xxxx:__init(...)
+	self.mAbPath = 'xxxx'
+end
+
+--绑定事件(一次)
+function xxxx: OnBind()
+
+end
+
+--第一次打开界面调用(一次)
+function xxxx: OnInit()
+
+end
+
+--显示时调用(可多次)
+function xxxx: OnShow(...)
+    
+end
+
+--隐藏时调用(可多次)
+function xxxx: OnHide()
+
+end
+
+--关闭时调用(一次)
+function xxxx: OnClose()
+
+end
+
+local function Register()
+    UIManager: GetInstance():RegisterCreateFunc('xxxx', xxxx.New)
+end
+Register()
+
+return xxxx".Replace("xxxx", name));
+        }
+        
         sw.Dispose();
         sw.Close();
         fs.Close();
+
+        AssetDatabase.Refresh();
+        Debug.Log("绑定成功!");
     }
 
-    private static void GetAllFile(string path, List<FileInfo> fileList)
+    private static void GenerateBindComponentCode(StreamWriter sw, string name)
     {
-        DirectoryInfo directory = new DirectoryInfo(path);
-        fileList.AddRange(directory.GetFiles());
+        //写入插入的
+        sw.WriteLine("");
+        sw.WriteLine("--@start 导出的组件列表,使用self.xxx来访问");
+        UIComponentBind[] bindDatas = Selection.activeGameObject.GetComponentsInChildren<UIComponentBind>(true);
 
-        DirectoryInfo[] directoryInfos = directory.GetDirectories();
-        for(int i = 0; i < directoryInfos.Length; i++)
+        for (int i = 0; i < bindDatas[0].mComponentDataList.Count; i++)
         {
-            GetAllFile(directoryInfos[i].FullName, fileList);
+            UIComponentBind.ComponentData data = bindDatas[0].mComponentDataList[i];
+            sw.WriteLine(string.Format("--local {0} {1}", data.name, data.type));
         }
-    }
 
-    public static FileInfo GetTargetFile(string path, string name)
-    {
-        List<FileInfo> fileList = new List<FileInfo>();
-        GetAllFile(path, fileList);
-
-        string realName = name + ".lua";
-        for(int i = 0; i < fileList.Count; i++)
+        for (int i = 1; i < bindDatas.Length; i++)
         {
-            if(fileList[i].Name == realName)
+            sw.WriteLine("");
+            sw.WriteLine(string.Format("--{0}的导出的子元素", bindDatas[i].mObjName));
+            for (int j = 0; j < bindDatas[i].mComponentDataList.Count; j++)
             {
-                return fileList[i];
+                UIComponentBind.ComponentData data = bindDatas[i].mComponentDataList[j];
+                sw.WriteLine(string.Format("--{0} {1}", data.name, data.type));
             }
         }
 
-        return null;
+        //sw.WriteLine("");
+        //sw.WriteLine(string.Format("function {0}:BindUI()", name));
+        //for (int i = 0; i < bindDatas[0].mComponentDataList.Count; i++)
+        //{
+        //    UIComponentBind.ComponentData data = bindDatas[0].mComponentDataList[i];
+        //    sw.WriteLine(string.Format("{0} = self.{1}", data.name, data.name));
+        //}
+
+        //sw.WriteLine("end");
+        sw.WriteLine("--@end");
+        sw.WriteLine("");
     }
 }

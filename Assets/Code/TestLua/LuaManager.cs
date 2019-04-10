@@ -92,7 +92,7 @@ public class LuaManager : SingletonMono<LuaManager> {
     void InitUpdate()
     {
         mLuaUpdater = gameObject.AddComponent<LuaUpdater>();
-        mLuaUpdater.Init(mLuaEnv);
+        mLuaUpdater.OnInit(mLuaEnv);
     }
 	
 	// Update is called once per frame

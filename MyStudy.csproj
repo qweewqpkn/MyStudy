@@ -294,7 +294,6 @@
     <Compile Include="Assets\Code\SpacePartition\QuadTree\QuadTree.cs" />
     <Compile Include="Assets\Code\Test.cs" />
     <Compile Include="Assets\Code\TestLua\LuaManager.cs" />
-    <Compile Include="Assets\Code\TestLua\LuaUpdater.cs" />
     <Compile Include="Assets\Code\TestLua\TestLua.cs" />
     <Compile Include="Assets\Code\TestLua\TestLuaCallCS.cs" />
     <Compile Include="Assets\Code\TextureDestroy\TextureDestroy.cs" />
@@ -369,6 +368,12 @@
     <Compile Include="Assets\XLua\Src\TemplateEngine\TemplateEngine.cs" />
     <Compile Include="Assets\XLua\Src\TypeExtensions.cs" />
     <Compile Include="Assets\XLua\Src\Utils.cs" />
+    <Compile Include="Assets\XLua\Support\BinaryWriterExtentions.cs" />
+    <Compile Include="Assets\XLua\Support\BuildInInit.cs" />
+    <Compile Include="Assets\XLua\Support\CoroutineRunner.cs" />
+    <Compile Include="Assets\XLua\Support\LuaFunction.cs" />
+    <Compile Include="Assets\XLua\Support\LuaUpdater.cs" />
+    <Compile Include="Assets\XLua\Support\UnityEngineObjectExtention.cs" />
     <Compile Include="Assets\XLua\Tutorial\CSharpCallLua\CSCallLua.cs" />
     <Compile Include="Assets\XLua\Tutorial\LoadLuaScript\ByFile\ByFile.cs" />
     <Compile Include="Assets\XLua\Tutorial\LoadLuaScript\ByString\ByString.cs" />

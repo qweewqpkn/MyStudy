@@ -128,4 +128,22 @@ public class FileUtility{
             return 0;
         }
     }
+
+    //判断目录下是否存在指定名字的文件
+    public static bool ExistFile(string directoryPath, string name, out string path, string filter = "*.*", SearchOption searchOption = SearchOption.AllDirectories)
+    {
+        path = "";
+        string[] files = Directory.GetFiles(directoryPath, filter, searchOption);
+        for (int i = 0; i < files.Length; i++)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(files[i]);
+            if (fileName == name)
+            {
+                path = files[i];
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -7,23 +7,18 @@ using UnityEngine;
 
 public class BuildRes
 {
-    [MenuItem("Tools/AssetBundle/打包所有资源")]
-    public static void Build()
+    [MenuItem("Tools/AssetBundle/增量打包")]
+    public static void BuildAdd()
     {
-        BuildABAdd();
+        BuildAB(false);
         BuildLua();
     }
 
-    [MenuItem("Tools/AssetBundle/增量打包AB")]
-    public static void BuildABAdd()
-    {
-        BuildAB(false);
-    }
-
-    [MenuItem("Tools/AssetBundle/重新打包AB")]
-    public static void BuildABAll()
+    [MenuItem("Tools/AssetBundle/重新打包")]
+    public static void BuildAll()
     {
         BuildAB(true);
+        BuildLua();
     }
 
     static void BuildAB(bool isALL)
@@ -53,7 +48,6 @@ public class BuildRes
         }
     }
 
-    [MenuItem("Tools/AssetBundle/打包Lua")]
     static void BuildLua()
     {
         //从lua原始目录拷贝到目标目录并加上.bytes后缀

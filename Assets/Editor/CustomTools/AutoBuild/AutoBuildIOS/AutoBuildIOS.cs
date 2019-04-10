@@ -19,7 +19,7 @@ public class AutoBuildIOS {
     {
         InitArg();
         InitPlayerSetting();
-        BuildRes.Build();
+        BuildRes.BuildAll();
         string[] level = GetBuildScene();
         string outputPath = argDic["output_path"].Replace("\\", "/");
         //生成唯一名字xcode工程,方便后面xcode自动化编译
