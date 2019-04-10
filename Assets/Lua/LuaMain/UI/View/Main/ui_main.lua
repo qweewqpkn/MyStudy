@@ -4,6 +4,10 @@ local ui_main = BaseClass("ui_main", UIBase)
 --local b_image Image
 --local b_text Text
 --local b_set Button
+--local b_t_items Image
+
+--b_t_items的导出的子元素
+--b_text Text
 --@end
 
 function ui_main:OnSet(btn, ...)
@@ -19,8 +23,7 @@ end
 --绑定事件(一次)
 function ui_main: OnBind()
     print("ui_main OnBind")
-
-    UIUtil.AddButtonEvent(self, self.b_set, self.OnSet, 123, "asdfasd1111")
+    UIUtil.AddButtonEvent(self, self.b_set, self.OnSet)
 end
 
 --第一次打开界面调用(一次)

@@ -297,7 +297,9 @@
     <Compile Include="Assets\Code\TestLua\TestLua.cs" />
     <Compile Include="Assets\Code\TestLua\TestLuaCallCS.cs" />
     <Compile Include="Assets\Code\TextureDestroy\TextureDestroy.cs" />
+    <Compile Include="Assets\Code\UI\ImageExt.cs" />
     <Compile Include="Assets\Code\UI\MirrorSprite.cs" />
+    <Compile Include="Assets\Code\UI\RawImageExt.cs" />
     <Compile Include="Assets\Code\UI\TextColorGradient.cs" />
     <Compile Include="Assets\Code\UI\UIComponentBind.cs" />
     <Compile Include="Assets\Code\UI\UniGif\UniGif.cs" />
