@@ -196,63 +196,63 @@ local function Cleanup(self)
 end
 
 -- 获取定时器
-local function InnerGetTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+local function InnerGetTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	local timer = nil
 	if table.length(self.__pool) > 0 then
 		timer = table.remove(self.__pool)
 		if delay and func then
-			timer:Init(delay, func, obj, one_shot, use_frame, unscaled)
+			timer:Init(delay, func, obj, loop, use_frame, unscaled)
 		end
 	else
-		timer = Timer.New(delay, func, obj, one_shot, use_frame, unscaled)
+		timer = Timer.New(delay, func, obj, loop, use_frame, unscaled)
 	end
 	return timer
 end
 
 -- 获取Update定时器
-local function GetTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+local function GetTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	assert(not self.__update_timer[timer] and not self.__update_toadd[timer])
-	local timer = InnerGetTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+	local timer = InnerGetTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	self.__update_toadd[timer] = true
 	return timer
 end
 
 -- 获取LateUpdate定时器
-local function GetLateTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+local function GetLateTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	assert(not self.__lateupdate_timer[timer] and not self.__lateupdate_toadd[timer])
-	local timer = InnerGetTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+	local timer = InnerGetTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	self.__lateupdate_toadd[timer] = true
 	return timer
 end
 
 -- 获取FixedUpdate定时器
-local function GetFixedTimer(self, delay, func, obj, one_shot, use_frame)
+local function GetFixedTimer(self, delay, func, obj, loop, use_frame)
 	assert(not self.__fixedupdate_timer[timer] and not self.__fixedupdate_toadd[timer])
-	local timer = InnerGetTimer(self, delay, func, obj, one_shot, use_frame, false)
+	local timer = InnerGetTimer(self, delay, func, obj, loop, use_frame, false)
 	self.__fixedupdate_toadd[timer] = true
 	return timer
 end
 
 -- 获取CoUpdate定时器
-local function GetCoTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+local function GetCoTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	assert(not self.__coupdate_timer[timer] and not self.__coupdate_toadd[timer])
-	local timer = InnerGetTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+	local timer = InnerGetTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	self.__coupdate_toadd[timer] = true
 	return timer
 end
 
 -- 获取CoLateUpdate定时器
-local function GetCoLateTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+local function GetCoLateTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	assert(not self.__colateupdate_timer[timer] and not self.__colateupdate_toadd[timer])
-	local timer = InnerGetTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+	local timer = InnerGetTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	self.__colateupdate_toadd[timer] = true
 	return timer
 end
 
 -- 获取CoFixedUpdate定时器
-local function GetCoFixedTimer(self, delay, func, obj, one_shot, use_frame)
+local function GetCoFixedTimer(self, delay, func, obj, loop, use_frame)
 	assert(not self.__cofixedupdate_timer[timer] and not self.__cofixedupdate_toadd[timer])
-	local timer = InnerGetTimer(self, delay, func, obj, one_shot, use_frame, unscaled)
+	local timer = InnerGetTimer(self, delay, func, obj, loop, use_frame, unscaled)
 	self.__cofixedupdate_toadd[timer] = true
 	return timer
 end

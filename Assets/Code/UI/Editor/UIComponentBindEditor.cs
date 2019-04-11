@@ -197,27 +197,27 @@ function xxxx:__init(...)
 end
 
 --绑定事件(一次)
-function xxxx: OnBind()
+function xxxx:OnBind()
 
 end
 
 --第一次打开界面调用(一次)
-function xxxx: OnInit()
+function xxxx:OnInit()
 
 end
 
 --显示时调用(可多次)
-function xxxx: OnShow(...)
+function xxxx:OnShow(...)
     
 end
 
 --隐藏时调用(可多次)
-function xxxx: OnHide()
+function xxxx:OnHide()
 
 end
 
 --关闭时调用(一次)
-function xxxx: OnClose()
+function xxxx:OnClose()
 
 end
 

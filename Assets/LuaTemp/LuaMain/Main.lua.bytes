@@ -2,6 +2,7 @@
 require "Framework.Define.Global"
 require "UI.View.Main.ui_main"
 Main = {}
+
 local function Start()					
 	print("logic start")
 	UpdateManager:GetInstance():Startup()

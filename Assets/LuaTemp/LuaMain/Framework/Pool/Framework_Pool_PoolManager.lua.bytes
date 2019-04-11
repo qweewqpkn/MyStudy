@@ -1,0 +1,41 @@
+local PoolManager = BaseClass("PoolManager", Singleton)
+local PoolGO = require "Framework.Pool.PoolGO"
+
+function PoolManager:__init()
+    self.mPoolGoList = {}
+    self.mPoolList = {}
+    self.mObj = CS.UnityEngine.GameObject()
+    self.mObj.name = "PoolManager"
+end
+
+function PoolManager:GetPoolGO(go)
+    if(IsNull(go)) then
+        Logger.LogError("PoolManager GetPoolGo arg go is nil")
+    end
+
+    if self.mPoolGoList[go] == nil then
+        local obj = CS.UnityEngine.GameObject()
+        obj.name = go.name .. "(PoolGo)"
+        GoUtil.SetParent(obj, self.mObj)
+        self.mPoolGoList[go] = PoolGO.New(go, obj)
+    end
+
+    return self.mPoolGoList[go]
+end
+
+function PoolManager:ReleasePoolGO(go)
+    if(self.mPoolGoList[go] ~= nil) then
+        self.mPoolGoList[go]:Release()
+        self.mPoolGoList[go] = nil
+    end
+end
+
+function PoolManager:GetPool(name)
+
+end
+
+function PoolManager:ReleasePool(name)
+
+end
+
+return PoolManager

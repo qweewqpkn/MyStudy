@@ -53,7 +53,7 @@ function UIManager:OpenPanel(uiName, ...)
     end
 
     if nil ~= ret then
-        if ret.IsMainUI then
+        if ret.mIsMainUI then
             self.mMainUI = ret
         end
 
@@ -101,14 +101,14 @@ function UIManager:ClosePanel(uiName)
         end
     end
 
-    if nil ~= ret and ret.IsStack then
+    if nil ~= ret and ret.mIsStack then
         local view = self.mViewStack:Peek()
         if view ~= nil then
             if view.mUIName == uiName then
                 self.mViewStack:Pop()
                 if self.mViewStack:Count() > 0 then
                     view = self.mViewStack:Peek()
-                    --view:OpenPanel(view.PanelData)
+                    --view:OpenPanel(view.mPanelData)
                     view:ShowPanel()
                 end
             else
@@ -129,7 +129,7 @@ function UIManager:ClosePanel(uiName)
         if(not(self.mIsInMiniGame))then
             if not self:IsStackHaveFullScreen() then
                 if self.mMainUI ~= nil then
-                    self.mMainUI:OpenPanel(self.mMainUI.PanelData)
+                    self.mMainUI:OpenPanel(self.mMainUI.mPanelData)
                 end
             end
         end
@@ -166,7 +166,7 @@ end
 
 function UIManager:HideAllPanel()
     for _,v in pairs(self.mViewList) do
-        if(v.IsRestore)then
+        if(v.mIsRestore)then
             table.insert(self.mRestoreList, v)
         end
         v:HidePanel()
@@ -178,8 +178,8 @@ end
 
 function UIManager:RestorePanel()
     for k, v in pairs(self.mRestoreList) do
-        if(v.IsRestore)then
-            self:OpenPanel(v.mUIName, v.PanelData)
+        if(v.mIsRestore)then
+            self:OpenPanel(v.mUIName, v.mPanelData)
             v:ShowPanel()
         end
     end
@@ -187,7 +187,6 @@ function UIManager:RestorePanel()
 end
 
 function UIManager:CloseAllPanel()
-    DebugLog.LogError(Logger.ModuleType.ui, "UIManager:CloseAllPanel()")
     for i = #self.mViewList,1,-1 do
         if self.mViewList[i]:ClosePanel() then
             table.remove( self.mViewList,i) --如果是销毁页面的，直接将对应的UI表也消除
@@ -198,13 +197,12 @@ function UIManager:CloseAllPanel()
 end
 
 function UIManager:DisposeAllPanel()
-    DebugLog.LogError(Logger.ModuleType.ui, "UIManager:DisposeAllPanel()")
     for i = #self.mViewList,1,-1 do
         self.mViewList[i]:RealClosePanel()
     end
     self.mViewList = {}
     self.mViewStack:Clear()
-    --self.mMainUI = nil
+    self.mMainUI = nil
     self.mInShowViewList = {}
 end
 
@@ -222,7 +220,7 @@ end
 
 function UIManager:IsStackHaveFullScreen()
     for i,v in ipairs(self.mViewStack.list) do
-        if v.IsFullScreen then
+        if v.mIsFullScreen then
             return true
         end
     end

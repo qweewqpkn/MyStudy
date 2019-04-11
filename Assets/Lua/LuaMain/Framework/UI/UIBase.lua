@@ -4,39 +4,39 @@ function UIBase:__init(...)
     self.mAbPath = "" --ab资源路径
     self.mLayer = 1 --界面层级
     self.mUIName = "" --界面名字
-    self.IsFullScreen = false --是否是全屏界面,全屏界面会隐藏之前的界面
-    self.IsStack = false --是否进栈界面,为了支持返回时能返回之前的界面
-    self.IsMainUI = false --是否是主界面
-    self.IsDontDestroy = false --关闭界面是否要销毁掉还是隐藏
-    self.PanelState = 0 --0未打开 1加载ab中 2打开完成 3隐藏
-    self.PanelData = nil --界面缓存外部传入的数据
-    self.IsRestore = false --战斗返回需要恢复的界面
-    self.UseSelfSorting = false --是否使用自带层级
-    self.useLayer = 1 --界面使用了多少层级，默认为1
+    self.mIsFullScreen = false --是否是全屏界面,全屏界面会隐藏之前的界面
+    self.mIsStack = false --是否进栈界面,为了支持返回时能返回之前的界面
+    self.mIsMainUI = false --是否是主界面
+    self.mIsDontDestroy = false --关闭界面是否要销毁掉还是隐藏
+    self.mPanelState = 0 --0未打开 1加载ab中 2打开完成 3隐藏
+    self.mPanelData = nil --界面缓存外部传入的数据
+    self.mIsRestore = false --战斗返回需要恢复的界面
+    self.mUseSelfSorting = false --是否使用自带层级
+    self.mUseLayer = 1 --界面使用了多少层级，默认为1
 end
 
 function UIBase:OpenPanel(...)
-    self.PanelData = SafePack(...)
-    if self.PanelState == 0 then
-        self.PanelState = 1
+    self.mPanelData = SafePack(...)
+    if self.mPanelState == 0 then
+        self.mPanelState = 1
 
         --加载界面资源
         ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
             --加载完成后，界面被标记为关闭
-			if self.PanelState == 0 then
+			if self.mPanelState == 0 then
                 self:RealClosePanel()
                 return
             end
 
             --加载完成后，界面被标记为隐藏
-            if self.PanelState == 3 then
+            if self.mPanelState == 3 then
                 self:HidePanel()
                 return
             end
 
             --处理栈逻辑
-            if self.IsStack then
-                if(self.IsFullScreen)then
+            if self.mIsStack then
+                if(self.mIsFullScreen)then
                     local view = UIManager:GetInstance().mViewStack:Peek()
                     if view ~= nil then
                         view:HidePanel()
@@ -60,9 +60,9 @@ function UIBase:OpenPanel(...)
             --初始化
             self:OnInit()
             --显示界面
-            self:ShowPanel(SafeUnpack(self.PanelData))
+            self:ShowPanel(SafeUnpack(self.mPanelData))
         end)
-    elseif self.PanelState == 3 then
+    elseif self.mPanelState == 3 then
         self:ShowPanel(...)
     end
 end
@@ -72,7 +72,7 @@ function UIBase:ShowPanel(...)
     if self.gameObject ~= nil then
         self.gameObject:SetActive(true)
     end
-    self.PanelState = 2
+    self.mPanelState = 2
     self:AnimationIn()
     self:SetCanvas()
     self:OnShow(...)
@@ -80,7 +80,7 @@ end
 
 --隐藏界面
 function UIBase:HidePanel()
-    self.PanelState = 3
+    self.mPanelState = 3
     if nil ~= self.gameObject then
         self.gameObject:SetActive(false)
     end
@@ -93,17 +93,17 @@ function UIBase:RealClosePanel()
         CS.UnityEngine.Object.Destroy(self.gameObject)
     end
 
-    --UIUnionManager.GetInstance():RemoveMsgWithTarget(self)
+    Messenger:GetInstance():RemoveByTarget(self)
     self:OnClose()
     self.gameObject = nil
-    self.PanelState = 0
+    self.mPanelState = 0
 end
 
 --关闭页面
 function UIBase:ClosePanel()
     local isDestroy = true
     if self.gameObject ~= nil then
-        if self.IsDontDestroy then
+        if self.mIsDontDestroy then
             self:HidePanel()
             isDestroy = false
         else
@@ -111,10 +111,10 @@ function UIBase:ClosePanel()
         end
     else
         --界面prefab还没加载完成,但是关闭了，所以要重置他的状态
-        if self.IsDontDestroy then
-            self.PanelState = 3
+        if self.mIsDontDestroy then
+            self.mPanelState = 3
         else
-            self.PanelState = 0
+            self.mPanelState = 0
         end
         isDestroy = false
     end
@@ -123,7 +123,7 @@ end
 
 --设置canvas层级
 function UIBase:SetCanvas()
-    if(self.UseSelfSorting)then
+    if(self.mUseSelfSorting)then
         return
     end
     local canvas = self.gameObject:GetComponent( "Canvas")
@@ -131,15 +131,15 @@ function UIBase:SetCanvas()
         return
     end
     canvas.overrideSorting = true
-    if(self.IsMainUI)then
+    if(self.mIsMainUI)then
         UIManager:GetInstance().mPanelSortingOrder = 0
         canvas.sortingOrder = 0
-        UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.useLayer
+        UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.mUseLayer
         return
     end
 
     canvas.sortingOrder = UIManager:GetInstance().mPanelSortingOrder + 1
-    UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.useLayer
+    UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.mUseLayer
     --canvas.sortingOrder = UIManager:GetInstance().mPanelSortingOrder
 end
 

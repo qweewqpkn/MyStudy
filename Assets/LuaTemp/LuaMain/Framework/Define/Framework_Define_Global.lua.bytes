@@ -25,14 +25,16 @@ TimeStrUtil = require "Framework.Util.TimeStrUtil"
 UIUtil = require "Framework.Util.UIUtil"
 TypeConvertUtil = require "Framework.Util.TypeConvertUtil"
 
+Singleton = require "Framework.Common.Singleton"
 list = require "Framework.Common.Tools.list"
 require "Framework.Common.Tools.event"
+Messenger = require "Framework.Common.Messenger"
 Config = require "Framework.Define.Config"
-Singleton = require "Framework.Common.Singleton"
 UIManager = require "Framework.UI.UIManager"
 SceneManager = require "Framework.Scene.SceneManager"
 UIBase = require "Framework.UI.UIBase"
 Logger = require "Framework.Common.Logger"
+PoolManager = require "Framework.Pool.PoolManager"
 
 -- update & time
 require "Framework.Updater.Coroutine"

@@ -9,10 +9,11 @@ function UIUtil.AddButtonEvent(self, obj, callback, ...)
     if(btn == nil) then
         btn = obj.gameObject:AddComponent(typeof(Button))
     end
+    local params = SafePack(...)
     btn.onClick:RemoveAllListeners()
     btn.onClick:AddListener(function ()
         --ComponentClick(btn, data)
-        callback(self, btn, ...)
+        callback(self, btn, SafeUnpack(params))
     end)
 end
 

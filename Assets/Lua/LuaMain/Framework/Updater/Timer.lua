@@ -9,17 +9,17 @@
 local Timer = BaseClass("Timer")
 
 -- 构造函数
-local function __init(self, delay, func, obj, one_shot, use_frame, unscaled)
+local function __init(self, delay, func, obj, loop, use_frame, unscaled)
 	-- 成员变量
 	-- weak表，保证定时器不影响目标对象的回收
 	self.target = setmetatable({}, {__mode = "v"})
 	if delay and func then
-		self:Init(delay, func, obj, one_shot, use_frame, unscaled)
+		self:Init(delay, func, obj, loop, use_frame, unscaled)
 	end
 end
 
 -- Init
-local function Init(self, delay, func, obj, one_shot, use_frame, unscaled)
+local function Init(self, delay, func, obj, loop, use_frame, unscaled)
 	assert(type(delay) == "number" and delay >= 0)
 	assert(func ~= nil)
 	-- 时长，秒或者帧
@@ -29,7 +29,9 @@ local function Init(self, delay, func, obj, one_shot, use_frame, unscaled)
 	-- 回传对象，一般作为回调函数第一个self参数
 	self.target.obj = obj
 	-- 是否是一次性计时
-	self.one_shot = one_shot
+	--self.one_shot = one_shot
+	-- 循环次数(-1是无限循环)
+	self.loop = loop
 	-- 是否是帧定时器，否则为秒定时器
 	self.use_frame = use_frame
 	-- 使用deltaTime计时，还是采用unscaledDeltaTime计时
@@ -73,7 +75,17 @@ local function Update(self, is_fixed)
 			-- 说明：这里一定要先改状态，后回调
 			-- 如果回调手动删除定时器又马上再次获取，则可能得到的是同一个定时器，再修改状态就不对了
 			-- added by wsh @ 2018-01-09：TimerManager已经被重构，不存在以上问题，但是这里的代码不再做调整
-			if not self.one_shot then
+			if self.loop > 0 then
+				if not self.use_frame then
+					-- 说明：必须把上次计时“欠下”的时间考虑进来，否则会有误差
+					self.left = self.delay + self.left
+				end
+				self.start_frame_count = Time.frameCount
+				self.loop = self.loop - 1
+				if(self.loop == 0) then
+					self.over = true
+				end
+			elseif self.loop == -1 then
 				if not self.use_frame then
 					-- 说明：必须把上次计时“欠下”的时间考虑进来，否则会有误差
 					self.left = self.delay + self.left
@@ -124,7 +136,8 @@ end
 -- 停止计时
 local function Stop(self)
 	self.left = 0
-	self.one_shot = false
+	self.loop = 0
+	--self.one_shot = false
 	self.target.func = nil
 	self.target.obj = nil
 	self.use_frame = false

@@ -1,31 +1,37 @@
 local ui_main = BaseClass("ui_main", UIBase)
 
---@start 自动绑定ui组件,请勿手动修改
-local b_image --Image
-local b_text --Text
-local b_set --Button
+--@start 导出的组件列表,使用self.xxx来访问
+--local b_image Image
+--local b_text Text
+--local b_set Button
+--local b_t_items Image
+--local b_content GridLayoutGroup
+--local b_release Button
 
-function ui_main:BindUI()
-b_image = self.b_image
-b_text = self.b_text
-b_set = self.b_set
-end
+--b_t_items的导出的子元素
+--b_text Text
 --@end
 
 function ui_main:OnSet()
-    print("OnSet ok")
+    self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items)
+
+    local newObj = self.mPoolGo:Spawn()
+    local newObj = self.mPoolGo:Spawn()
+    local newObj = self.mPoolGo:Spawn()
 end
 
 --构造函数
 function ui_main:__init(...)
 	self.mAbPath = 'ui_main'
+    self.mIsDontDestroy = true
 end
 
 --绑定事件(一次)
 function ui_main: OnBind()
     print("ui_main OnBind")
-
     UIUtil.AddButtonEvent(self, self.b_set, self.OnSet)
+    Messenger:GetInstance():Register(MsgEnum.MSG_MAIN_REFRESH, self.OnRefresh, self, "第一个参数哦")
+    Messenger:GetInstance():Register(MsgEnum.MSG_MAIN_REFRESH, self.OnRefresh1, self, "第xxx个参数哦")
 end
 
 --第一次打开界面调用(一次)
@@ -37,6 +43,10 @@ end
 function ui_main: OnShow(...)
     self.b_text.text = "成功啦我们"
     print("ui_main OnShow")
+    self.timer = TimerManager:GetInstance():GetTimer(1, function()
+        print("Timer is cal")
+    end, nil, -1)
+    self.timer:Start()
 end
 
 --隐藏时调用(可多次)
@@ -47,6 +57,18 @@ end
 --关闭时调用(一次)
 function ui_main: OnClose()
     print("ui_main OnClose")
+end
+
+function ui_main:OnRefresh(...)
+    for k,v in pairs({...}) do
+        print(v)
+    end
+end
+
+function ui_main:OnRefresh1(...)
+    for k,v in pairs({...}) do
+        print(v)
+    end
 end
 
 local function Register()

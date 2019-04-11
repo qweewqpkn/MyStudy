@@ -8,15 +8,15 @@
 
 local Messenger = require "Framework.Common.Messenger"
 local UpdateManager = BaseClass("UpdateManager", Singleton)
-local UpdateMsgName = "Update"
-local LateUpdateMsgName = "LateUpdateMsgName"
-local FixedUpdateMsgName = "FixedUpdateMsgName"
+--local UpdateMsgName = "Update"
+--local LateUpdateMsgName = "LateUpdateMsgName"
+--local FixedUpdateMsgName = "FixedUpdateMsgName"
 
 -- 构造函数
 local function __init(self)
 	-- 成员变量
 	-- 消息中心
-	self.ui_message_center = Messenger.New()
+	--self.ui_message_center = Messenger.New()
 	-- Update
 	self.__update_handle = nil
 	-- LateUpdate
@@ -27,17 +27,20 @@ end
 
 -- Update回调
 local function UpdateHandle(self)
-	self.ui_message_center:Broadcast(UpdateMsgName)
+	--self.ui_message_center:Broadcast(UpdateMsgName)
+	Messenger:GetInstance():Broadcast(MsgEnum.MSG_UPDATE)
 end
 
 -- LateUpdate回调
 local function LateUpdateHandle(self)
-	self.ui_message_center:Broadcast(LateUpdateMsgName)
+	--self.ui_message_center:Broadcast(LateUpdateMsgName)
+	Messenger:GetInstance():Broadcast(MsgEnum.MSG_LATE_UPDATE)
 end
 
 -- FixedUpdate回调
 local function FixedUpdateHandle(self)
-	self.ui_message_center:Broadcast(FixedUpdateMsgName)
+	--self.ui_message_center:Broadcast(FixedUpdateMsgName)
+	Messenger:GetInstance():Broadcast(MsgEnum.MSG_FIXED_UPDATE)
 end
 
 -- 启动
@@ -73,38 +76,44 @@ end
 
 -- 添加Update更新
 local function AddUpdate(self, e_listener)
-	self.ui_message_center:AddListener(UpdateMsgName, e_listener)
+	--self.ui_message_center:AddListener(UpdateMsgName, e_listener)
+	Messenger:GetInstance():Register(MsgEnum.MSG_UPDATE, e_listener)
 end
 
 -- 添加LateUpdate更新
 local function AddLateUpdate(self, e_listener)
-	self.ui_message_center:AddListener(LateUpdateMsgName, e_listener)
+	--self.ui_message_center:AddListener(LateUpdateMsgName, e_listener)
+	Messenger:GetInstance():Register(MsgEnum.MSG_LATE_UPDATE, e_listener)
 end
 
 -- 添加FixedUpdate更新
 local function AddFixedUpdate(self, e_listener)
-	self.ui_message_center:AddListener(FixedUpdateMsgName, e_listener)
+	--self.ui_message_center:AddListener(FixedUpdateMsgName, e_listener)
+	Messenger:GetInstance():Register(MsgEnum.MSG_FIXED_UPDATE, e_listener)
 end
 
 -- 移除Update更新
 local function RemoveUpdate(self, e_listener)
-	self.ui_message_center:RemoveListener(UpdateMsgName, e_listener)
+	--self.ui_message_center:RemoveListener(UpdateMsgName, e_listener)
+	Messenger:GetInstance():RemoveByFunc(MsgEnum.MSG_UPDATE, e_listener)
 end
 
 -- 移除LateUpdate更新
 local function RemoveLateUpdate(self, e_listener)
-	self.ui_message_center:RemoveListener(LateUpdateMsgName, e_listener)
+	--self.ui_message_center:RemoveListener(LateUpdateMsgName, e_listener)
+	Messenger:GetInstance():RemoveByFunc(MsgEnum.MSG_LATE_UPDATE, e_listener)
 end
 
 -- 移除FixedUpdate更新
 local function RemoveFixedUpdate(self, e_listener)
-	self.ui_message_center:RemoveListener(FixedUpdateMsgName, e_listener)
+	--self.ui_message_center:RemoveListener(FixedUpdateMsgName, e_listener)
+	Messenger:GetInstance():RemoveByFunc(MsgEnum.MSG_FIXED_UPDATE, e_listener)
 end
 
 -- 析构函数
 local function __delete(self)
 	self:Cleanup()
-	self.ui_message_center = nil
+	--self.ui_message_center = nil
 end
 
 UpdateManager.__init = __init

@@ -85,7 +85,4 @@ function UIUtil.ChangeLayerRecursive(obj, name)
     end
 end
 
-
-
-
 return UIUtil
