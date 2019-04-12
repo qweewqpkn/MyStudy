@@ -360,6 +360,7 @@
     <None Include="Assets\Shader\Reflection\SphereMapReflection\SphereMapReflection.shader" />
     <None Include="Assets\Shader\Refraction\Refraction1.shader" />
     <None Include="Assets\Shader\Role\Cartoon_QP\Role.shader" />
+    <None Include="Assets\Shader\Role\Cartoon_QP\RoleBody.shader" />
     <None Include="Assets\Shader\SSAO\SSAO.shader" />
     <None Include="Assets\Shader\ScreenPos\ScreenPos.shader" />
     <None Include="Assets\Shader\Shadow\PlanarShadow\Planar.shader" />

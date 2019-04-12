@@ -22,6 +22,7 @@ end
 
 function ui_main:OnRelease()
     PoolManager:GetInstance():ReleasePoolGO(self.b_t_items)
+    SingletonManager:GetInstance():Release()
 end
 
 --构造函数
@@ -50,8 +51,14 @@ function ui_main: OnShow(...)
     print("ui_main OnShow")
     self.timer = TimerManager:GetInstance():GetTimer(1, function()
         print("Timer is cal")
-    end, nil, -1)
+    end, nil, 1)
     self.timer:Start()
+
+    local co = coroutine.create(function (...)
+        print()
+    end)
+    print("i am here")
+    coroutine.resume(co, 45, 4123, "123")
 end
 
 --隐藏时调用(可多次)

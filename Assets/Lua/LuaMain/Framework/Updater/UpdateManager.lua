@@ -113,6 +113,7 @@ end
 -- 析构函数
 local function __delete(self)
 	self:Cleanup()
+	self:Dispose()
 	--self.ui_message_center = nil
 end
 

@@ -1,4 +1,4 @@
-Shader "Custom/Role"
+Shader "Custom/RoleBody"
 {
 	Properties
 	{
@@ -11,6 +11,8 @@ Shader "Custom/Role"
 		_FresnelGloss("_FresnelGloss", Float) = 1.0
 		_FresnelStrength("_FresnelStrength", Float) = 1.0
 		_FresnelDir("_FresnelDir", Range(-1.0, 1.0)) = 1.0 
+		_fOutlineWidth("_Outline Width", float) = 0.001
+		_f4OutlineColor("_Outline Color", Color) = (0.0,0.0,0.0,0.0)
 	}
 
 	SubShader
@@ -96,13 +98,42 @@ Shader "Custom/Role"
 
 				//计算阴影和衰减
 				UNITY_LIGHT_ATTENUATION(atten, i, i.worldPos.xyz);
-				fixed3 fresnelDir = cross(viewDir, fixed3(0.0, 1.0, 0.0)) * _FresnelDir;
-				//pow(1 - saturate(dot(viewDir, N)), _FresnelGloss) * (1 - abs(smoothstep(-1, 0, dot(N, lightDir)))) 这样可以实现球体单侧背光frenel，首先是正常的菲涅尔光一圈，然后(1 - abs(smoothstep(-1, 0, dot(N, lightDir))))实现了单侧
-				fixed3 fresnelColor = smoothstep(0.65, 1, dot(fresnelDir, N)) * _FresnelStrength * _FresnelColor.rgb ;//* pow(1 - saturate(dot(viewDir, N)), _FresnelGloss);				
+				//fixed3 fresnelDir = cross(viewDir, fixed3(0.0, 1.0, 0.0)) * _FresnelDir;
+				fixed3 fresnelColor = pow(1 - saturate(dot(viewDir, N)), _FresnelGloss) * (1 - abs(smoothstep(-1, 0, dot(N, lightDir)))) * _FresnelStrength * _FresnelColor.rgb ;			
 				fixed3 finalColor = texColor * ((diffuse + specular) * atten  + UNITY_LIGHTMODEL_AMBIENT) + fresnelColor;
 				return fixed4(finalColor, 1.0f);
 			}
+			
 
+			ENDCG
+		}
+
+		Pass
+		{
+			Cull front
+
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+
+			struct appdata
+			{
+				float4 vertex : POSITION;
+				float3 normal : NORMAL;
+			};
+
+			float _fOutlineWidth;
+			fixed4 _f4OutlineColor;
+
+			float4 vert(appdata v) : SV_POSITION
+			{
+				return UnityObjectToClipPos(v.vertex + normalize(v.normal) * _fOutlineWidth);
+			}
+
+			fixed4 frag() : SV_Target
+			{
+				return _f4OutlineColor;
+			}
 			ENDCG
 		}
 	}

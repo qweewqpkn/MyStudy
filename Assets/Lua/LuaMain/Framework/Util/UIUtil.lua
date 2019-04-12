@@ -41,14 +41,14 @@ function UIUtil.SpawnGridItem(template, parent, t)
     newItem.transform.localScale = Vector3.one
 end
 
-function UIUtil.ChangeImage(image, abName, spriteName, isGray)
+function UIUtil.SetSprite(image, abName, spriteName, isGray)
     isGray = isGray or false
     local imageExt = image.gameObject:GetComponent(typeof(ImageExt))
     imageExt:SetSprite(abName, spriteName)
     imageExt:SetGray(isGray)
 end
 
-function UIUtil.ChangeUrlImage(image, url, isGray)
+function UIUtil.SetUrlSprite(image, url, isGray)
     isGray = isGray or false
     local imageExt = image.gameObject:GetComponent(typeof(ImageExt))
     imageExt:SetUrlSprite(url)
@@ -56,14 +56,14 @@ function UIUtil.ChangeUrlImage(image, url, isGray)
 end
 
 --通过texture名字加载本地纹理
-function UIUtil.ChangeRawImage(rawImage, textureName, isGray, callBack)
+function UIUtil.SetRawImage(rawImage, textureName, isGray, callBack)
     local rawImageExt = rawImage.gameObject:GetComponent(typeof(RawImageExt))
     rawImageExt:SetTexture(textureName, callBack)
     rawImageExt:SetGray(isGray)
 end
 
 --通过texture字节填充一张纹理
-function UIUtil.ChangeRawImage(rawImage, textureBytes, isGray)
+function UIUtil.SetRawImage(rawImage, textureBytes, isGray)
     local rawImageExt = rawImage.gameObject:GetComponent(typeof(RawImageExt))
     rawImageExt:SetTextureBytes(textureBytes)
     rawImageExt:SetGray(isGray)

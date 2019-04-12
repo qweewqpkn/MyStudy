@@ -26,6 +26,7 @@ UIUtil = require "Framework.Util.UIUtil"
 TypeConvertUtil = require "Framework.Util.TypeConvertUtil"
 
 Singleton = require "Framework.Common.Singleton"
+SingletonManager = require "Framework.Common.SingletonManager"
 list = require "Framework.Common.Tools.list"
 require "Framework.Common.Tools.event"
 Messenger = require "Framework.Common.Messenger"
