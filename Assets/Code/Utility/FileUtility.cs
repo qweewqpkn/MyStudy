@@ -17,7 +17,7 @@ public class FileUtility{
 
     public static void DeleteDirectory(string path)
     {
-        if (!Directory.Exists(path))
+        if (Directory.Exists(path))
         {
             Directory.Delete(path, true);
         }
@@ -153,5 +153,12 @@ public class FileUtility{
         }
 
         return false;
+    }
+
+    static public void ShowAndSelectFileInExplorer(string path)
+    {
+        path = path.Replace('/', '\\');
+        string arg = string.Format(@"/select,{0}", path);
+        System.Diagnostics.Process.Start("explorer.exe", arg);
     }
 }

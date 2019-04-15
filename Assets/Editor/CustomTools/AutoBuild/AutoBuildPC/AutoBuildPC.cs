@@ -11,22 +11,30 @@ public class AutoBuildPC {
 
     protected static Dictionary<string, string> argDic = new Dictionary<string, string>();
 
-    static void BuildPC()
+    [MenuItem("Tools/Build/打包PC")]
+    static void BuildManual()
     {
-        InitArg();
-        InitPlayerSetting();
+        Build(string.Format("*output_path-{0}", Path.GetFullPath(".") + "/Output/Windows"));
+    }
 
-        foreach(var item in argDic)
-        {
-            Debug.Log(item.Value);
-        }
+    static void BuildAuto()
+    {
+        Build();
+    }
+
+    static void Build(string args = "")
+    {
+        InitArg(args);
+        InitPlayerSetting();
+        BuildRes.BuildAll();
+        FileUtility.DeleteDirectory(PathManager.RES_STREAM_ROOT_PATH);
+        FileUtility.CopyTo(PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform(), PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetEditorPlatform());
         string[] level = GetBuildScene();
-        string path = argDic["output_path"].Replace("\\", "/") + "/" + string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now);
-        string name = "monk";
-        path = string.Format("{0}/{1}.exe", path, name);
+        string outputPath = GetArg("output_path").Replace("\\", "/") + "/" + string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now);
+        string name = "SLG";
+        string path = string.Format("{0}/{1}.exe", outputPath, name);
         BuildPipeline.BuildPlayer(level, path, BuildTarget.StandaloneWindows, BuildOptions.Development);
-        //将你打包的资源拷贝到读取的路径下
-        //FileUtility.CopyTo(PathManager.RES_PATH_WINDOWS, path + name + "_Data" + "/ClientRes/StandaloneWindows");
+        FileUtility.ShowAndSelectFileInExplorer(outputPath);
     }
 
     protected static string[] GetBuildScene()
@@ -44,9 +52,18 @@ public class AutoBuildPC {
         return sceneList.ToArray();
     }
 
-    static void InitArg()
+    static void InitArg(string content)
     {
-        string[] args = System.Environment.GetCommandLineArgs();
+        string[] args;
+        if (string.IsNullOrEmpty(content))
+        {
+            args = System.Environment.GetCommandLineArgs();
+        }
+        else
+        {
+            args = content.Split(' ');
+        }
+
         for (int i = 0; i < args.Length; i++)
         {
             //过滤出我们真正需要的参数,用*开头,IOS使用#作为标志,结果有特殊意义,导致传参失败

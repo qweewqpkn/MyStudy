@@ -124,13 +124,6 @@ public class BuildRes
         Debug.Log("生成MD5成功!");
     }
 
-    public static void CopyResToStreamingAssets(string source, string target)
-    {
-        FileUtility.CopyTo(source, target);
-        AssetDatabase.Refresh();
-        Debug.Log("拷贝资源成功!");
-    }
-
     //移除无用的AB
     static void RemoveUnUseAB(string path)
     {

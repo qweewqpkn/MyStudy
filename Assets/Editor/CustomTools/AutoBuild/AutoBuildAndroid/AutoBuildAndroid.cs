@@ -32,17 +32,15 @@ public class AutoBuildAndroid {
             InitArg(args);
             InitPlayerSetting();
             BuildRes.BuildAll();
-            if (Directory.Exists(PathManager.RES_STREAM_ROOT_PATH))
-            {
-                Directory.Delete(PathManager.RES_STREAM_ROOT_PATH, true);
-            }
-            BuildRes.CopyResToStreamingAssets(PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform(), PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetEditorPlatform());
+			FileUtility.DeleteDirectory(PathManager.RES_STREAM_ROOT_PATH);
+            FileUtility.CopyTo(PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform(), PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetEditorPlatform());
             string[] level = GetBuildScene();
-            string path = GetArg("output_path").Replace("\\", "/");
-            FileUtility.CreateDirectory(path);
-            path = string.Format("{0}/{1}_{2}.apk", path, "SLG", string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
-            //使用5.6的unity path是不能含有Assets路径的，但是2017就可以使用包含有Assets的路径
+            string outputPath = GetArg("output_path").Replace("\\", "/");
+            FileUtility.CreateDirectory(outputPath);
+            string path = string.Format("{0}/{1}_{2}.apk", outputPath, "SLG", string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
             BuildPipeline.BuildPlayer(level, path, BuildTarget.Android, BuildOptions.None);
+			//使用5.6的unity path是不能含有Assets路径的，但是2017就可以使用包含有Assets的路径
+            FileUtility.ShowAndSelectFileInExplorer(path);
             Debug.Log("打包APK完成!");
         }
     }
@@ -64,9 +62,9 @@ public class AutoBuildAndroid {
 
     static void InitPlayerSetting()
     {
-        PlayerSettings.productName = "monk";
-        PlayerSettings.companyName = "monk";
-        PlayerSettings.applicationIdentifier = "com.monk.game";
+        PlayerSettings.productName = "slg";
+        PlayerSettings.companyName = "slg";
+        PlayerSettings.applicationIdentifier = "com.slg.game";
         //设置签名
         //layerSettings.Android.keystoreName = Application.dataPath + "/Editor/AndroidKeyStore/game";
         //layerSettings.Android.keystorePass = "123";

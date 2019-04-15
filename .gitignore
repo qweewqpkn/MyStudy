@@ -6,3 +6,4 @@ ProjectSettings/PresetManager.asset
 Packages/manifest.json
 UnityPackageManager/
 ClientRes/
+Output/
