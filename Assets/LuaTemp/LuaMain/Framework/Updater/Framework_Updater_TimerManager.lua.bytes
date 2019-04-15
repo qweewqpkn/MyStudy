@@ -260,6 +260,7 @@ end
 -- 析构函数
 local function __delete(self)
 	self:Cleanup()
+	self:Dispose()
 	self.__update_handle = nil
 	self.__lateupdate_handle = nil
 	self.__fixedupdate_handle = nil

@@ -13,11 +13,16 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items)
+    self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items, 10)
 
-    local newObj = self.mPoolGo:Spawn()
-    local newObj = self.mPoolGo:Spawn()
-    local newObj = self.mPoolGo:Spawn()
+    self.newObj1 = self.mPoolGo:Spawn()
+    self.newObj2 = self.mPoolGo:Spawn()
+    self.newObj3 = self.mPoolGo:Spawn()
+end
+
+function ui_main:OnRelease()
+    PoolManager:GetInstance():ReleasePoolGO(self.b_t_items)
+    SingletonManager:GetInstance():Release()
 end
 
 --构造函数
@@ -30,6 +35,7 @@ end
 function ui_main: OnBind()
     print("ui_main OnBind")
     UIUtil.AddButtonEvent(self, self.b_set, self.OnSet)
+    UIUtil.AddButtonEvent(self, self.b_release, self.OnRelease)
     Messenger:GetInstance():Register(MsgEnum.MSG_MAIN_REFRESH, self.OnRefresh, self, "第一个参数哦")
     Messenger:GetInstance():Register(MsgEnum.MSG_MAIN_REFRESH, self.OnRefresh1, self, "第xxx个参数哦")
 end
@@ -41,12 +47,25 @@ end
 
 --显示时调用(可多次)
 function ui_main: OnShow(...)
+
+    coroutine.start(function ()
+        print("协程开始")
+        coroutine.waitforseconds(10)
+        print("协程结束")
+    end)
+
     self.b_text.text = "成功啦我们"
     print("ui_main OnShow")
     self.timer = TimerManager:GetInstance():GetTimer(1, function()
         print("Timer is cal")
-    end, nil, -1)
+    end, nil, 1)
     self.timer:Start()
+
+    local co = coroutine.create(function (...)
+        print()
+    end)
+    print("i am here")
+    coroutine.resume(co, 45, 4123, "123")
 end
 
 --隐藏时调用(可多次)

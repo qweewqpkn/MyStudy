@@ -253,7 +253,7 @@ local function waitforfixedupdate()
 	local timer = TimerManager:GetInstance():GetCoFixedTimer()
 	local action = __GetAction(co, timer)
 	
-	timer:Init(0, __Action, action, true, true)
+	timer:Init(0, __Action, action, 1, true)
  	timer:Start()
 	action_map[co] = action
  	return coroutine.yield()
@@ -266,7 +266,7 @@ local function waitforframes(frames)
 	local timer = TimerManager:GetInstance():GetCoTimer()
 	local action = __GetAction(co, timer)
 	
-	timer:Init(frames, __Action, action, true, true)
+	timer:Init(frames, __Action, action, 1, true)
  	timer:Start()
 	action_map[co] = action
  	return coroutine.yield()
@@ -280,7 +280,7 @@ local function waitforseconds(seconds)
 	local timer = TimerManager:GetInstance():GetCoTimer()
 	local action = __GetAction(co, timer)
 	
-	timer:Init(seconds, __Action, action, true)
+	timer:Init(seconds, __Action, action, 1)
  	timer:Start()
 	action_map[co] = action
  	return coroutine.yield()
@@ -304,7 +304,7 @@ local function waitforasyncop(async_operation, callback)
 	local timer = TimerManager:GetInstance():GetCoTimer()
 	local action = __GetAction(co, timer, __AsyncOpCheck, SafePack(co, async_operation, callback), true)
 	
-	timer:Init(1, __Action, action, false, true)
+	timer:Init(1, __Action, action, -1, true)
  	timer:Start()
 	action_map[co] = action
  	return coroutine.yield()
@@ -318,7 +318,7 @@ local function waituntil(func, ...)
 	local timer = TimerManager:GetInstance():GetCoTimer()
 	local action = __GetAction(co, timer, func, SafePack(...), true)
 	
-	timer:Init(1, __Action, action, false, true)
+	timer:Init(1, __Action, action, -1, true)
  	timer:Start()
 	action_map[co] = action
  	return coroutine.yield()
@@ -332,7 +332,7 @@ local function waitwhile(func, ...)
 	local timer = TimerManager:GetInstance():GetCoTimer()
 	local action = __GetAction(co, timer, func, SafePack(...), false)
 	
-	timer:Init(1, __Action, action, false, true)
+	timer:Init(1, __Action, action, -1, true)
  	timer:Start()
 	action_map[co] = action
  	return coroutine.yield()
@@ -345,7 +345,7 @@ local function waitforendofframe()
 	local timer = TimerManager:GetInstance():GetCoLateTimer()
 	local action = __GetAction(co, timer)
 	
-	timer:Init(0, __Action, action, true, true)
+	timer:Init(0, __Action, action, 1, true)
  	timer:Start()
 	action_map[co] = action
  	return coroutine.yield()

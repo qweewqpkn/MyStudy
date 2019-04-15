@@ -6,8 +6,6 @@ using UnityEngine.UI;
 using XLua;
 
 public class TestLua : MonoBehaviour {
-    public Button mButton;
-
     public class DClass
     {
         public int f1;

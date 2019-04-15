@@ -18,7 +18,7 @@ svn revert -R %LUA_PATH%
 svn update %LUA_PATH%
 
 echo "开始打包apk"
-%UNITY_PATH% -quit -batchmode -logFile build.log -projectPath %PROJECT_PATH% -executeMethod AutoBuildAndroid.BuildAndroid %*
+%UNITY_PATH% -quit -batchmode -logFile build.log -projectPath %PROJECT_PATH% -executeMethod AutoBuildAndroid.BuildAuto %*
 echo "打包完成"
 
 pause   

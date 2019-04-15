@@ -15,6 +15,14 @@ public class FileUtility{
         }
     }
 
+    public static void DeleteDirectory(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.Delete(path, true);
+        }
+    }
+
     //拷贝源目录所有文件(包含子目录的文件)到目标目录
     public static void CopyTo(string sourceDir, string targetDir,string filter = "*",string postfix = "", string rootPath = "")
     {

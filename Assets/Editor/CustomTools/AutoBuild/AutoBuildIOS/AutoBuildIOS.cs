@@ -9,7 +9,6 @@ public class AutoBuildIOS {
 
     protected static Dictionary<string, string> argDic = new Dictionary<string, string>();
 
-    [MenuItem("Tools/打包IOS")]
     static void Build()
     {
 

@@ -1,6 +1,9 @@
 ﻿
 using AssetLoad;
 using System.Text;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 public class PathManager
@@ -23,39 +26,68 @@ public class PathManager
         StringBuilder result = new StringBuilder();
         result.Append("file://");
         result.Append(RES_SERVER_ROOT_PATH);
-        result.Append(GetPlatform());
+        result.Append("/");
+        result.Append(GetRuntimePlatform());
         result.Append("/");
         result.Append(name);
         return result.ToString();
     }
 
-    public static string GetPlatform()
+    public static string GetRuntimePlatform()
     {
         StringBuilder result = new StringBuilder();
         switch (Application.platform)
         {
             case RuntimePlatform.Android:
                 {
-                    result.Append("/Android");
+                    result.Append("Android");
                 }
                 break;
             case RuntimePlatform.IPhonePlayer:
             case RuntimePlatform.OSXEditor:
             case RuntimePlatform.OSXPlayer:
                 {
-                    result.Append("/IOS");
+                    result.Append("IOS");
                 }
                 break;
             case RuntimePlatform.WindowsEditor:
             case RuntimePlatform.WindowsPlayer:
                 {
-                    result.Append("/Windows");
+                    result.Append("Windows");
                 }
                 break;
         }
 
         return result.ToString();
     }
+
+#if UNITY_EDITOR
+    public static string GetEditorPlatform()
+    {
+        switch (EditorUserBuildSettings.activeBuildTarget)
+        {
+            case BuildTarget.Android:
+                {
+                    return "Android";
+                }
+            case BuildTarget.iOS:
+            case BuildTarget.StandaloneOSXIntel:
+            case BuildTarget.StandaloneOSXIntel64:
+                //case BuildTarget.StandaloneOSXUniversal:
+                {
+                    return "IOS";
+                }
+
+            case BuildTarget.StandaloneWindows64:
+            case BuildTarget.StandaloneWindows:
+                {
+                    return "Windows";
+                }
+        }
+
+        return "";
+    }
+#endif
 
     public static string URL(string abName, AssetType type, bool isWWW = true)
     {
@@ -93,7 +125,9 @@ public class PathManager
         }
 
         //特定平台
-        result.Append(GetPlatform());
+        result.Append("/");
+        result.Append(GetRuntimePlatform());
+        result.Append("/");
 
         //特定资源
         switch (type)
@@ -107,12 +141,12 @@ public class PathManager
             case AssetType.eTexture:
             case AssetType.eText:
                 {
-                    result.Append("/Assetbundle");
+                    result.Append("Assetbundle");
                 }
                 break;
             case AssetType.eLua:
                 {
-                    result.Append("/Lua");
+                    result.Append("Lua");
                 }
                 break;
         }

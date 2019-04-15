@@ -57,14 +57,14 @@ class ResourceUpdateManager : MonoBehaviour
         VersionRes serverVersionRes = JsonUtility.FromJson<VersionRes>(serverWWW.text);
 
         //获取streamingAssetsPath的version
-        string streamVersionPath = PathManager.RES_STREAM_ROOT_PATH + PathManager.GetPlatform() + "/VersionRes.txt";
+        string streamVersionPath = PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/VersionRes.txt";
         WWW streamWWW = new WWW(streamVersionPath);
         yield return streamWWW;
         VersionRes streamVersionRes = JsonUtility.FromJson<VersionRes>(streamWWW.text);
 
         //获取persistentDataPath的version
         VersionRes persistentVersionRes = null;
-        string persistentVersionPath = PathManager.RES_PERSISTENT_ROOT_PATH + PathManager.GetPlatform() + "/VersionRes.txt";
+        string persistentVersionPath = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/VersionRes.txt";
         if (File.Exists(persistentVersionPath))
         {
             string str = File.ReadAllText(persistentVersionPath);
@@ -149,7 +149,7 @@ class ResourceUpdateManager : MonoBehaviour
         for(int i = 0; i < updateList.Count; i++)
         {
             //首先要判断这个文件是否存在，并且MD5码是否匹配，来判断是否下载这个文件。（因为这个文件可能没写入完成，用户就退出了，有这种情况）
-            string filePath = string.Format("{0}{1}/{2}", PathManager.RES_PERSISTENT_ROOT_PATH, PathManager.GetPlatform(), updateList[i].resName);
+            string filePath = string.Format("{0}/{1}/{2}", PathManager.RES_PERSISTENT_ROOT_PATH, PathManager.GetRuntimePlatform(), updateList[i].resName);
             bool isLoad = false;
             if(File.Exists(filePath))
             {
@@ -181,7 +181,7 @@ class ResourceUpdateManager : MonoBehaviour
         }
 
         string str = JsonUtility.ToJson(server);
-        FileStream verionFS = File.Open(PathManager.RES_PERSISTENT_ROOT_PATH + PathManager.GetPlatform() + "/VersionRes.txt", FileMode.Create, FileAccess.ReadWrite);
+        FileStream verionFS = File.Open(PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/VersionRes.txt", FileMode.Create, FileAccess.ReadWrite);
         StreamWriter sw = new StreamWriter(verionFS);
         sw.Write(str);
         sw.Close();

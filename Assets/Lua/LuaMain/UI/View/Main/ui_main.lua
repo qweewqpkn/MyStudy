@@ -47,6 +47,13 @@ end
 
 --显示时调用(可多次)
 function ui_main: OnShow(...)
+
+    coroutine.start(function ()
+        print("协程开始")
+        coroutine.waitforseconds(10)
+        print("协程结束")
+    end)
+
     self.b_text.text = "成功啦我们"
     print("ui_main OnShow")
     self.timer = TimerManager:GetInstance():GetTimer(1, function()

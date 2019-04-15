@@ -26,7 +26,7 @@ public class BuildRes
         bool isOk = SetAllABName();
         if(isOk)
         {
-            string path = GetRootPath(RootPathType.eLocal, "Assetbundle");
+            string path = PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform() + "/" + "Assetbundle";
             if (isALL)
             {
                 if (Directory.Exists(path))
@@ -86,8 +86,8 @@ public class BuildRes
             abbList.Add(abb);
         }
 
-        string output_path = GetRootPath(RootPathType.eLocal, "Lua");
-        if(Directory.Exists(output_path))
+        string output_path = PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform() + "/" + "Lua";
+        if (Directory.Exists(output_path))
         {
             Directory.Delete(output_path, true);
         }
@@ -97,7 +97,7 @@ public class BuildRes
 
     static void MD5Res()
     {
-        string path = GetRootPath(RootPathType.eLocal);
+        string path = PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform();
         string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
         StringBuilder sb = new StringBuilder();
         VersionRes version = new VersionRes();
@@ -124,14 +124,11 @@ public class BuildRes
         Debug.Log("生成MD5成功!");
     }
 
-    public static void CopyResToStreamingAssets()
+    public static void CopyResToStreamingAssets(string source, string target)
     {
-        if(EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64 && EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows)
-        {
-            FileUtility.CopyTo(GetRootPath(RootPathType.eLocal), GetRootPath(RootPathType.ePhone));
-            AssetDatabase.Refresh();
-            Debug.Log("拷贝资源成功!");
-        }
+        FileUtility.CopyTo(source, target);
+        AssetDatabase.Refresh();
+        Debug.Log("拷贝资源成功!");
     }
 
     //移除无用的AB
@@ -233,58 +230,5 @@ public class BuildRes
                 }
             }
         }
-    }
-
-
-    public enum RootPathType
-    {
-        eLocal,
-        ePhone,
-    }
-    public static string GetRootPath(RootPathType type, string name = "")
-    {
-        StringBuilder result = new StringBuilder();
-        switch (type)
-        {
-            case RootPathType.eLocal:
-                {
-                    result.Append(PathManager.RES_LOCAL_ROOT_PATH);
-                }
-                break;
-            case RootPathType.ePhone:
-                {
-                    result.Append(PathManager.RES_STREAM_ROOT_PATH);
-                }
-                break;
-        }
-        switch (EditorUserBuildSettings.activeBuildTarget)
-        {
-            case BuildTarget.Android:
-                {
-                    result.Append("/Android");
-                }
-                break;
-            case BuildTarget.iOS:
-            case BuildTarget.StandaloneOSXIntel:
-            case BuildTarget.StandaloneOSXIntel64:
-            //case BuildTarget.StandaloneOSXUniversal:
-                {
-                    result.Append("/IOS");
-                }
-                break;
-            case BuildTarget.StandaloneWindows64:
-            case BuildTarget.StandaloneWindows:
-                {
-                    result.Append("/Windows");
-                }
-                break;
-        }
-
-        if (!string.IsNullOrEmpty(name))
-        {
-            result.Append("/");
-            result.Append(name);
-        }
-        return result.ToString();
     }
 }
