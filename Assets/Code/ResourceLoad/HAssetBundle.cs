@@ -69,6 +69,16 @@ namespace AssetLoad
 
         public static void LoadAsync(string abName, Action<AssetBundle> callback)
         {
+            if (string.IsNullOrEmpty(abName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                if (callback != null)
+                {
+                    callback(null);
+                }
+                return;
+            }
+
             Action<UnityEngine.Object> tCallBack = null;
             if(callback != null)
             {
@@ -84,6 +94,12 @@ namespace AssetLoad
 
         public static AssetBundle Load(string abName)
         {
+            if (string.IsNullOrEmpty(abName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                return null;
+            }
+
             HAssetBundle res = Get<HAssetBundle>(abName, "", AssetType.eAB);
             res.StartLoad("", true, false, null);
             return res.Asset as AssetBundle;

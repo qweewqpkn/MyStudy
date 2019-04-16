@@ -15,6 +15,16 @@ namespace AssetLoad
 
         public static void LoadAsync(string abName, string assetName, Action<Shader> callback)
         {
+            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                if (callback != null)
+                {
+                    callback(null);
+                }
+                return;
+            }
+
             Action<UnityEngine.Object> tCallBack = null;
             if (callback != null)
             {
@@ -30,6 +40,12 @@ namespace AssetLoad
 
         public static Shader Load(string abName, string assetName)
         {
+            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                return null;
+            }
+
             HShader res = Get<HShader>(abName, assetName, AssetType.eShader);
             res.StartLoad(assetName, true, false, null);
             return res.Asset as Shader;

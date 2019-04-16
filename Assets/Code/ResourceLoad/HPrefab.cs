@@ -19,6 +19,16 @@ namespace AssetLoad
 
         public static void LoadAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
         {
+            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                if (callback != null)
+                {
+                    callback(null, null);
+                }
+                return;
+            }
+
             Action<UnityEngine.Object> tCallBack = null;
             if (callback != null)
             {
@@ -34,6 +44,12 @@ namespace AssetLoad
 
         public static GameObject Load(string abName, string assetName)
         {
+            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                return null;
+            }
+
             HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
             res.StartLoad(assetName, true, false, null);
             return res.InstObj as GameObject;

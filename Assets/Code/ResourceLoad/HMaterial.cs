@@ -15,6 +15,16 @@ namespace AssetLoad
 
         public static void LoadAsync(string abName, string assetName, Action<Material> callback)
         {
+            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                if (callback != null)
+                {
+                    callback(null);
+                }
+                return;
+            }
+
             Action<UnityEngine.Object> tCallBack = null;
             if (callback != null)
             {
@@ -30,6 +40,12 @@ namespace AssetLoad
 
         public static Material Load(string abName, string assetName)
         {
+            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                return null;
+            }
+
             HMaterial res = Get<HMaterial>(abName, assetName, AssetType.eMaterial);
             res.StartLoad(assetName, true, false, null);
             return res.Asset as Material;
