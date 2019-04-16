@@ -13,35 +13,69 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/UI/View/Main/ui_main.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1040">
-              <caret line="52" column="24" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="32" />
+            <state relative-caret-position="260">
+              <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/XLua/Perf/profiler.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-40">
+              <caret line="34" column="37" lean-forward="true" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/XLua/Perf/memory.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="400">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/XLua/Tdr/tdr.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="560">
+              <caret line="28" column="33" lean-forward="true" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/XLua/Common/util.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-440" />
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Framework/Updater/Coroutine.lua">
+        <entry file="file://$PROJECT_DIR$/Framework/Pool/PoolManager.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
-              <caret line="128" column="20" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="20" />
+            <state relative-caret-position="120">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Framework/Updater/Timer.lua">
+        <entry file="file://$PROJECT_DIR$/Framework/Pool/PoolGO.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="21" column="48" selection-start-line="21" selection-start-column="44" selection-end-line="21" selection-end-column="48" />
+            <state relative-caret-position="320">
+              <caret line="16" column="3" lean-forward="true" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Framework/Common/Updatable.lua">
+        <entry file="file://$PROJECT_DIR$/Framework/Util/GoUtil.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+            <state relative-caret-position="640">
+              <caret line="32" column="16" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -58,17 +92,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Framework/Common/BaseClass.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Main.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="10" column="48" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
+            <state relative-caret-position="334">
+              <caret line="27" column="15" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -84,8 +109,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>IsStack</find>
-      <find>IsMainUI</find>
       <find>IsDontDestroy</find>
       <find>PanelState</find>
       <find>mPanelState</find>
@@ -97,7 +120,6 @@
       <find>one_shot</find>
       <find>MSG_MAIN_REFRESH</find>
       <find>Stop</find>
-      <find>mGoList</find>
       <find>_class_type</find>
       <find>Startup</find>
       <find>Delete</find>
@@ -114,6 +136,9 @@
       <find>__cname</find>
       <find>Init</find>
       <find>loop</find>
+      <find>mUseList</find>
+      <find>mGoList</find>
+      <find>mObj</find>
     </findStrings>
     <replaceStrings>
       <replace>gameObject</replace>
@@ -144,8 +169,6 @@
         <option value="$PROJECT_DIR$/Framework/Updater/Timer.lua" />
         <option value="$PROJECT_DIR$/Framework/Scene/SceneManager.lua" />
         <option value="$PROJECT_DIR$/Framework/Util/GoUtil.lua" />
-        <option value="$PROJECT_DIR$/Framework/Pool/PoolGO.lua" />
-        <option value="$PROJECT_DIR$/Framework/Pool/PoolManager.lua" />
         <option value="$PROJECT_DIR$/Main.lua" />
         <option value="$PROJECT_DIR$/Framework/Common/UpdatableSingleton.lua" />
         <option value="$PROJECT_DIR$/Framework/Common/SingletonManager.lua" />
@@ -158,14 +181,16 @@
         <option value="$PROJECT_DIR$/Framework/Updater/Coroutine.lua" />
         <option value="$PROJECT_DIR$/Framework/Define/Global.lua" />
         <option value="$PROJECT_DIR$/UI/View/Main/ui_main.lua" />
+        <option value="$PROJECT_DIR$/Framework/Pool/PoolManager.lua" />
+        <option value="$PROJECT_DIR$/Framework/Pool/PoolGO.lua" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1008" />
-    <option name="y" value="-22" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="-1036" />
+    <option name="y" value="-8" />
+    <option name="width" value="1044" />
+    <option name="height" value="1936" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -244,17 +269,40 @@
               <item name="View" type="462c0819:PsiDirectoryNode" />
               <item name="Main" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="XLua" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="XLua" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="XLua" type="462c0819:PsiDirectoryNode" />
+              <item name="Perf" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="XLua" type="462c0819:PsiDirectoryNode" />
+              <item name="Tdr" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="jdk.selected.LUA_MODULE" value="Lua" />
-    <property name="last_opened_file_path" value="E:/Project/SLG/Branches/Client/Main/Project/Assets/Lua/LuaMain" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="RecentsManager">
@@ -286,8 +334,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1036" y="-8" width="1044" height="1936" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2554672" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.08449304" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -330,23 +379,6 @@
     </layout-to-restore>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/UnityEngine/Mathf.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1560">
-          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/misc/utf8.lua" />
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/misc/strict.lua" />
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/UnityEngine/Bounds.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="81" column="59" selection-start-line="81" selection-start-column="59" selection-end-line="81" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Class.lua" />
     <entry file="file://$PROJECT_DIR$/Framework/Util/TimeStrUtil.lua.meta">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -447,24 +479,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Pool/PoolGO.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="10" column="48" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Define/Config.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Util/GoUtil.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" column="37" selection-start-line="16" selection-start-column="37" selection-end-line="16" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -550,24 +568,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Pool/PoolManager.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="10" column="9" lean-forward="true" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Define/Global.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="860">
           <caret line="43" column="57" selection-start-line="43" selection-start-column="57" selection-end-line="43" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UI/View/Main/ui_main.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1040">
-          <caret line="52" column="24" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -585,20 +589,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Updater/TimerManager.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1540">
-          <caret line="77" column="52" selection-start-line="77" selection-start-column="52" selection-end-line="77" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Common/BaseClass.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Main.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
@@ -606,10 +596,81 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/XLua/Common/util.lua.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Updater/Coroutine.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="128" column="20" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="20" />
+        <state relative-caret-position="700">
+          <caret line="56" column="7" lean-forward="true" selection-start-line="56" selection-start-column="7" selection-end-line="56" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XLua/Perf/profiler.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-40">
+          <caret line="34" column="37" lean-forward="true" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XLua/Perf/memory.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XLua/Tdr/tdr.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="28" column="33" lean-forward="true" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XLua/Common/util.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-440" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Common/BaseClass.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="27" column="15" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Updater/TimerManager.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1540">
+          <caret line="77" column="52" selection-start-line="77" selection-start-column="52" selection-end-line="77" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Util/GoUtil.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="640">
+          <caret line="32" column="16" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Pool/PoolGO.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="16" column="3" lean-forward="true" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UI/View/Main/ui_main.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Pool/PoolManager.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="13" />
         </state>
       </provider>
     </entry>
