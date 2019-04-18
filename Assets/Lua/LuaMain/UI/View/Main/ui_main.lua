@@ -47,12 +47,37 @@ end
 
 --显示时调用(可多次)
 function ui_main: OnShow(...)
-
     coroutine.start(function ()
         print("协程开始")
-        coroutine.waitforseconds(10)
+        coroutine.waitforseconds(1)
         print("协程结束")
-    end)
+
+        print("当前" .. CS.UnityEngine.Time.frameCount)
+        coroutine.waitforframes(5)
+        print("然后" .. CS.UnityEngine.Time.frameCount)
+        coroutine.waitforendofframe()
+        print("然后" .. CS.UnityEngine.Time.frameCount)
+
+        local i = 0
+        coroutine.waituntil(function()
+            print(i)
+            i = i + 1
+            if(i == 100) then
+                return true
+            end
+
+            return false
+        end)
+
+        local request = ResourceManager.Instance:LoadPrefabAsync("cube", "cube")
+        coroutine.waitforasyncop(request, function()
+            print("异步加载中.....")
+        end )
+        local obj = request.Asset
+        obj.name = "测试啦"
+        print("结果来了" .. CS.UnityEngine.Time.frameCount)
+        end)
+
 
     self.b_text.text = "成功啦我们"
     print("ui_main OnShow")
@@ -60,12 +85,6 @@ function ui_main: OnShow(...)
         print("Timer is cal")
     end, nil, 1)
     self.timer:Start()
-
-    local co = coroutine.create(function (...)
-        print()
-    end)
-    print("i am here")
-    coroutine.resume(co, 45, 4123, "123")
 end
 
 --隐藏时调用(可多次)

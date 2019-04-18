@@ -9,6 +9,10 @@ local function Start()
 	TimerManager:GetInstance():Startup()
 
 	UIManager:GetInstance():OpenPanel("ui_main")
+
+	local info = debug.getinfo(2, "S")
+	Logger.Log("info is : " .. info.what)
+
 end
 
 Main.Start = Start

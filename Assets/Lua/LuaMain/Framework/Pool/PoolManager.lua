@@ -8,6 +8,18 @@ function PoolManager:__init()
     self.mObj.name = "PoolManager"
 end
 
+function PoolManager:__delete()
+    for k,v in pairs(self.mPoolGoList) do
+        self:ReleasePoolGO(k)
+    end
+    self.mPoolGoList = nil
+
+    if(self.mObj ~= nil) then
+        GoUtil.Destroy(self.mObj)
+        self.mObj = nil
+    end
+end
+
 --获取一个缓存池
 function PoolManager:GetPoolGO(go, size, ctor, dtor)
     if(IsNull(go)) then

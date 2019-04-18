@@ -92,6 +92,20 @@ namespace AssetLoad
             res.StartLoad("", false, false, tCallBack);
         }
 
+        //使用协程等待异步请求，而不用回调的形式
+        public static AsyncRequest LoadAsync(string abName)
+        {
+            AsyncRequest request = new AsyncRequest();
+            LoadAsync(abName, (obj) =>
+            {
+                request.isDone = true;
+                request.progress = 1;
+                request.Asset = obj;
+            });
+
+            return request;
+        }
+
         public static AssetBundle Load(string abName)
         {
             if (string.IsNullOrEmpty(abName))

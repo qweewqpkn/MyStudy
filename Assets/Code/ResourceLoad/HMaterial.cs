@@ -38,6 +38,20 @@ namespace AssetLoad
             res.StartLoad(assetName, false, false, tCallBack);
         }
 
+        //使用协程等待异步请求，而不用回调的形式
+        public static AsyncRequest LoadAsync(string abName, string assetName)
+        {
+            AsyncRequest request = new AsyncRequest();
+            LoadAsync(abName, assetName, (obj) =>
+            {
+                request.isDone = true;
+                request.progress = 1;
+                request.Asset = obj;
+            });
+
+            return request;
+        }
+
         public static Material Load(string abName, string assetName)
         {
             if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))

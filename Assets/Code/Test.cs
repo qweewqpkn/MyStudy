@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class Test : MonoBehaviour {
 
     public Button mButton;
@@ -25,8 +26,24 @@ public class Test : MonoBehaviour {
             ResourceManager.Instance.ReleaseAll();
         });
 
-        //LoadTest9();
-        LoadConfig();
+        CoroutineUtility.Instance.StartCoroutine(CoLoad());
+    }
+
+    IEnumerator CoLoad()
+    {
+        Debug.Log("start frame count : " + Time.frameCount);
+        AsyncRequest request = ResourceManager.Instance.LoadPrefabAsync("cube", "cube");
+        yield return request;
+        Debug.Log("over frame count : " + Time.frameCount);
+        GameObject obj = request.Asset as GameObject;
+        obj.name = "success ok";
+
+        Debug.Log("start frame count : " + Time.frameCount);
+        AsyncRequest request1 = ResourceManager.Instance.LoadPrefabAsync("cube", "cube");
+        yield return request1;
+        Debug.Log("over frame count : " + Time.frameCount);
+        GameObject obj1 = request.Asset as GameObject;
+        obj1.name = "success ok1";
     }
 
     void LoadConfig()
