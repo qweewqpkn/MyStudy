@@ -37,7 +37,7 @@ function UIManager:GetPanel(uiName,log)
         end
     end
     if nil == ret and log then
-        Log.warn("UIManager.GetPanel,panel is null,uiname=",uiName)
+        Logger.LogWarning(Logger.Module.UI, "UIManager.GetPanel,panel is null,uiname=",uiName)
     end
     return ret
 end

@@ -1,4 +1,5 @@
 require "Framework.Common.BaseClass"
+require "Framework.Define.Rename"
 
 -- unityengine
 Mathf		= require "Framework.Common.Tools.UnityEngine.Mathf"
@@ -42,8 +43,6 @@ require "Framework.Updater.Coroutine"
 Timer = require "Framework.Updater.Timer"
 TimerManager = require "Framework.Updater.TimerManager"
 UpdateManager = require "Framework.Updater.UpdateManager"
-
-require "Framework.Define.Rename"
 
 UIManager:GetInstance()
 UpdateManager:GetInstance()

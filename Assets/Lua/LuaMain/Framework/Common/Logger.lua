@@ -1,71 +1,53 @@
---[[
-	游戏日志工具
-]]
+local Logger = BaseClass("Logger")
 
-------------- Class -------------
-local Logger = {
-    _type = "Log",
-    outfile = nil,
-    level = "Log",
-}
+function Logger.Init()
+    --print = nil --屏蔽内置的print该接口,统一走我们这个类哦!
+    Logger.IsOpenLog = Debuger.IsOpenLog
+    Logger.Module =
+    {
+        UI = "UI",
+        BATTLE = "BATTLE",
+        SCENE = "SCENE",
+        COMMON = "COMMON",
+    }
 
--------------- private vars  & funs ----------
-local modes = {
-    { name = "Log"},
-    { name = "LogWarning"},
-    { name = "LogError"},
-}
-
-local levels = {}
-for i, v in ipairs(modes) do
-    levels[v.name] = i
-end
-
-local _tostring = tostring
-
-local tostring = function(...)
-    local t = {}
-    for i = 1, select('#', ...) do
-        local x = select(i, ...)
-        t[#t + 1] = _tostring(x)
-    end
-    return table.concat(t, " ")
-end
-
-for i, x in ipairs(modes) do
-    local nameupper = x.name:upper()
-    Logger[x.name] = function(...)
-
-        if i < levels[Logger.level] then
-            return
-        end
-
-        local msg = tostring(...)
-        local info = debug.getinfo(2, "Sl")
-        local lineinfo = string.format("(%s:%s)", info.short_src, info.currentline)
-
-        -- Output to console
-        print(string.format("[%-6s%s] %s: %s",
-                nameupper,
-                os.date("%H:%M:%S"),
-                lineinfo,
-                msg))
-
-        if x.name == "LogError" then
-            error(msg)
-        end
-
-        if Logger.outfile then
-            local fp = io.open(Logger.outfile, "a")
-            local str = string.format("[%-6s%s] %s: %s\n",
-                    nameupper, os.date(), lineinfo, msg)
-            fp:write(str)
-            fp:close()
-        end
-
+    if(Logger.IsOpenLog) then
+        Debuger.SwitchModule(Logger.Module.UI, false)
+        Debuger.SwitchModule(Logger.Module.BATTLE, true)
+        Debuger.SwitchModule(Logger.Module.SCENE, true)
+        Debuger.SwitchModule(Logger.Module.COMMON, true)
     end
 end
 
+function Logger.ContentWrap(...)
+    local msg = string.join(SafePack(...), " ")
+    local info = debug.getinfo(3, "Sl")
+    local lineinfo = string.format("(%s:%s)", info.short_src, info.currentline)
+    return string.format("[%s] %s: %s",
+            os.date("%H:%M:%S"),
+            lineinfo,
+            msg)
+end
+
+function Logger.Log(type, ...)
+    if(Logger.IsOpenLog) then
+        Debuger.Log(type, Logger.ContentWrap(...))
+    end
+end
+
+function Logger.LogWarning(type, ...)
+    if(Logger.IsOpenLog) then
+        Debuger.LogWarning(type, Logger.ContentWrap(...))
+    end
+end
+
+function Logger.LogError(type, ...)
+    if(Logger.IsOpenLog) then
+        Debuger.LogError(type, Logger.ContentWrap(...))
+    end
+end
+
+Logger.Init()
 return Logger
 
 

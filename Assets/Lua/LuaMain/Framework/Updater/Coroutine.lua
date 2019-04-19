@@ -97,7 +97,7 @@ local function __PResume(co, func, ...)
 	end
 	local flag, msg = resume_ret[1], resume_ret[2]
 	if not flag then
-		Logger.LogError(msg.."\n"..debug.traceback(co))
+		Logger.LogError(Logger.Module.COMMON, msg.."\n"..debug.traceback(co))
 	elseif resume_ret.n > 1 then
 		table.remove(resume_ret, 1)
 	else

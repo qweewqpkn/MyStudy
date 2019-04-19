@@ -19,7 +19,7 @@ end
 --获得一个对象
 function PoolGO:Spawn()
     if(IsNull(self.mGoTemplate)) then
-        Logger.LogError("PoolGo templte is nil")
+        Logger.LogError(Logger.Module.COMMON, "PoolGo templte is nil")
         return
     end
 

@@ -604,7 +604,7 @@ namespace XLua
         {
             try
             {
-                int n = LuaAPI.lua_gettop(L);
+                int n = LuaAPI.lua_gettop(L);   
                 string s = String.Empty;
 
                 if (0 != LuaAPI.xlua_getglobal(L, "tostring"))

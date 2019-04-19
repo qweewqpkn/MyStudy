@@ -103,7 +103,7 @@ local function Update(self, is_fixed)
 			end
 			if not status then
 				self.over = true
-				Logger.LogError(err)
+				Logger.LogError(Logger.Module.COMMON, err)
 			end
 		else
 			self.over = true
@@ -114,7 +114,7 @@ end
 -- 启动计时
 local function Start(self)
 	if self.over then
-		Logger.LogError("You can't start a overed timer, try add a new one!")
+		Logger.LogError(Logger.Module.COMMON, "You can't start a overed timer, try add a new one!")
 	end
 	if not self.started then
 		self.left = self.delay

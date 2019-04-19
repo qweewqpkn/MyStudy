@@ -183,7 +183,7 @@ function UIBase:AnimationIn()
     if(IsNull(t_animation))then
         return
     else
-        Logger.Log(t_animation)
+        Logger.Log(Logger.Module.UI, t_animation)
     end
     local animation_name = "ui_anim_"..string.lower(self.mUIName)
     local t_animation_clip = t_animation:GetClip(animation_name)
@@ -197,7 +197,7 @@ function UIBase:AnimationIn()
         return
     end
     local t_aniamtion_state = t_animation:get_Item(animation_name)
-    Log.info("#################### t_aniamtion_state.name="..t_aniamtion_state.name)
+    Logger.Log(Logger.Module.UI, "#################### t_aniamtion_state.name="..t_aniamtion_state.name)
     t_aniamtion_state.speed = 1
     t_animation:Play(animation_name)
 end
@@ -242,9 +242,9 @@ function UIBase:AnimationOut()
         t_animation:Play(animation_name2)
     end
 
-    Log.info("#################################################wait panel animation")
+    Logger.Log(Logger.Module.UI, "#################################################wait panel animation")
     self.m_timer = Timer.New(function (self)
-        Log.info("#################################################real close")
+        Logger.Log(Logger.Module.UI, "#################################################real close")
         self:RealClosePanel()
         self.m_timer:Stop()
         self.m_timer = nil

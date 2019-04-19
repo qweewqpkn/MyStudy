@@ -20,7 +20,7 @@ function Messenger:Register(id, func, target, ...)
 	for _,v in pairs(self.mNotifies[id]) do
 		if(v.func == func) then
 			bFind = true
-			Logger.LogError("Messenger have same func, check!!!")
+			Logger.LogError(Logger.Module.COMMON, "Messenger have same func, check!!!")
 		end
 	end
 

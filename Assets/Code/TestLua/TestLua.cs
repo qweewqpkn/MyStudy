@@ -17,6 +17,7 @@ public class TestLua : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        Debuger.Init();
         LuaManager.Instance.StartGame();
     }
 	

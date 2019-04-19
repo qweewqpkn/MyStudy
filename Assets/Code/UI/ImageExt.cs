@@ -20,7 +20,7 @@ public class ImageExt : Image
 			ResourceManager.Instance.Release (mAbName, AssetType.eSprite);
 		}
 		mAbName = abName;
-		ResourceManager.Instance.LoadSpriteAsync (mAbName, mAbName,  (sprite) =>{
+		ResourceManager.Instance.LoadSpriteAsync (mAbName, spriteName,  (sprite) =>{
             this.sprite = sprite;
 		});
 	}

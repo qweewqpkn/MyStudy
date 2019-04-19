@@ -23,7 +23,7 @@ end
 --获取一个缓存池
 function PoolManager:GetPoolGO(go, size, ctor, dtor)
     if(IsNull(go)) then
-        Logger.LogError("PoolManager GetPoolGo arg go is nil")
+        Logger.LogError(Logger.Module.COMMON, "PoolManager GetPoolGo arg go is nil")
         return
     end
 

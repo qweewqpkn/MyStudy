@@ -12,7 +12,7 @@ function SingletonManager:Register(inst)
     if(self.mInstList[inst] == nil) then
         self.mInstList[inst] = true
     else
-        Logger.LogError("SingletonManager Register same inst")
+        Logger.LogError(Logger.Module.COMMON, "SingletonManager Register same inst")
     end
 end
 

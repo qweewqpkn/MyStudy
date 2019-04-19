@@ -13,11 +13,18 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items, 10)
+    --self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items, 10)
+--
+    --self.newObj1 = self.mPoolGo:Spawn()
+    --self.newObj2 = self.mPoolGo:Spawn()
+    --self.newObj3 = self.mPoolGo:Spawn()
 
-    self.newObj1 = self.mPoolGo:Spawn()
-    self.newObj2 = self.mPoolGo:Spawn()
-    self.newObj3 = self.mPoolGo:Spawn()
+    for i = 1, 100000 do
+        --if(i == 10000001) then
+        --    print("输出了")
+        --end
+        --Debuger.Log("other", "输出了")
+        end
 end
 
 function ui_main:OnRelease()
@@ -33,7 +40,7 @@ end
 
 --绑定事件(一次)
 function ui_main: OnBind()
-    print("ui_main OnBind")
+    Logger.Log(Logger.Module.UI, "ui_main OnBind")
     UIUtil.AddButtonEvent(self, self.b_set, self.OnSet)
     UIUtil.AddButtonEvent(self, self.b_release, self.OnRelease)
     Messenger:GetInstance():Register(MsgEnum.MSG_MAIN_REFRESH, self.OnRefresh, self, "第一个参数哦")
@@ -42,25 +49,25 @@ end
 
 --第一次打开界面调用(一次)
 function ui_main: OnInit()
-    print("ui_main OnInit")
+    Logger.Log(Logger.Module.UI, "ui_main OnInit")
 end
 
 --显示时调用(可多次)
 function ui_main: OnShow(...)
     coroutine.start(function ()
-        print("协程开始")
+        Logger.Log(Logger.Module.UI, "协程开始")
         coroutine.waitforseconds(1)
-        print("协程结束")
+        Logger.Log(Logger.Module.UI, "协程结束")
 
-        print("当前" .. CS.UnityEngine.Time.frameCount)
+        Logger.Log(Logger.Module.UI, "当前" .. CS.UnityEngine.Time.frameCount)
         coroutine.waitforframes(5)
-        print("然后" .. CS.UnityEngine.Time.frameCount)
+        Logger.Log(Logger.Module.UI, "然后" .. CS.UnityEngine.Time.frameCount)
         coroutine.waitforendofframe()
-        print("然后" .. CS.UnityEngine.Time.frameCount)
+        Logger.Log(Logger.Module.UI, "然后" .. CS.UnityEngine.Time.frameCount)
 
         local i = 0
         coroutine.waituntil(function()
-            print(i)
+            Logger.Log(Logger.Module.UI, i)
             i = i + 1
             if(i == 100) then
                 return true
@@ -71,41 +78,41 @@ function ui_main: OnShow(...)
 
         local request = ResourceManager.Instance:LoadPrefabAsync("cube", "cube")
         coroutine.waitforasyncop(request, function()
-            print("异步加载中.....")
+            Logger.Log(Logger.Module.UI, "异步加载中.....")
         end )
         local obj = request.Asset
         obj.name = "测试啦"
-        print("结果来了" .. CS.UnityEngine.Time.frameCount)
+        Logger.Log(Logger.Module.UI, "结果来了" .. CS.UnityEngine.Time.frameCount)
         end)
 
 
     self.b_text.text = "成功啦我们"
-    print("ui_main OnShow")
+    Logger.Log(Logger.Module.UI, "ui_main OnShow")
     self.timer = TimerManager:GetInstance():GetTimer(1, function()
-        print("Timer is cal")
+       Logger.Log(Logger.Module.UI, "Timer is cal")
     end, nil, 1)
     self.timer:Start()
 end
 
 --隐藏时调用(可多次)
 function ui_main: OnHide()
-    print("ui_main OnHide")
+    Logger.Log(Logger.Module.UI, "ui_main OnHide")
 end
 
 --关闭时调用(一次)
 function ui_main: OnClose()
-    print("ui_main OnClose")
+    Logger.Log(Logger.Module.UI, "ui_main OnClose")
 end
 
 function ui_main:OnRefresh(...)
     for k,v in pairs({...}) do
-        print(v)
+        Logger.Log(Logger.Module.UI, v)
     end
 end
 
 function ui_main:OnRefresh1(...)
     for k,v in pairs({...}) do
-        print(v)
+        Logger.Log(Logger.Module.UI, v)
     end
 end
 

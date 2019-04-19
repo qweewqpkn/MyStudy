@@ -23,10 +23,16 @@ public class Test : MonoBehaviour {
 	void Start () {
         mButton.onClick.AddListener(() =>
         {
-            ResourceManager.Instance.ReleaseAll();
+            for (int i = 0; i < 10000; i++)
+            {
+                Debuger.Log("other", "xixixi");
+            }
+            //ResourceManager.Instance.ReleaseAll();
         });
 
-        CoroutineUtility.Instance.StartCoroutine(CoLoad());
+        Debuger.Init();
+        Debuger.SwitchModule("other", true);
+        //CoroutineUtility.Instance.StartCoroutine(CoLoad());
     }
 
     IEnumerator CoLoad()

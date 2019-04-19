@@ -7,8 +7,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class UIComponentBindEditor {
-    [MenuItem("Tools/自动绑定UI组件")]
+    [MenuItem("Tools/绑定组件")]
     public static void AutoBindUIComponent()
+    {
+        GameObject obj = Selection.activeGameObject;
+        BindComponent(obj, null);
+    }
+
+    [MenuItem("Tools/绑定组件并生成UI代码")]
+    public static void AutoBindUIAndGenerateCode()
     {
         GameObject obj = Selection.activeGameObject;
         BindComponent(obj, null);
@@ -105,21 +112,21 @@ public class UIComponentBindEditor {
             data.type = "Image";
             data.component = obj.GetComponent<Image>();
         }
-        //else if (obj.GetComponent<ImageExt>() != null)
-        //{
-        //    data.type = "ImageExt";
-        //    data.component = obj.GetComponent<ImageExt>();
-        //}
+        else if (obj.GetComponent<ImageExt>() != null)
+        {
+            data.type = "ImageExt";
+            data.component = obj.GetComponent<ImageExt>();
+        }
         else if (obj.GetComponent<RawImage>() != null)
         {
             data.type = "RawImage";
             data.component = obj.GetComponent<RawImage>();
         }
-        //else if (obj.GetComponent<RawImageExt>() != null)
-        //{
-        //    data.type = "RawImageExt";
-        //    data.component = obj.GetComponent<RawImageExt>();
-        //}
+        else if (obj.GetComponent<RawImageExt>() != null)
+        {
+            data.type = "RawImageExt";
+            data.component = obj.GetComponent<RawImageExt>();
+        }
         else if (obj.GetComponent<Text>() != null)
         {
             data.type = "Text";

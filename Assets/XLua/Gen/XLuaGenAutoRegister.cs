@@ -212,6 +212,9 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(System.GC), SystemGCWrap.__Register);
         
         
+            translator.DelayWrapLoader(typeof(Debuger), DebugerWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(TestBase), TestBaseWrap.__Register);
         
         
@@ -255,9 +258,6 @@ namespace XLua.CSObjectWrap
         
         
             translator.DelayWrapLoader(typeof(XLuaTest.FooExtension), XLuaTestFooExtensionWrap.__Register);
-        
-        
-            translator.DelayWrapLoader(typeof(UnityEngine.Light), UnityEngineLightWrap.__Register);
         
         
             translator.DelayWrapLoader(typeof(System.IO.BinaryWriter), SystemIOBinaryWriterWrap.__Register);

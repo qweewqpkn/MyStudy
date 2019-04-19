@@ -3,16 +3,16 @@ require "Framework.Define.Global"
 require "UI.View.Main.ui_main"
 Main = {}
 
-local function Start()					
-	print("logic start")
+local function Start()
+	Logger.Log(Logger.Module.COMMON, "logic start")
 	UpdateManager:GetInstance():Startup()
 	TimerManager:GetInstance():Startup()
 
 	UIManager:GetInstance():OpenPanel("ui_main")
 
-	local info = debug.getinfo(2, "S")
-	Logger.Log("info is : " .. info.what)
-
+	Logger.Log(Logger.Module.COMMON, "Log")
+	Logger.LogWarning(Logger.Module.COMMON, "LogWarning")
+	Logger.LogError(Logger.Module.COMMON, "LogError")
 end
 
 Main.Start = Start
