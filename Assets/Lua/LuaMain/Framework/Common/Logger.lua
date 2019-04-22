@@ -1,7 +1,6 @@
 local Logger = BaseClass("Logger")
 
 function Logger.Init()
-    --print = nil --屏蔽内置的print该接口,统一走我们这个类哦!
     Logger.IsOpenLog = Debuger.IsOpenLog
     Logger.Module =
     {
@@ -12,7 +11,7 @@ function Logger.Init()
     }
 
     if(Logger.IsOpenLog) then
-        Debuger.SwitchModule(Logger.Module.UI, false)
+        Debuger.SwitchModule(Logger.Module.UI, true)
         Debuger.SwitchModule(Logger.Module.BATTLE, true)
         Debuger.SwitchModule(Logger.Module.SCENE, true)
         Debuger.SwitchModule(Logger.Module.COMMON, true)

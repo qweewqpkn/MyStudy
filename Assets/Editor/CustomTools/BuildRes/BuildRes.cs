@@ -40,20 +40,46 @@ public class BuildRes
             }
             FileUtility.CreateDirectory(path);
             BuildPipeline.BuildAssetBundles(path, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
-            Debug.Log("打包完成");
+            Debug.Log("打包资源完成");
         }
         else
         {
-            Debug.Log("打包失败");
+            Debug.Log("打包资源失败");
         }
     }
 
     static void BuildLua()
     {
         //从lua原始目录拷贝到目标目录并加上.bytes后缀
-        string source_path = Application.dataPath + "/Lua";
+        string source_path = PathManager.LUA_ROOT_PATH;
         string target_path = Application.dataPath + "/LuaTemp";
-        FileUtility.CopyTo(source_path, target_path, "*.lua", "bytes", target_path);
+        string rootPath = target_path.Replace("\\", "/");
+        FileUtility.CopyTo(source_path, target_path, "*.lua", "bytes", (targetPath, filePath)=>
+        {
+            string fileName = "";
+            if (targetPath == rootPath)
+            {
+                fileName = Path.GetFileName(filePath);
+            }
+            else
+            {
+                string moduleName = targetPath.Replace(rootPath + "/", "").Split('/')[0]; //取根目录下的文件名作为模块名
+                fileName = targetPath.Replace(rootPath + "/" + moduleName, ""); //获取模块下文件的相对路径
+                                                                                       //fileName可能为空，在当前模块目录下有文件时
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    //移除斜杠,替换斜杠
+                    fileName = fileName.Remove(0, 1).Replace("/", "_");
+                    fileName = fileName + "_" + Path.GetFileName(filePath);
+                }
+                else
+                {
+                    fileName = Path.GetFileName(filePath);
+                }
+            }
+
+            return fileName;
+        });
         AssetDatabase.Refresh();
 
         //以目标lua目录下的文件作为模块，打包成不同的AB中
@@ -93,6 +119,7 @@ public class BuildRes
         }
         FileUtility.CreateDirectory(output_path);
         BuildPipeline.BuildAssetBundles(output_path, abbList.ToArray(), BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+        Debug.Log("打包Lua完成");
     }
 
     static void MD5Res()
@@ -146,7 +173,7 @@ public class BuildRes
             if (!isHave)
             {
                 File.Delete(buildABList[i]);
-                Debug.Log("delete unuse ab : " + name);
+                //Debug.Log("delete unuse ab : " + name);
             }
         }
 

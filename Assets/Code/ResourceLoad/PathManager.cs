@@ -19,7 +19,7 @@ public class PathManager
     //服务器资源路径
     public static string RES_SERVER_ROOT_PATH = "";
     //Lua根路径
-    public static string LUA_ROOT_PATH = Application.dataPath + "/Lua/LuaMain";
+    public static string LUA_ROOT_PATH = Application.dataPath + "/Lua";
 
     public static string GetServerURL(string name)
     {

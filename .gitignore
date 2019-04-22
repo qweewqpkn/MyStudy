@@ -8,3 +8,5 @@ UnityPackageManager/
 ClientRes/
 Output/
 Assets/StreamingAssets/
+Assets/LuaTemp/
+Log/

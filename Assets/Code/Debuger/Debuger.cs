@@ -262,25 +262,25 @@ public class Debuger
 
     private static string ModifyLog(string message, int type)
     {
-        string result = "";// System.DateTime.Now.ToLocalTime().ToString();
-        switch (type)
-        {
-            case 0:
-                {
-                    result += "common : ";
-                }
-                break;
-            case 1:
-                {
-                    result += "warning : ";
-                }
-                break;
-            case 2:
-                {
-                    result += "error : ";
-                }
-                break;
-        }
+        string result = "";
+        //switch (type)
+        //{
+        //    case 0:
+        //        {
+        //            result += "common : ";
+        //        }
+        //        break;
+        //    case 1:
+        //        {
+        //            result += "warning : ";
+        //        }
+        //        break;
+        //    case 2:
+        //        {
+        //            result += "error : ";
+        //        }
+        //        break;
+        //}
         result += message;
         return result;
     }

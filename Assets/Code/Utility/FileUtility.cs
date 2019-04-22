@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class FileUtility{
 
+    public delegate string ReNameAction(string targetPath, string filePath);
+
     //创建一个目录
     public static void CreateDirectory(string path)
     {
@@ -24,9 +26,13 @@ public class FileUtility{
     }
 
     //拷贝源目录所有文件(包含子目录的文件)到目标目录
-    public static void CopyTo(string sourceDir, string targetDir,string filter = "*",string postfix = "", string rootPath = "")
+    //sourceDir 原目录
+    //targetDir 目标目录
+    //filter 原始目录的过滤类型如*.txt
+    //postfix 目标文件的增加的后缀名
+    //action 修改拷贝时文件的名字
+    public static void CopyTo(string sourceDir, string targetDir,string filter = "*",string postfix = "", ReNameAction action = null)
     {
-        rootPath = rootPath.Replace("\\", "/");
         targetDir = targetDir.Replace("\\", "/");
         sourceDir = sourceDir.Replace("\\", "/");
 
@@ -48,21 +54,9 @@ public class FileUtility{
             for (int i = 0; i < files.Length; i++)
             {
                 string fileName = "";
-                if (!string.IsNullOrEmpty(rootPath))
+                if (action != null)
                 {
-                    string moduleName = targetDir.Replace(rootPath + "/", "").Split('/')[0];
-                    fileName = targetDir.Replace(rootPath + "/" + moduleName, "");
-                    //fileName可能为空，在当前模块目录下有文件时
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        //移除斜杠,替换斜杠
-                        fileName = fileName.Remove(0, 1).Replace("/", "_");
-                        fileName = fileName + "_" + Path.GetFileName(files[i]);
-                    }
-                    else
-                    {
-                        fileName = Path.GetFileName(files[i]);
-                    }
+                    fileName = action(targetDir, files[i]);
                 }
                 else
                 {
@@ -87,7 +81,7 @@ public class FileUtility{
             {
                 curDirs[i] = curDirs[i].Replace("\\", "/");
                 string path = curDirs[i].Substring(curDirs[i].LastIndexOf("/") + 1);
-                CopyTo(curDirs[i], targetDir + "/" + path, filter, postfix, rootPath);
+                CopyTo(curDirs[i], targetDir + "/" + path, filter, postfix, action);
             }
         }
     }

@@ -35,7 +35,7 @@ public class LuaManager : SingletonMono<LuaManager> {
             string name = fileName.ToLower();
 
 #if UNITY_EDITOR
-            string filePath = string.Format("{0}/{1}", PathManager.LUA_ROOT_PATH, name.Replace(".", "/"));
+            string filePath = string.Format("{0}/{1}", PathManager.LUA_ROOT_PATH + "/LuaMain", name.Replace(".", "/"));
             if (!filePath.Contains(".lua"))
             {
                 filePath = filePath + ".lua";
