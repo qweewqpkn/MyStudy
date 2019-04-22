@@ -13,18 +13,11 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    --self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items, 10)
---
-    --self.newObj1 = self.mPoolGo:Spawn()
-    --self.newObj2 = self.mPoolGo:Spawn()
-    --self.newObj3 = self.mPoolGo:Spawn()
+    self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items, 10)
 
-    for i = 1, 100000 do
-        --if(i == 10000001) then
-        --    print("输出了")
-        --end
-        --Debuger.Log("other", "输出了")
-        end
+    self.newObj1 = self.mPoolGo:Spawn()
+    self.newObj2 = self.mPoolGo:Spawn()
+    self.newObj3 = self.mPoolGo:Spawn()
 end
 
 function ui_main:OnRelease()

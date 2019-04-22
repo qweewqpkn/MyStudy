@@ -127,13 +127,13 @@ namespace AssetLoad
             AssetType = assetType;
         }
 
-        protected virtual void StartLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
+        protected virtual void StartLoad(string assetName, bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
         {
             assetName = assetName.ToLower();
-            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, isSync, isAll, callback));
+            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, isSync, isAll, isPreLoad, callback));
         }
 
-        protected virtual IEnumerator CoLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
+        protected virtual IEnumerator CoLoad(string assetName, bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
         {
             ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
@@ -190,10 +190,10 @@ namespace AssetLoad
                 }
             }
 
-            OnCompleted(callback);
+            OnCompleted(isPreLoad, callback);
         }
 
-        protected virtual void OnCompleted(Action<UnityEngine.Object> callback) 
+        protected virtual void OnCompleted(bool isPreLoad, Action<UnityEngine.Object> callback) 
         {
             if(callback != null)
             {

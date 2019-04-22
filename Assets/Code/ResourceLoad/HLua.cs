@@ -33,7 +33,7 @@ namespace AssetLoad
             }
 
             HLua res = Get<HLua>(abName, assetName, AssetType.eLua);
-            res.StartLoad(assetName, false, true, tCallBack);
+            res.StartLoad(assetName, false, true, false, tCallBack);
         }
 
         //使用协程等待异步请求，而不用回调的形式
@@ -59,7 +59,7 @@ namespace AssetLoad
             }
 
             HLua res = Get<HLua>(abName, assetName, AssetType.eLua);
-            res.StartLoad(assetName, true, true, null);
+            res.StartLoad(assetName, true, true, false, null);
             return res.Asset as TextAsset;
         }
     }

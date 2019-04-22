@@ -89,7 +89,7 @@ namespace AssetLoad
             }
 
             HAssetBundle res = Get<HAssetBundle>(abName, "", AssetType.eAB);
-            res.StartLoad("", false, false, tCallBack);
+            res.StartLoad("", false, false, false, tCallBack);
         }
 
         //使用协程等待异步请求，而不用回调的形式
@@ -115,11 +115,11 @@ namespace AssetLoad
             }
 
             HAssetBundle res = Get<HAssetBundle>(abName, "", AssetType.eAB);
-            res.StartLoad("", true, false, null);
+            res.StartLoad("", true, false, false, null);
             return res.Asset as AssetBundle;
         }
 
-        protected override IEnumerator CoLoad(string assetName, bool isSync, bool isAll, Action<UnityEngine.Object> callback)
+        protected override IEnumerator CoLoad(string assetName, bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
         {
             ABRequest abRequest = new ABRequest();
             abRequest.Load(this, isSync, AssetType);
@@ -129,7 +129,7 @@ namespace AssetLoad
             }
 
             Asset = AB;
-            OnCompleted(callback);
+            OnCompleted(isPreLoad, callback);
         }
 
         public override void AddRef()
