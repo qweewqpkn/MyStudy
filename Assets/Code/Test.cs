@@ -21,18 +21,33 @@ public class Test : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        Debuger.Init();
+        Debuger.SwitchModule("test", true);
         mButton.onClick.AddListener(() =>
         {
-            for (int i = 0; i < 10000; i++)
-            {
-                Debuger.Log("other", "xixixi");
-            }
-            //ResourceManager.Instance.ReleaseAll();
+            PreLoad();
         });
+        
 
-        Debuger.Init();
-        Debuger.SwitchModule("other", true);
-        //CoroutineUtility.Instance.StartCoroutine(CoLoad());
+    }
+
+    //使用预加载的方式
+    void PreLoad()
+    {
+        StartCoroutine(CoPreLoad());
+    }
+
+    IEnumerator CoPreLoad()
+    {
+        Debuger.Log("test", "111 Frame Count : " + Time.frameCount);
+        yield return ResourceManager.Instance.PreLoadPrefabAsync("cube", "cube");
+        Debuger.Log("test", "start Frame Count : " + Time.frameCount);
+        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (obj, args)=>
+        //{
+        //    Debuger.Log("test", "over Frame Count : " + Time.frameCount);
+        //});
+
+        GameObject obj1 = ResourceManager.Instance.LoadPrefab("cube", "cube");
     }
 
     IEnumerator CoLoad()

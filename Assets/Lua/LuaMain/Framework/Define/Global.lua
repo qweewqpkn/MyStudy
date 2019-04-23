@@ -1,5 +1,6 @@
 require "Framework.Common.BaseClass"
 require "Framework.Define.Rename"
+require "Framework.Define.Consts"
 
 -- unityengine
 Mathf		= require "Framework.Common.Tools.UnityEngine.Mathf"
@@ -32,9 +33,11 @@ list = require "Framework.Common.Tools.list"
 require "Framework.Common.Tools.event"
 Messenger = require "Framework.Common.Messenger"
 Config = require "Framework.Define.Config"
-UIManager = require "Framework.UI.UIManager"
-SceneManager = require "Framework.Scene.SceneManager"
 UIBase = require "Framework.UI.UIBase"
+UIManager = require "Framework.UI.UIManager"
+SceneConfig = require "Framework.Scene.SceneConfig"
+SceneBase = require "Framework.Scene.SceneBase"
+SceneManager = require "Framework.Scene.SceneManager"
 Logger = require "Framework.Common.Logger"
 PoolManager = require "Framework.Pool.PoolManager"
 

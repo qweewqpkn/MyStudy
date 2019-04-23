@@ -75,6 +75,18 @@ namespace AssetLoad
             return HPrefab.LoadAsync(abName, assetName, args);
         }
 
+        //预加载prefab
+        public void PreLoadPrefabAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
+        {
+            HPrefab.PreLoadAsync(abName, assetName, callback, args);
+        }
+
+        //预加载prefab协程形式
+        public AsyncRequest PreLoadPrefabAsync(string abName, string assetName, params object[] args)
+        {
+            return HPrefab.PreLoadAsync(abName, assetName, args);
+        }
+
         //同步加载prefab
         public GameObject LoadPrefab(string abName, string assetName)
         {
