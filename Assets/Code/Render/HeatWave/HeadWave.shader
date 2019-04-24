@@ -5,6 +5,7 @@
 		_MainTex ("主贴图", 2D) = "white" {}
 		_DisTex("扰动贴图", 2D) = "white" {}
 		_HeatSpeed("扰动速度", Float) = 1.0
+		_HeatScale("123", Float) = 1.0
 	}
 
 	SubShader
@@ -44,6 +45,7 @@
 			float4 _MainTex_ST;
 			sampler2D _BackgroundTex;
 			float _HeatSpeed;
+			float _HeatScale;
 			
 			v2f vert (appdata v)
 			{
@@ -58,7 +60,9 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
-				fixed4 bgCol = tex2Dproj(_BackgroundTex, i.grabPos + fixed4(i.normal.xy * _Time.xy, 0.0f, 0.0f));
+				fixed4 disCol = tex2D(_DisTex, i.uv + frac(_Time.yx * _HeatSpeed)) * _HeatScale;
+				float3 normal = normalize(i.normal);
+				fixed4 bgCol = tex2Dproj(_BackgroundTex, i.grabPos + float4(disCol.xy, 0.0f, 0.0f));
 				return bgCol;
 			}
 			ENDCG
