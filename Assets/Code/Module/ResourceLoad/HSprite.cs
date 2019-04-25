@@ -33,7 +33,7 @@ namespace AssetLoad
             }
 
             HSprite res = Get<HSprite>(abName, assetName, AssetType.eSprite);
-            res.StartLoad(assetName, false, true, false, tCallBack);
+            res.StartLoad(false, true, false, tCallBack);
         }
 
         //使用协程等待异步请求，而不用回调的形式
@@ -59,7 +59,7 @@ namespace AssetLoad
             }
 
             HSprite res = Get<HSprite>(abName, assetName, AssetType.eSprite);
-            res.StartLoad(assetName, true, true, false, null);
+            res.StartLoad(true, true, false, null);
             return res.Asset as Sprite;
         }
     }

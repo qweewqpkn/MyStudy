@@ -15,6 +15,12 @@ namespace AssetLoad
             private set;
         }
 
+        public bool IsLoading
+        {
+            get;
+            private set;
+        }
+
         public UnityEngine.Object Asset
         {
             get;
@@ -32,15 +38,55 @@ namespace AssetLoad
             Asset = null;
             AssetList = null;
             IsComplete = false;
+            IsLoading = false;
         }
 
-        public void Load(AssetBundle ab, string assetName, bool isSync, bool isAll = false)
+        public void Load(HRes res, bool isSync, bool isAll = false)
         {
-            ResourceManager.Instance.StartCoroutine(CoLoad(ab, assetName, isSync, isAll));
+            string assetName = res.AssetName;
+            if(IsLoading)
+            {
+                return;
+            }
+
+            if(isAll)
+            {        
+                if(AssetList != null)
+                {
+                    if (res.AssetMap.ContainsKey(assetName))
+                    {
+                        res.Asset = res.AssetMap[assetName];
+                        return;
+                    }
+                }
+                else
+                {
+                    HRes shareRes = null;
+                    if(HRes.mShareResMap.TryGetValue(res.ABName, out shareRes))
+                    {
+                        if (shareRes.AssetMap.ContainsKey(assetName))
+                        {
+                            res.Asset = res.AssetMap[assetName];
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(Asset != null)
+                {
+                    res.Asset = Asset;
+                    return;
+                }
+            }
+
+            ResourceManager.Instance.StartCoroutine(CoLoad(res, assetName, isSync, isAll));
         }
 
-        public IEnumerator CoLoad(AssetBundle ab, string assetName, bool isSync, bool isAll = false)
+        public IEnumerator CoLoad(HRes res, string assetName, bool isSync, bool isAll = false)
         {
+            AssetBundle ab = res.ABDep.AB;
             if (ab == null)
             {
                 IsComplete = true;
@@ -55,7 +101,8 @@ namespace AssetLoad
                 }
                 else
                 {
-                    if(isSync)
+                    IsLoading = true;
+                    if (isSync)
                     {
                         if(isAll)
                         {
@@ -86,6 +133,29 @@ namespace AssetLoad
                         }
                     }
 
+                    if(isAll)
+                    {
+                        if (AssetList != null)
+                        {
+                            for (int i = 0; i < AssetList.Length; i++)
+                            {
+                                res.AssetMap[AssetList[i].name.ToLower()] = AssetList[i];
+                            }
+
+                            if (res.AssetMap.ContainsKey(assetName))
+                            {
+                                res.Asset = res.AssetMap[assetName];
+                            }
+
+                            HRes.mShareResMap[res.ABName] = res;
+                        }
+                    }
+                    else
+                    {
+                        res.Asset = Asset;
+                    }
+
+                    IsLoading = false;
                     IsComplete = true;
                 }
             }

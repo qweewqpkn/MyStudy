@@ -35,7 +35,7 @@ namespace AssetLoad
             }
 
             HText res = Get<HText>(abName, assetName, AssetType.eText);
-            res.StartLoad(assetName, false, false, false, tCallBack);
+            res.StartLoad(false, false, false, tCallBack);
         }
 
         //使用协程等待异步请求，而不用回调的形式
@@ -61,7 +61,7 @@ namespace AssetLoad
             }
 
             HText res = Get<HText>(abName, assetName, AssetType.eText);
-            res.StartLoad(assetName, true, false, false, null);
+            res.StartLoad(true, false, false, null);
             return res.Asset as TextAsset;
         }
     }

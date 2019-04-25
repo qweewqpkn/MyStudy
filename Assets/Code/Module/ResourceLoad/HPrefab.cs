@@ -39,7 +39,7 @@ namespace AssetLoad
             }
 
             HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(assetName, false, false, false, tCallBack);
+            res.StartLoad(false, false, false, tCallBack);
         }
 
         //使用协程等待异步请求，而不用回调的形式
@@ -79,7 +79,7 @@ namespace AssetLoad
             }
 
             HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(assetName, false, false, true, tCallBack);
+            res.StartLoad(false, false, true, tCallBack);
         }
 
         public static AsyncRequest PreLoadAsync(string abName, string assetName, params object[] args)
@@ -104,7 +104,7 @@ namespace AssetLoad
             }
 
             HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(assetName, true, false, false, null);
+            res.StartLoad(true, false, false, null);
             return res.InstObj as GameObject;
         }
 

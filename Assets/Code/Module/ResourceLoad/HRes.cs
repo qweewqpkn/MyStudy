@@ -11,14 +11,15 @@ namespace AssetLoad
     public class HRes
     {
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
+        public static Dictionary<string, HRes> mShareResMap = new Dictionary<string, HRes>();
 
-        private Dictionary<string, UnityEngine.Object> AssetMap
+        public Dictionary<string, UnityEngine.Object> AssetMap
         {
             get;
             set;
         }
 
-        private ABRequest ABRequest
+        protected ABRequest ABRequest
         {
             get;
             set;
@@ -86,20 +87,9 @@ namespace AssetLoad
             AssetRequest = new AssetRequest();
         }
 
-        public static string GetResName(string abName, string assetName, AssetType assetType)
+        public static string GetResName(string abName, string assetName)
         {
-            switch(assetType)
-            {
-                case AssetType.eSprite:
-                case AssetType.eLua:
-                    {
-                        return string.Format("{0}/{1}", abName, "*");
-                    }
-                default:
-                    {
-                        return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
-                    }
-            }
+            return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
         }
 
         public static T Get<T>(string abName, string assetName, AssetType assetType) where T : HRes, new()
@@ -107,7 +97,7 @@ namespace AssetLoad
             HRes res = null;
             abName = abName.ToLower();
             assetName = assetName.ToLower();
-            string resName = GetResName(abName, assetName, assetType);
+            string resName = GetResName(abName, assetName);
             if (!mResMap.TryGetValue(resName, out res))
             {
                 res = new T();
@@ -127,13 +117,12 @@ namespace AssetLoad
             AssetType = assetType;
         }
 
-        protected virtual void StartLoad(string assetName, bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
+        protected virtual void StartLoad(bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
         {
-            assetName = assetName.ToLower();
-            ResourceManager.Instance.StartCoroutine(CoLoad(assetName, isSync, isAll, isPreLoad, callback));
+            ResourceManager.Instance.StartCoroutine(CoLoad(isSync, isAll, isPreLoad, callback));
         }
 
-        protected virtual IEnumerator CoLoad(string assetName, bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
+        protected virtual IEnumerator CoLoad(bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
         {
             ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
@@ -144,52 +133,14 @@ namespace AssetLoad
                 yield return null;
             }
 
-            if(isAll)
+            //加载资源
+            AssetRequest.Load(this, isSync, isAll);
+            while (!AssetRequest.IsComplete)
             {
-                if(AssetMap.Count == 0)
-                {
-                    //资源还未加载过,那么加载AB中的资源
-                    AssetRequest.Load(ABDep.AB, assetName, isSync, isAll);
-                    while (!AssetRequest.IsComplete)
-                    {
-                        yield return null;
-                    }
-
-                    //缓存AB中加载的所有资源，为了下次使用
-                    if (AssetRequest.AssetList != null)
-                    {
-                        for (int i = 0; i < AssetRequest.AssetList.Length; i++)
-                        {
-                            AssetMap[AssetRequest.AssetList[i].name.ToLower()] = AssetRequest.AssetList[i];
-                        }
-                    }
-                }
-
-                if (AssetMap.ContainsKey(assetName))
-                {
-                    Asset = AssetMap[assetName];
-                }
-                else
-                {
-                    Asset = null;
-                }
-            }
-            else
-            {
-                if(AssetName != assetName || Asset == null)
-                {
-                    AssetName = assetName;
-                    //资源还未加载过,那么加载AB中的资源
-                    AssetRequest.Load(ABDep.AB, assetName, isSync, isAll);
-                    while (!AssetRequest.IsComplete)
-                    {
-                        yield return null;
-                    }
-
-                    Asset = AssetRequest.Asset;
-                }
+                yield return null;
             }
 
+            //回调
             OnCompleted(isPreLoad, callback);
         }
 

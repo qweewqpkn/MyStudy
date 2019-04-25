@@ -25,10 +25,17 @@ public class Test : MonoBehaviour {
         Debuger.SwitchModule("test", true);
         mButton.onClick.AddListener(() =>
         {
-            PreLoad();
+            //LoadTest1();
+            //LoadTest2();
+            //LoadTest3();
+            //LoadTest4();
+            //LoadTest5();
+            //LoadTest6();
+            //LoadTest7();
+            //LoadTest8();
+            //LoadTest9();
+            LoadSprite();
         });
-        
-
     }
 
     //使用预加载的方式
@@ -252,6 +259,18 @@ public class Test : MonoBehaviour {
         });
     }
 
+    void LoadSprite()
+    {
+        ResourceManager.Instance.LoadSpriteAsync("sprite", "0001", (sprite)=>
+        {
+
+        });
+
+        ResourceManager.Instance.LoadSpriteAsync("sprite", "0002", (sprite) =>
+        {
+
+        });
+    }
 
     // Update is called once per frame
     void Update () {

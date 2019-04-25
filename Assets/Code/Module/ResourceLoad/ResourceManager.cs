@@ -224,7 +224,7 @@ namespace AssetLoad
             HRes res;
             abName = abName.ToLower();
             assetName = assetName.ToLower();
-            string name = HRes.GetResName(abName, assetName, assetType);
+            string name = HRes.GetResName(abName, assetName);
             if (HRes.mResMap.TryGetValue(name, out res))
             {
                 res.Release();
