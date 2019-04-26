@@ -20,7 +20,7 @@ public class RawImageExt : RawImage
         {
             if(!string.IsNullOrEmpty(mTextureName))
             {
-                ResourceManager.Instance.Release(mTextureName, AssetType.eTexture);
+                ResourceManager.Instance.Release(mTextureName);
             }
 
             mTextureName = name;
@@ -34,7 +34,7 @@ public class RawImageExt : RawImage
 
                 if(this == null || IsDestroyed())
                 {
-                    ResourceManager.Instance.Release(mTextureName, AssetType.eTexture);
+                    ResourceManager.Instance.Release(mTextureName);
                     return;
                 }
 
@@ -84,7 +84,7 @@ public class RawImageExt : RawImage
     {
         if(!string.IsNullOrEmpty(mTextureName))
         {
-            ResourceManager.Instance.Release(mTextureName, AssetType.eTexture);
+            ResourceManager.Instance.Release(mTextureName);
         }
 
         if(mTexture2D != null) 

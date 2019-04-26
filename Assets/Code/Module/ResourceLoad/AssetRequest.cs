@@ -7,15 +7,20 @@ namespace AssetLoad
 {
     public class AssetRequest
     {
-        static List<AssetBundleRequest> mRequestList= new List<AssetBundleRequest>();
-
-        public bool IsComplete
+        public class ABAssetData
         {
-            get;
-            private set;
+            //AB中的资源缓存
+            public Dictionary<string, UnityEngine.Object> mAssetMap = new Dictionary<string, UnityEngine.Object>();
+            //AB中请求所有资源的请求
+            public AssetBundleRequest mAllAssetRequest;
+            //AB中的每个资源对应了一个请求
+            public Dictionary<string, AssetBundleRequest> mAssetRequestMap = new Dictionary<string, AssetBundleRequest>();
         }
 
-        public bool IsLoading
+        //每个AB的资源数据
+        static Dictionary<string, ABAssetData> mABAssetDataMap = new Dictionary<string, ABAssetData>();
+
+        public bool IsComplete
         {
             get;
             private set;
@@ -27,135 +32,125 @@ namespace AssetLoad
             private set;
         }
 
-        public UnityEngine.Object[] AssetList
-        {
-            get;
-            set;
-        }
-
         public AssetRequest()
         {
-            Asset = null;
-            AssetList = null;
             IsComplete = false;
-            IsLoading = false;
         }
 
-        public void Load(HRes res, bool isSync, bool isAll = false)
+        public void Load(AssetBundle ab, string assetName, bool isSync, bool isAll = false)
         {
-            string assetName = res.AssetName;
-            if(IsLoading)
-            {
-                return;
-            }
-
-            if(isAll)
-            {        
-                if(AssetList != null)
-                {
-                    if (res.AssetMap.ContainsKey(assetName))
-                    {
-                        res.Asset = res.AssetMap[assetName];
-                        return;
-                    }
-                }
-                else
-                {
-                    HRes shareRes = null;
-                    if(HRes.mShareResMap.TryGetValue(res.ABName, out shareRes))
-                    {
-                        if (shareRes.AssetMap.ContainsKey(assetName))
-                        {
-                            res.Asset = res.AssetMap[assetName];
-                            return;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if(Asset != null)
-                {
-                    res.Asset = Asset;
-                    return;
-                }
-            }
-
-            ResourceManager.Instance.StartCoroutine(CoLoad(res, assetName, isSync, isAll));
+            ResourceManager.Instance.StartCoroutine(CoLoad(ab, assetName, isSync, isAll));
         }
 
-        public IEnumerator CoLoad(HRes res, string assetName, bool isSync, bool isAll = false)
+        public IEnumerator CoLoad(AssetBundle ab, string assetName, bool isSync, bool isAll = false)
         {
-            AssetBundle ab = res.ABDep.AB;
             if (ab == null)
             {
                 IsComplete = true;
+                yield break;
             }
             else
             {
                 if(string.IsNullOrEmpty(assetName))
                 {
                     IsComplete = true;
-                    Debug.LogError("AssetRequest assetName is null");
+                    Debuger.LogError("ASSET_LOAD", "AssetRequest assetName is null");
                     yield break;
                 }
                 else
                 {
-                    IsLoading = true;
-                    if (isSync)
+                    //获取该AB对应的请求数据
+                    ABAssetData cacheData = null;
+                    if (!mABAssetDataMap.TryGetValue(ab.name, out cacheData))
                     {
-                        if(isAll)
+                        cacheData = new ABAssetData();
+                        mABAssetDataMap.Add(ab.name, cacheData);
+                    }
+
+                    //是否有该资源的缓存
+                    if(!cacheData.mAssetMap.ContainsKey(assetName))
+                    {
+                        if (isSync)
                         {
-                            AssetList = ab.LoadAllAssets();
+                            if (isAll)
+                            {
+                                UnityEngine.Object[] assetList = ab.LoadAllAssets();
+                                for (int i = 0; i < assetList.Length; i++)
+                                {
+                                    cacheData.mAssetMap[assetList[i].name.ToLower()] = assetList[i];
+                                }
+                            }
+                            else
+                            {
+                                UnityEngine.Object asset = ab.LoadAsset(assetName);
+                                cacheData.mAssetMap[asset.name.ToLower()] = asset;
+                            }
                         }
                         else
                         {
-                            Asset = ab.LoadAsset(assetName);
+                            //获取AB中指定资源的请求
+                            AssetBundleRequest cacheRequest = null;
+                            if (isAll)
+                            {
+                                cacheRequest = cacheData.mAllAssetRequest;
+                            }
+                            else
+                            {
+                                //如果已经存在加载所有资源的请求了,就不需要单独资源的了,因为所有资源请求中就包含了所有资源
+                                if(cacheData.mAllAssetRequest != null)
+                                {
+                                    cacheRequest = cacheData.mAllAssetRequest;
+                                }
+                                else
+                                {
+                                    if (cacheData.mAssetRequestMap.ContainsKey(assetName))
+                                    {
+                                        cacheRequest = cacheData.mAssetRequestMap[assetName];
+                                    }
+                                }
+                            }
+
+                            if (cacheRequest == null)
+                            {
+                                //AB中没有加载这个资源的请求，那么新启一个
+                                if (isAll)
+                                {
+                                    cacheRequest = ab.LoadAllAssetsAsync();
+                                    cacheData.mAllAssetRequest = cacheRequest;
+                                    yield return cacheRequest;
+                                }
+                                else
+                                {
+                                    cacheRequest = ab.LoadAssetAsync(assetName);
+                                    cacheData.mAssetRequestMap.Add(assetName, cacheRequest);
+                                    yield return cacheRequest;
+                                }
+                            }
+                            else
+                            {
+                                //AB中已经有这个资源的对应请求了,那么检测是否还在加载中
+                                while (!cacheRequest.isDone)
+                                {
+                                    yield return null;
+                                }
+                            }
+
+                            for (int i = 0; i < cacheRequest.allAssets.Length; i++)
+                            {
+                                cacheData.mAssetMap[cacheRequest.allAssets[i].name.ToLower()] = cacheRequest.allAssets[i];
+                            }
                         }
+                    }
+
+                    if(cacheData.mAssetMap.ContainsKey(assetName))
+                    {
+                        Asset = cacheData.mAssetMap[assetName];
                     }
                     else
                     {
-                        if (isAll)
-                        {
-                            AssetBundleRequest request = ab.LoadAllAssetsAsync();
-                            mRequestList.Add(request);
-                            yield return request;
-                            mRequestList.Remove(request);
-                            AssetList = request.allAssets;
-                        }
-                        else
-                        {
-                            AssetBundleRequest request = ab.LoadAssetAsync(assetName);
-                            mRequestList.Add(request);
-                            yield return request;
-                            mRequestList.Remove(request);
-                            Asset = request.asset;
-                        }
+                        Debuger.LogError("ASSET_LOAD", string.Format("加载资源失败,请确认该{0}中是否有资源{1}", ab.name, assetName));
                     }
 
-                    if(isAll)
-                    {
-                        if (AssetList != null)
-                        {
-                            for (int i = 0; i < AssetList.Length; i++)
-                            {
-                                res.AssetMap[AssetList[i].name.ToLower()] = AssetList[i];
-                            }
-
-                            if (res.AssetMap.ContainsKey(assetName))
-                            {
-                                res.Asset = res.AssetMap[assetName];
-                            }
-
-                            HRes.mShareResMap[res.ABName] = res;
-                        }
-                    }
-                    else
-                    {
-                        res.Asset = Asset;
-                    }
-
-                    IsLoading = false;
                     IsComplete = true;
                 }
             }
@@ -163,10 +158,22 @@ namespace AssetLoad
 
         public static void StopAllRequest()
         {
+            //这里缓存一份请求，因为requestList[i].allAssets访问后，会导致mRequestList的大小发生变化
             List<AssetBundleRequest> requestList = new List<AssetBundleRequest>();
-            for (int i = 0; i < mRequestList.Count; i++)
+            foreach (var data in mABAssetDataMap)
             {
-                requestList.Add(mRequestList[i]);
+                foreach(var item  in data.Value.mAssetRequestMap)
+                {
+                    if (!item.Value.isDone)
+                    {
+                        requestList.Add(item.Value);
+                    }
+                }
+
+                if(data.Value.mAllAssetRequest != null && !data.Value.mAllAssetRequest.isDone)
+                {
+                    requestList.Add(data.Value.mAllAssetRequest);
+                }
             }
 
             //访问AssetBundleRequest 异步请求的allAssets会导致该ab的加载立马返回，相当于变为同步加载
@@ -175,7 +182,7 @@ namespace AssetLoad
                 UnityEngine.Object[] assets = requestList[i].allAssets;
             }
 
-            mRequestList.Clear();
+            mABAssetDataMap.Clear();
         }
     }
 }

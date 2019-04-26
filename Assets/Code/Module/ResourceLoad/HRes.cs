@@ -11,13 +11,6 @@ namespace AssetLoad
     public class HRes
     {
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
-        public static Dictionary<string, HRes> mShareResMap = new Dictionary<string, HRes>();
-
-        public Dictionary<string, UnityEngine.Object> AssetMap
-        {
-            get;
-            set;
-        }
 
         protected ABRequest ABRequest
         {
@@ -82,7 +75,6 @@ namespace AssetLoad
 
         public HRes()
         {
-            AssetMap = new Dictionary<string, UnityEngine.Object>();
             ABRequest = new ABRequest();
             AssetRequest = new AssetRequest();
         }
@@ -134,11 +126,14 @@ namespace AssetLoad
             }
 
             //加载资源
-            AssetRequest.Load(this, isSync, isAll);
+            AssetRequest.Load(ABDep.AB, AssetName, isSync, isAll);
             while (!AssetRequest.IsComplete)
             {
                 yield return null;
             }
+
+            //拿到资源
+            Asset = AssetRequest.Asset;
 
             //回调
             OnCompleted(isPreLoad, callback);

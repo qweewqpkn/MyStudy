@@ -25,6 +25,7 @@ public class Test : MonoBehaviour {
         Debuger.SwitchModule("test", true);
         mButton.onClick.AddListener(() =>
         {
+            ResourceManager.Instance.LoadAB("sprite");
             //LoadTest1();
             //LoadTest2();
             //LoadTest3();
@@ -263,12 +264,19 @@ public class Test : MonoBehaviour {
     {
         ResourceManager.Instance.LoadSpriteAsync("sprite", "0001", (sprite)=>
         {
-
+            mSprite.sprite = sprite;
         });
 
-        ResourceManager.Instance.LoadSpriteAsync("sprite", "0002", (sprite) =>
+        ResourceManager.Instance.LoadSpriteAsync("sprite", "0001", (sprite) =>
         {
+            mSprite1.sprite = sprite;
+        });
 
+        ResourceManager.Instance.ReleaseAll();
+
+        ResourceManager.Instance.LoadSpriteAsync("sprite", "0003", (sprite) =>
+        {
+            mSprite1.sprite = sprite;
         });
     }
 

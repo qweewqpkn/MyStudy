@@ -214,12 +214,12 @@ namespace AssetLoad
         }
         #endregion
 
-        public void Release(string name, AssetType assetType)
+        public void Release(string name)
         {
-            Release(name, name, assetType);
+            Release(name, name);
         }
 
-        public void Release(string abName, string assetName, AssetType assetType)
+        public void Release(string abName, string assetName)
         {
             HRes res;
             abName = abName.ToLower();

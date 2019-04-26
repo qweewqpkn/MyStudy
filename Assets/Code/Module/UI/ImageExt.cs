@@ -8,19 +8,19 @@ using AssetLoad;
 
 public class ImageExt : Image
 {
-	private string mAbName = "";
-
+	private string mABName = "";
+    private string mSpriteName = "";
 	private bool mGrayState = false;
-
 	public Material mGrayMaterial = null;
 
 	public void SetSprite(string abName,string spriteName)
 	{
-		if (null != mAbName && !string.IsNullOrEmpty (mAbName)) {
-			ResourceManager.Instance.Release (mAbName, AssetType.eSprite);
+		if (!string.IsNullOrEmpty (mABName)) {
+			ResourceManager.Instance.Release (mABName, mSpriteName);
 		}
-		mAbName = abName;
-		ResourceManager.Instance.LoadSpriteAsync (mAbName, spriteName,  (sprite) =>{
+        mABName = abName;
+        mSpriteName = spriteName;
+        ResourceManager.Instance.LoadSpriteAsync (mABName, mSpriteName,  (sprite) =>{
             this.sprite = sprite;
 		});
 	}
@@ -28,8 +28,8 @@ public class ImageExt : Image
     protected override void OnDestroy()
     {
         base.OnDestroy();
-		if (null != mAbName && !string.IsNullOrEmpty (mAbName)) {
-			ResourceManager.Instance.Release(mAbName, AssetType.eSprite);
+		if (null != mABName && !string.IsNullOrEmpty (mABName)) {
+			ResourceManager.Instance.Release(mABName, mSpriteName);
         }
     }
 
