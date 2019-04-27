@@ -176,6 +176,9 @@ namespace AssetLoad
                 RefCount--;
                 if (RefCount <= 0)
                 {
+                    //停止这个对这个AB中资源的请求
+                    AssetRequest.StopRequest(ABName);
+
                     if (mResMap.ContainsKey(ResName))
                     {
                         mResMap.Remove(ResName);

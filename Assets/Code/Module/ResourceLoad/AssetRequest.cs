@@ -11,7 +11,7 @@ namespace AssetLoad
         {
             //AB中的资源缓存
             public Dictionary<string, UnityEngine.Object> mAssetMap = new Dictionary<string, UnityEngine.Object>();
-            //AB中请求所有资源的请求
+            //AB中所有资源的请求
             public AssetBundleRequest mAllAssetRequest;
             //AB中的每个资源对应了一个请求
             public Dictionary<string, AssetBundleRequest> mAssetRequestMap = new Dictionary<string, AssetBundleRequest>();
@@ -158,31 +158,44 @@ namespace AssetLoad
 
         public static void StopAllRequest()
         {
-            //这里缓存一份请求，因为requestList[i].allAssets访问后，会导致mRequestList的大小发生变化
-            List<AssetBundleRequest> requestList = new List<AssetBundleRequest>();
             foreach (var data in mABAssetDataMap)
             {
-                foreach(var item  in data.Value.mAssetRequestMap)
-                {
-                    if (!item.Value.isDone)
-                    {
-                        requestList.Add(item.Value);
-                    }
-                }
-
-                if(data.Value.mAllAssetRequest != null && !data.Value.mAllAssetRequest.isDone)
-                {
-                    requestList.Add(data.Value.mAllAssetRequest);
-                }
-            }
-
-            //访问AssetBundleRequest 异步请求的allAssets会导致该ab的加载立马返回，相当于变为同步加载
-            for (int i = 0; i < requestList.Count; i++)
-            {
-                UnityEngine.Object[] assets = requestList[i].allAssets;
+                StopRequest(data.Value);
             }
 
             mABAssetDataMap.Clear();
+        }
+
+        public static void StopRequest(string abName)
+        {
+            ABAssetData data = null;
+            if (mABAssetDataMap.TryGetValue(abName, out data))
+            {
+                StopRequest(data);
+            }
+        }
+
+        private static void StopRequest(ABAssetData data)
+        {
+            if(data == null)
+            {
+                return;
+            }
+
+            foreach (var item in data.mAssetRequestMap)
+            {
+                if (!item.Value.isDone)
+                {
+                    //如果资源还未加载完成，那么访问allAssets属性后，就会将资源加载变成同步加载,之前yield会在同步加载完成后立即返回执行
+                    //协程后面的逻辑后,再返回这里执行,有点像goto语句的行为
+                    UnityEngine.Object[] assets = item.Value.allAssets;
+                }
+            }
+
+            if (data.mAllAssetRequest != null && !data.mAllAssetRequest.isDone)
+            {
+                UnityEngine.Object[] assets = data.mAllAssetRequest.allAssets;
+            }
         }
     }
 }

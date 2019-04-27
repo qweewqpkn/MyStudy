@@ -125,7 +125,7 @@ namespace AssetLoad
                 yield return null;
             }
 
-            //加载资源
+            //加载Asset
             AssetRequest.Load(ABDep.AB, AssetName, isSync, isAll);
             while (!AssetRequest.IsComplete)
             {
