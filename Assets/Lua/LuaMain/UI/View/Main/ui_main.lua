@@ -13,16 +13,14 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items, 10)
-
-    self.newObj1 = self.mPoolGo:Spawn()
-    self.newObj2 = self.mPoolGo:Spawn()
-    self.newObj3 = self.mPoolGo:Spawn()
+    ResourceManager.Instance:PreLoadPrefabAsync("ui_loading", "ui_loading", function()
+        Logger.Log(Logger.Module.COMMON, "预加载完成")
+        SceneManager:GetInstance():SwitchScene(SceneConfig.LoginScene)
+    end)
 end
 
 function ui_main:OnRelease()
-    PoolManager:GetInstance():ReleasePoolGO(self.b_t_items)
-    SingletonManager:GetInstance():Release()
+
 end
 
 --构造函数
@@ -62,7 +60,7 @@ function ui_main: OnShow(...)
         coroutine.waituntil(function()
             Logger.Log(Logger.Module.UI, i)
             i = i + 1
-            if(i == 100) then
+            if(i == 1) then
                 return true
             end
 
@@ -71,7 +69,7 @@ function ui_main: OnShow(...)
 
         local request = ResourceManager.Instance:LoadPrefabAsync("cube", "cube")
         coroutine.waitforasyncop(request, function()
-            Logger.Log(Logger.Module.UI, "异步加载中.....")
+            --Logger.Log(Logger.Module.UI, "异步加载中.....")
         end )
         local obj = request.Asset
         obj.name = "测试啦"

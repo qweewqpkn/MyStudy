@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class ABRequest
 {
+    public class ABData
+    {
+        public AssetBundle mAB;
+        public AssetBundleCreateRequest mRequest;
+    }
+
     List<HAssetBundle> mABLoadList = new List<HAssetBundle>();
-    static Dictionary<string, AssetBundleCreateRequest> mRequestMap = new Dictionary<string, AssetBundleCreateRequest>();
+    static Dictionary<string, ABData> mABDataMap = new Dictionary<string, ABData>();
     private AssetType mAssetType; //目标资源类型
     private bool mIsSync; //是否是同步请求
 
@@ -48,95 +54,110 @@ public class ABRequest
         //开启所有加载
         for (int i = 0; i < mABLoadList.Count; i++)
         {
-            ResourceManager.Instance.StartCoroutine(OnLoad(mABLoadList[i]));
+            ResourceManager.Instance.StartCoroutine(CoLoadAB(mABLoadList[i]));
         }
 
         //等待加载完成
         for (int i = 0; i < mABLoadList.Count; i++)
         {
-            while (mABLoadList[i].Status != LoadStatus.eLoaded)
+            ABData data;
+            if(mABDataMap.TryGetValue(mABLoadList[i].ABName, out data))
             {
-                yield return null;
+                if(data.mRequest != null)
+                {
+                    while(!data.mRequest.isDone)
+                    {
+                        yield return null;
+                    }
+                }
+            }
+            else
+            {
+                Debuger.LogError("ASSET_LOAD", "mABDataMap is not find abname : " + mABLoadList[i].ABName);
             }
         }
 
         IsComplete = true;
     }
 
-    private IEnumerator OnLoad(HAssetBundle ab)
+    private IEnumerator CoLoadAB(HAssetBundle ab)
     {
-        if (ab.Status == LoadStatus.eNone)
+        ABData abData = null;
+        if(!mABDataMap.TryGetValue(ab.ABName, out abData))
         {
-            ab.Status = LoadStatus.eLoading;
+            abData = new ABData();
+            mABDataMap[ab.ABName] = abData;
+        }
 
+        if(abData.mAB == null)
+        {
+            string url = PathManager.URL(ab.ABName, mAssetType, false);
             if (mIsSync)
             {
-                if (ab.AB == null)
+                if(abData.mRequest == null)
                 {
-                    string url = PathManager.URL(ab.ABName, mAssetType, false);
-                    ab.AB = AssetBundle.LoadFromFile(url);
-                    ab.Status = LoadStatus.eLoaded;
+                    abData.mAB = AssetBundle.LoadFromFile(url);
+                }
+                else
+                {
+                    abData.mAB = abData.mRequest.assetBundle;
                 }
             }
             else
             {
-                string url = PathManager.URL(ab.ABName, mAssetType, false);
-                AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
-                mRequestMap.Add(ab.ABName, request);
-                yield return request;
-                mRequestMap.Remove(ab.ABName);
-                ab.AB = request.assetBundle;
-                ab.Status = LoadStatus.eLoaded;
-            }
-        }
-        else if (ab.Status == LoadStatus.eLoading)
-        {
-            if(mIsSync)
-            {
-                if (mRequestMap.ContainsKey(ab.ABName))
+                if(abData.mRequest == null)
                 {
-                    Debug.Log("提示:资源异步加载还在进行中,但是又调用了同步接口加载该资源!!!");
-                    if (mRequestMap[ab.ABName].assetBundle != null)
+                    AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(url);
+                    abData.mRequest = request;
+                    yield return request;
+                }
+                else
+                {
+                    while(!abData.mRequest.isDone)
                     {
-                        if (mRequestMap.ContainsKey(ab.ABName))
-                        {
-                            mRequestMap[ab.ABName].assetBundle.Unload(true);
-                        }
+                        yield return null;
                     }
                 }
 
-                if(ab.AB == null)
-                {
-                    string url = PathManager.URL(ab.ABName, mAssetType, false);
-                    ab.AB = AssetBundle.LoadFromFile(url);
-                    ab.Status = LoadStatus.eLoaded;
-                }
+                abData.mAB = abData.mRequest.assetBundle;
             }
-            else
-            {
-                while (ab.Status != LoadStatus.eLoaded)
-                {
-                    yield return null;
-                }
-            }
+
+            ab.AB = abData.mAB;
+        }
+    }
+
+    public static void StopRequest(string abName)
+    {
+        ABData data;
+        if(mABDataMap.TryGetValue(abName, out data))
+        {
+            StopRequest(data.mRequest);
+            mABDataMap.Remove(abName);
+        }
+    }
+
+    public static void StopRequest(AssetBundleCreateRequest request)
+    {
+        if (request == null)
+        {
+            return;
+        }
+
+        if (!request.isDone)
+        {
+            AssetBundle ab = request.assetBundle;
         }
     }
 
     public static void StopAllRequest()
     {
-        List<AssetBundleCreateRequest> requestList = new List<AssetBundleCreateRequest>();
-        foreach (var item in mRequestMap)
-        {
-            requestList.Add(item.Value);
-        }
-
         //访问AssetBundleCreateRequest异步请求的assetbundle会导致该ab的异步加载立马返回，相当于变为同步加载
         //这句会让之前的异步加载立马完成，像Goto一样跳转到yield return request后面的逻辑执行，执行完后再回到这里执行
-        for (int i = 0; i < requestList.Count; i++)
+        foreach (var item in mABDataMap)
         {
-            AssetBundle ab = requestList[i].assetBundle;
+            StopRequest(item.Value.mRequest);
         }
 
-        mRequestMap.Clear();
+        mABDataMap.Clear();
     }
 }

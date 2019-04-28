@@ -21,6 +21,7 @@ function UIBase:OpenPanel(...)
         self.mPanelState = 1
 
         --加载界面资源
+        Logger.Log(Logger.Module.UI, "load ui : " .. self.mAbPath)
         ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
             --加载完成后，界面被标记为关闭
 			if self.mPanelState == 0 then

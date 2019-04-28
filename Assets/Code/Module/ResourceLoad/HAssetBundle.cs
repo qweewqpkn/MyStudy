@@ -5,13 +5,6 @@ using UnityEngine;
 
 namespace AssetLoad
 {
-    public enum LoadStatus
-    {
-        eNone,
-        eLoading,
-        eLoaded,
-    }
-
     public class HAssetBundle : HRes
     {
         private static AssetBundleManifest mAssetBundleManifest;
@@ -36,14 +29,6 @@ namespace AssetLoad
         }
 
         public AssetBundle AB
-        {
-            get;
-            set;
-        }
-
-        //加载状态
-
-        public LoadStatus Status
         {
             get;
             set;
@@ -176,14 +161,16 @@ namespace AssetLoad
                 RefCount--;
                 if (RefCount <= 0)
                 {
+                    //停止对这个AB的请求
+                    ABRequest.StopRequest(ABName);
                     //停止这个对这个AB中资源的请求
                     AssetRequest.StopRequest(ABName);
-
+                    //缓存列表中移除
                     if (mResMap.ContainsKey(ResName))
                     {
                         mResMap.Remove(ResName);
                     }
-
+                    //释放这个AB的所有资源,从这个AB中加载的资源Asset都将变为"null"
                     if (AB != null)
                     {
                         AB.Unload(true);

@@ -57,6 +57,7 @@ function UIManager:OpenPanel(uiName, ...)
             self.mMainUI = ret
         end
 
+        Logger.Log(Logger.Module.UI, "OpenPanel : " .. uiName)
         self:SetCurrentView(ret)
         ret:OpenPanel(...)
     end

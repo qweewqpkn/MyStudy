@@ -22,19 +22,23 @@ function SceneManager:SwitchScene(sceneConfig)
 		return
 	end
 
-	coroutine.start(CoSwitchScene(sceneConfig))
+	self.mSwitching = true
+	coroutine.start(self.CoSwitchScene, self, sceneConfig)
 end
 
 function SceneManager:CoSwitchScene(sceneConfig)
+	local model = 0
 	--关闭所有界面
 	UIManager:GetInstance():CloseAllPanel()
 	--打开loading界面
-	UIManager:GetInstance():OpenPanel(Consts.UINAME.ui_loding)
+	UIManager:GetInstance():OpenPanel(Consts.UINAME.ui_loading)
 	if(self.mCurScene ~= nil) then
 		self.mCurScene:UnLoad()
 		self.mCurScene:OnExit()
 		self.mCurScene = nil
 	end
+	model = model + 0.1
+	Messenger:GetInstance():Broadcast(MsgEnum.ui_loading_refresh, "清理资源中", model)
 	--GC
 	collectgarbage("collect")
 	CS.System.GC.Collect()
@@ -46,17 +50,28 @@ function SceneManager:CoSwitchScene(sceneConfig)
 	if(self.mCurScene ~= nil) then
 		self.mCurSceneName = sceneConfig.name
 		--预加载新场景的资源
-		coroutine.yieldstart(self.mCurScene.PreLoad, function()
-
-		end)
+		local curProgress = model
+		coroutine.yieldstart(self.mCurScene.PreLoad, function(co, progress)
+			Logger.Log(Logger.Module.SCENE, "self.mCurScene.PreLoad call back " .. progress)
+			model = curProgress + 0.8 * progress
+			Messenger:GetInstance():Broadcast(MsgEnum.ui_loading_refresh, "加载资源中", model)
+		end, self.mCurScene)
+		model = curProgress + 0.8
+		Messenger:GetInstance():Broadcast(MsgEnum.ui_loading_refresh, "准备场景中", model)
 		--进入新的场景
 		self.mCurScene:OnEnter()
 		--等待新的场景完成
 		coroutine.waituntil(function()
 			return self.mCurScene:IsComplete()
 		end )
+
+		model = model + 0.1
+		Messenger:GetInstance():Broadcast(MsgEnum.ui_loading_refresh, "完成", model)
+		coroutine.waitforseconds(0.5)
 		--关闭loading界面
-		UIManager:GetInstance():ClosePanel(Consts.UINAME.ui_loding)
+		UIManager:GetInstance():ClosePanel(Consts.UINAME.ui_loading)
+
+		self.mSwitching = false
 	end
 end
 

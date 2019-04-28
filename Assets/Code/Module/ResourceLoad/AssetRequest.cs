@@ -7,7 +7,7 @@ namespace AssetLoad
 {
     public class AssetRequest
     {
-        public class ABAssetData
+        public class AssetData
         {
             //AB中的资源缓存
             public Dictionary<string, UnityEngine.Object> mAssetMap = new Dictionary<string, UnityEngine.Object>();
@@ -18,7 +18,7 @@ namespace AssetLoad
         }
 
         //每个AB的资源数据
-        static Dictionary<string, ABAssetData> mABAssetDataMap = new Dictionary<string, ABAssetData>();
+        static Dictionary<string, AssetData> mAssetDataMap = new Dictionary<string, AssetData>();
 
         public bool IsComplete
         {
@@ -60,11 +60,11 @@ namespace AssetLoad
                 else
                 {
                     //获取该AB对应的请求数据
-                    ABAssetData cacheData = null;
-                    if (!mABAssetDataMap.TryGetValue(ab.name, out cacheData))
+                    AssetData cacheData = null;
+                    if (!mAssetDataMap.TryGetValue(ab.name, out cacheData))
                     {
-                        cacheData = new ABAssetData();
-                        mABAssetDataMap.Add(ab.name, cacheData);
+                        cacheData = new AssetData();
+                        mAssetDataMap.Add(ab.name, cacheData);
                     }
 
                     //是否有该资源的缓存
@@ -158,24 +158,25 @@ namespace AssetLoad
 
         public static void StopAllRequest()
         {
-            foreach (var data in mABAssetDataMap)
+            foreach (var data in mAssetDataMap)
             {
                 StopRequest(data.Value);
             }
 
-            mABAssetDataMap.Clear();
+            mAssetDataMap.Clear();
         }
 
         public static void StopRequest(string abName)
         {
-            ABAssetData data = null;
-            if (mABAssetDataMap.TryGetValue(abName, out data))
+            AssetData data = null;
+            if (mAssetDataMap.TryGetValue(abName, out data))
             {
                 StopRequest(data);
+                mAssetDataMap.Remove(abName);
             }
         }
 
-        private static void StopRequest(ABAssetData data)
+        private static void StopRequest(AssetData data)
         {
             if(data == null)
             {

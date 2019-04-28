@@ -25,7 +25,6 @@ public class Test : MonoBehaviour {
         Debuger.SwitchModule("test", true);
         mButton.onClick.AddListener(() =>
         {
-            ResourceManager.Instance.LoadAB("sprite");
             //LoadTest1();
             //LoadTest2();
             //LoadTest3();
@@ -35,8 +34,21 @@ public class Test : MonoBehaviour {
             //LoadTest7();
             //LoadTest8();
             //LoadTest9();
-            LoadSprite();
+            //LoadSprite();
+            //PreLoad();
+            ReleaseTest();
         });
+    }
+
+    void ReleaseTest()
+    {
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (Obj1, args) =>
+        {
+            if (Obj1 != null)
+                Obj1.name = "test1";
+        });
+
+        //ResourceManager.Instance.Release("cube");
     }
 
     //使用预加载的方式

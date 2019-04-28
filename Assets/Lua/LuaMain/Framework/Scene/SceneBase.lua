@@ -10,6 +10,7 @@ end
 
 --预加载资源
 function SceneBase:PreLoad()
+    Logger.Log(Logger.Module.SCENE, "SceneBase:PreLoad start")
     local totalCount = table.count(self.mPreLoadList)
     local loadCount = 0
     if(totalCount <= 0) then
@@ -17,10 +18,12 @@ function SceneBase:PreLoad()
     end
 
     for _,v in ipairs(self.mPreLoadList) do
-        local request = ResourceManager.Instance:PreLoadPrefabAsync(v.abName, v.assestName)
+        Logger.Log(Logger.Module.SCENE, "self.mPreLoadList start" .. v.abName)
+        local request = ResourceManager.Instance:PreLoadPrefabAsync(v.abName, v.assetName)
         coroutine.waitforasyncop(request, function () end)
         loadCount = loadCount + 1
         coroutine.yieldreturn(loadCount * 1.0 / totalCount)
+        Logger.Log(Logger.Module.SCENE, "self.mPreLoadList over" .. v.abName)
     end
 
     return coroutine.yieldbreak()
@@ -47,3 +50,5 @@ end
 function SceneBase:IsComplete()
     return true
 end
+
+return SceneBase
