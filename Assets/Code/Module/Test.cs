@@ -60,7 +60,7 @@ public class Test : MonoBehaviour {
     IEnumerator CoPreLoad()
     {
         Debuger.Log("test", "111 Frame Count : " + Time.frameCount);
-        yield return ResourceManager.Instance.PreLoadPrefabAsync("cube", "cube");
+        yield return ResourceManager.Instance.PreLoadPrefabRequest("cube", "cube");
         Debuger.Log("test", "start Frame Count : " + Time.frameCount);
         //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (obj, args)=>
         //{
@@ -73,14 +73,14 @@ public class Test : MonoBehaviour {
     IEnumerator CoLoad()
     {
         Debug.Log("start frame count : " + Time.frameCount);
-        AsyncRequest request = ResourceManager.Instance.LoadPrefabAsync("cube", "cube");
+        AsyncRequest request = ResourceManager.Instance.LoadPrefabRequest("cube", "cube");
         yield return request;
         Debug.Log("over frame count : " + Time.frameCount);
         GameObject obj = request.Asset as GameObject;
         obj.name = "success ok";
 
         Debug.Log("start frame count : " + Time.frameCount);
-        AsyncRequest request1 = ResourceManager.Instance.LoadPrefabAsync("cube", "cube");
+        AsyncRequest request1 = ResourceManager.Instance.LoadPrefabRequest("cube", "cube");
         yield return request1;
         Debug.Log("over frame count : " + Time.frameCount);
         GameObject obj1 = request.Asset as GameObject;

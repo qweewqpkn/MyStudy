@@ -381,7 +381,6 @@
     <Compile Include="Assets\XLua\Gen\UnityEngineGameObjectWrap.cs" />
     <Compile Include="Assets\XLua\Gen\UnityEngineKeyframeWrap.cs" />
     <Compile Include="Assets\XLua\Gen\UnityEngineLayerMaskWrap.cs" />
-    <Compile Include="Assets\XLua\Gen\UnityEngineLightWrap.cs" />
     <Compile Include="Assets\XLua\Gen\UnityEngineMathfWrap.cs" />
     <Compile Include="Assets\XLua\Gen\UnityEngineMonoBehaviourWrap.cs" />
     <Compile Include="Assets\XLua\Gen\UnityEngineObjectExtentionWrap.cs" />
