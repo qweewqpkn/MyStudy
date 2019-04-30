@@ -30,7 +30,7 @@ namespace AssetLoad
         }
 
         //协程加载AB
-        public AsyncRequest LoadABAsync(string abName)
+        public AsyncRequest LoadABRequest(string abName)
         {
             return HAssetBundle.LoadAsync(abName);
         }
@@ -50,7 +50,7 @@ namespace AssetLoad
         }
 
         //协程加载text
-        public AsyncRequest LoadTextAsync(string abName, string assetName)
+        public AsyncRequest LoadTextRequest(string abName, string assetName)
         {
             return HText.LoadAsync(abName, assetName);
         }
@@ -70,7 +70,7 @@ namespace AssetLoad
         }
 
         //协程加载prefab
-        public AsyncRequest LoadPrefabAsync(string abName, string assetName, params object[] args)
+        public AsyncRequest LoadPrefabRequest(string abName, string assetName, params object[] args)
         {
             return HPrefab.LoadAsync(abName, assetName, args);
         }
@@ -82,7 +82,7 @@ namespace AssetLoad
         }
 
         //预加载prefab协程形式
-        public AsyncRequest PreLoadPrefabAsync(string abName, string assetName, params object[] args)
+        public AsyncRequest PreLoadPrefabRequest(string abName, string assetName, params object[] args)
         {
             return HPrefab.PreLoadAsync(abName, assetName, args);
         }
@@ -102,7 +102,7 @@ namespace AssetLoad
         }
 
         //协程加载图集
-        public AsyncRequest LoadSpriteAsync(string abName, string assetName)
+        public AsyncRequest LoadSpriteRequest(string abName, string assetName)
         {
             return HSprite.LoadAsync(abName, assetName);
         }
@@ -122,7 +122,7 @@ namespace AssetLoad
         }
 
         //协程加载贴图
-        public AsyncRequest LoadTextureAsync(string abName, string assetName)
+        public AsyncRequest LoadTextureRequest(string abName, string assetName)
         {
             return HTexture.LoadAsync(abName, assetName);
         }
@@ -142,7 +142,7 @@ namespace AssetLoad
         }
 
         //协程加载贴图
-        public AsyncRequest LoadAudioClipAsync(string abName, string assetName)
+        public AsyncRequest LoadAudioClipRequest(string abName, string assetName)
         {
             return HAudioCilp.LoadAsync(abName, assetName);
         }
@@ -162,7 +162,7 @@ namespace AssetLoad
         }
 
         //协程加载材质
-        public AsyncRequest LoadMaterialAsync(string abName, string assetName)
+        public AsyncRequest LoadMaterialRequest(string abName, string assetName)
         {
             return HMaterial.LoadAsync(abName, assetName);
         }
@@ -182,7 +182,7 @@ namespace AssetLoad
         }
 
         //协程加载shader
-        public AsyncRequest LoadShaderAsync(string abName, string assetName)
+        public AsyncRequest LoadShaderRequest(string abName, string assetName)
         {
             return HShader.LoadAsync(abName, assetName);
         }
@@ -202,7 +202,7 @@ namespace AssetLoad
         }
 
         //协程加载lua
-        public AsyncRequest LoadLuaAsync(string abName, string assetName)
+        public AsyncRequest LoadLuaRequest(string abName, string assetName)
         {
             return HLua.LoadAsync(abName, assetName);
         }
