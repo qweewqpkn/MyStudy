@@ -21,7 +21,6 @@ function UIBase:OpenPanel(...)
         self.mPanelState = 1
 
         --加载界面资源
-        Logger.Log(Logger.Module.UI, "load ui : " .. self.mAbPath)
         ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
             --加载完成后，界面被标记为关闭
 			if self.mPanelState == 0 then
@@ -37,6 +36,7 @@ function UIBase:OpenPanel(...)
 
             --处理栈逻辑
             if self.mIsStack then
+                --如果新打开的界面是全屏界面,那么就将栈顶的界面隐藏
                 if(self.mIsFullScreen)then
                     local view = UIManager:GetInstance().mViewStack:Peek()
                     if view ~= nil then
@@ -45,6 +45,8 @@ function UIBase:OpenPanel(...)
                 end
 
                 UIManager:GetInstance().mViewStack:Push(self)
+
+                --如果有
                 if UIManager:GetInstance():IsStackHaveFullScreen() then
                     if UIManager:GetInstance().mMainUI ~= nil then
                         UIManager:GetInstance().mMainUI:HidePanel()

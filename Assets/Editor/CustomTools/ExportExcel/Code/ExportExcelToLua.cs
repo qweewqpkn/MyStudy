@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 using System.Text;
 using UnityEditor;
+using UnityEngine;
 
 class ExportExcelToLua
 {
@@ -14,15 +15,15 @@ class ExportExcelToLua
     [MenuItem("Tools/Excel Export/Excel导出为Lua")]
     public static void Export()
     {
-        mCodePath = "E:/Test/Unity/MyStudy/Assets/Editor/CustomTools/ExportExcel/ExportLua/";
-        mExcelPath = "E:/Test/Unity/MyStudy/Assets/Editor/CustomTools/ExportExcel/Excel/";
+        mCodePath = PathManager.LUA_ROOT_PATH + "/LuaMain/Config/";
+        mExcelPath = Application.dataPath + "/Excel";
 
         //所有excel配置
         string[] allExcelPath = Directory.GetFiles(mExcelPath);
         for (int i = 0; i < allExcelPath.Length; i++)
         {
             string extensionName = Path.GetExtension(allExcelPath[i]);
-            if (extensionName == ".xlsx")
+            if (extensionName == ".xlsx" || extensionName == ".xls")
             {
                 FileStream excelFS = File.Open(allExcelPath[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 IExcelDataReader reader = ExcelReaderFactory.CreateReader(excelFS);
@@ -79,6 +80,14 @@ class ExportExcelToLua
                     DataType type = ExportExcelUtility.SwitchTypeToEnumType(typeRow[j].ToString());
                     switch (type)
                     {
+                        case DataType.eInt:
+                        case DataType.eFloat:
+                        case DataType.eBool:
+                        case DataType.eShort:
+                            {
+                                sb.AppendFormat("{0} = {1}, ", nameRow[j], strValue);
+                            }
+                            break;
                         case DataType.eString:
                             {
                                 sb.AppendFormat("{0} = \"{1}\", ", nameRow[j], strValue);
@@ -180,9 +189,9 @@ class ExportExcelToLua
                             break;
                         default:
                             {
-                                sb.AppendFormat("{0} = {1}, ", nameRow[j], strValue);
+                                Debug.LogError(string.Format("配置表{0}, 第{1}列类型指定错误, 请检查配置表!", fileName, j + 1));
+                                return;
                             }
-                            break;
                     }
                 }
             }
@@ -192,6 +201,11 @@ class ExportExcelToLua
         sb.AppendLine("}");
         sb.AppendLine(endFlag);
         sb.Append(endContent);
+        string returnStr = string.Format("return {0}", fileName);
+        if (!endContent.Contains(returnStr))
+        {
+            sb.Append(returnStr);
+        }
         sw.Write(sb);
 
         sw.Close();

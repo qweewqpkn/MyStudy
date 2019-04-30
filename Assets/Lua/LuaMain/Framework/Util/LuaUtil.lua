@@ -5,7 +5,7 @@
 -- 1、SafePack和SafeUnpack会被大量使用，到时候看需要需要做记忆表降低GC
 --]]
 
-local unpack = unpack or table.unpack
+local unpack = table.unpack
 
 -- 解决原生pack的nil截断问题，SafePack与SafeUnpack要成对使用
 function SafePack(...)

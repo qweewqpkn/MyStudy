@@ -495,6 +495,7 @@
     <None Include="Assets\Code\Render\Fog\Fog_Common\Fog_Common.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_Internel\Fog_Internel.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_PostProcess\Fog_PostProcess.shader" />
+    <None Include="Assets\Code\Render\Fur\Fur.shader" />
     <None Include="Assets\Code\Render\GodRays\GodRays1\GodRays1.shader" />
     <None Include="Assets\Code\Render\GodRays\GodRays2\GodRays2.shader" />
     <None Include="Assets\Code\Render\Hair\Hair.shader" />

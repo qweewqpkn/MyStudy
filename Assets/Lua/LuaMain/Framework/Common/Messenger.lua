@@ -47,15 +47,17 @@ end
 
 function Messenger:RemoveByTarget(target)
 	for k,v in pairs(self.mNotifies) do
-		local count = #v
-		for i = count, 1, -1 do
-			if(v[i].target == target) then
-				table.remove(v, i)
+		if(v ~= nil) then
+			local count = #v
+			for i = count, 1, -1 do
+				if(v[i].target == target) then
+					table.remove(v, i)
+				end
 			end
-		end
 
-		if(#v == 0) then
-			self.mNotifies[k] = nil
+			if(#v == 0) then
+				self.mNotifies[k] = nil
+			end
 		end
 	end
 end
@@ -69,6 +71,10 @@ function Messenger:RemoveByFunc(id, func)
 				table.remove(v, i)
 				break
 			end
+		end
+
+		if(#v == 0) then
+			self.mNotifies[id] = nil
 		end
 	end
 end

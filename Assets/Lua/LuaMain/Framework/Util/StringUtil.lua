@@ -3,7 +3,7 @@
 -- string扩展工具类，对string不支持的功能执行扩展
 --]]
 
-local unpack = unpack or table.unpack
+local unpack = table.unpack
 
 -- 字符串分割
 -- @split_string：被分割的字符串

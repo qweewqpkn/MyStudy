@@ -13,35 +13,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneManager.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="501">
-              <caret line="61" column="32" lean-forward="true" selection-start-line="61" selection-start-column="32" selection-end-line="61" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneConfig.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="9" column="18" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="18" />
+            <state relative-caret-position="440">
+              <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Scene/LoginScene.lua">
+        <entry file="file://$PROJECT_DIR$/Main.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="500">
-              <caret line="34" column="44" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="44" />
+            <state relative-caret-position="320">
+              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Framework/Updater/Coroutine.lua">
+        <entry file="file://$PROJECT_DIR$/Scene/LoginScene.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="129" column="25" selection-start-line="129" selection-start-column="15" selection-end-line="129" selection-end-column="25" />
+            <state relative-caret-position="680">
+              <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/strict.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -49,35 +49,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneBase.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="24" column="39" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="39" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Framework/Common/BaseClass.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UI/View/Main/ui_main.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="17" column="46" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UI/View/Loading/ui_loading.lua">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="10" column="31" lean-forward="true" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
+            <state relative-caret-position="440">
+              <caret line="22" column="18" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -85,17 +58,44 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Framework/Define/Global.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="37" column="34" selection-start-line="37" selection-start-column="34" selection-end-line="37" selection-end-column="34" />
+            <state relative-caret-position="500">
+              <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/UnityEngine/Object.lua">
+        <entry file="file://$PROJECT_DIR$/Framework/Util/LuaUtil.lua">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+            <state relative-caret-position="140">
+              <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UI/View/Main/ui_main.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1240">
+              <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Framework/Util/StringUtil.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Framework/Define/Config.lua">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -111,9 +111,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>LogError</find>
-      <find>Logger</find>
-      <find>print</find>
       <find>ReleasePoolGO</find>
       <find>Release</find>
       <find>totalCount</find>
@@ -141,6 +138,9 @@
       <find>SwitchScene</find>
       <find>PreLoad</find>
       <find>yieldstart</find>
+      <find>__update_timer</find>
+      <find>print(&quot;xxxxx : &quot; .. debug.getinfo(1, &quot;S&quot;).what)</find>
+      <find>Layer</find>
     </findStrings>
     <replaceStrings>
       <replace>gameObject</replace>
@@ -158,14 +158,11 @@
         <option value="$PROJECT_DIR$/Framework/Common/Class.lua" />
         <option value="$PROJECT_DIR$/UI/View/ui_main.lua" />
         <option value="$PROJECT_DIR$/Framework/Common/Stack.lua" />
-        <option value="$PROJECT_DIR$/Framework/Define/Config.lua" />
         <option value="$PROJECT_DIR$/Framework/Common/BaseClass.lua" />
         <option value="$PROJECT_DIR$/Framework/UI/UIRegister.lua" />
-        <option value="$PROJECT_DIR$/Framework/Util/LuaUtil.lua" />
         <option value="$PROJECT_DIR$/Framework/Util/TimeStrUtil.lua" />
         <option value="$PROJECT_DIR$/Framework/Util/GoUtil.lua" />
         <option value="$PROJECT_DIR$/Framework/Common/UpdatableSingleton.lua" />
-        <option value="$PROJECT_DIR$/Framework/Updater/TimerManager.lua" />
         <option value="$PROJECT_DIR$/Framework/Updater/UpdateManager.lua" />
         <option value="$PROJECT_DIR$/Framework/Common/Singleton.lua" />
         <option value="$PROJECT_DIR$/Test/UpadateTest.lua" />
@@ -182,28 +179,37 @@
         <option value="$PROJECT_DIR$/Framework/UI/UIBase.lua" />
         <option value="$PROJECT_DIR$/Framework/Define/Consts.lua" />
         <option value="$PROJECT_DIR$/Framework/UI/UIManager.lua" />
-        <option value="$PROJECT_DIR$/Main.lua" />
         <option value="$PROJECT_DIR$/UI/View/Loading/ui_loading.lua" />
-        <option value="$PROJECT_DIR$/UI/View/Main/ui_main.lua" />
         <option value="$PROJECT_DIR$/Framework/Updater/Coroutine.lua" />
         <option value="$PROJECT_DIR$/Scene/LoginScene.lua" />
-        <option value="$PROJECT_DIR$/Framework/Define/Global.lua" />
         <option value="$PROJECT_DIR$/Framework/Scene/SceneBase.lua" />
         <option value="$PROJECT_DIR$/Framework/Scene/SceneManager.lua" />
+        <option value="$PROJECT_DIR$/Test/TestUpdate.lua" />
+        <option value="$PROJECT_DIR$/Framework/Util/StringUtil.lua" />
+        <option value="$PROJECT_DIR$/Framework/Define/Config.lua" />
+        <option value="$PROJECT_DIR$/Framework/Updater/TimerManager.lua" />
+        <option value="$PROJECT_DIR$/UI/View/Main/ui_main.lua" />
+        <option value="$PROJECT_DIR$/Framework/Common/Tools/event.lua" />
+        <option value="$PROJECT_DIR$/Framework/Util/LuaUtil.lua" />
+        <option value="$PROJECT_DIR$/Framework/Common/Tools/strict.lua" />
+        <option value="$PROJECT_DIR$/Framework/Define/Global.lua" />
+        <option value="$PROJECT_DIR$/Main.lua" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
+    <option name="x" value="-1036" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="width" value="1044" />
+    <option name="height" value="1936" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -219,12 +225,42 @@
             <path>
               <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
               <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="Framework" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="Framework" type="462c0819:PsiDirectoryNode" />
+              <item name="Common" type="462c0819:PsiDirectoryNode" />
+              <item name="Tools" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="Framework" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
               <item name="Scene" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
               <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="Test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
               <item name="UI" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+              <item name="Model" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
@@ -235,32 +271,26 @@
             <path>
               <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
               <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
-              <item name="XLua" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+              <item name="View" type="462c0819:PsiDirectoryNode" />
+              <item name="Loading" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+              <item name="View" type="462c0819:PsiDirectoryNode" />
+              <item name="Main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
               <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
               <item name="XLua" type="462c0819:PsiDirectoryNode" />
-              <item name="Common" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
-              <item name="XLua" type="462c0819:PsiDirectoryNode" />
-              <item name="Perf" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="LuaMain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LuaMain" type="462c0819:PsiDirectoryNode" />
-              <item name="XLua" type="462c0819:PsiDirectoryNode" />
-              <item name="Tdr" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -296,10 +326,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-1036" y="-8" width="1044" height="1936" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12592202" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23757455" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -320,7 +350,7 @@
       <window_info anchor="right" id="Palette&#9;" order="3" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13593256" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12592202" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -342,15 +372,6 @@
     </layout-to-restore>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Framework/UI/UIManager.lua.meta">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/UI/UIBase.lua.meta">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/UnityEngine/LayerMask.lua">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="jar://$APPLICATION_PLUGINS_DIR$/EmmyLua/lib/EmmyLua-1.2.8-IDEA182.jar!/std/Lua53/table.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
@@ -442,13 +463,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Util/StringUtil.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="42" column="13" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$APPLICATION_PLUGINS_DIR$/EmmyLua/lib/EmmyLua-1.2.8-IDEA182.jar!/std/Lua53/global.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4240">
@@ -477,13 +491,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Define/Config.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Define/Rename.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -505,20 +512,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Updater/UpdateManager.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="11" column="47" selection-start-line="11" selection-start-column="47" selection-end-line="11" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Updatable.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" selection-start-line="8" selection-end-line="32" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Pool/PoolGO.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -526,31 +519,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Updater/TimerManager.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1540">
-          <caret line="77" column="52" selection-start-line="77" selection-start-column="52" selection-end-line="77" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/event.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-319">
-          <caret line="24" column="25" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Common/Messenger.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="36" column="56" selection-start-line="36" selection-start-column="56" selection-end-line="36" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Util/LuaUtil.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="10" column="9" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -563,13 +535,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Define/Consts.lua">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Main.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="10" column="40" lean-forward="true" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Framework/UI/UIManager.lua">
       <provider selected="true" editor-type-id="text-editor">
@@ -585,10 +550,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneConfig.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Updater/Coroutine.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2580">
+          <caret line="129" column="25" selection-start-line="129" selection-start-column="15" selection-end-line="129" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/UI/View/Loading/ui_loading.lua">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
-          <caret line="10" column="31" lean-forward="true" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
+          <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -599,59 +578,122 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Define/Global.lua">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="37" column="34" selection-start-line="37" selection-start-column="34" selection-end-line="37" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Common/BaseClass.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
+        <state relative-caret-position="120">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/UI/View/Main/ui_main.lua">
+    <entry file="file://$PROJECT_DIR$/Test/TestUpdate.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="17" column="46" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="46" />
+        <state>
+          <caret column="48" lean-forward="true" selection-start-column="48" selection-end-column="48" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneConfig.lua">
+    <entry file="file://$PROJECT_DIR$/Framework/Common/Updatable.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" column="18" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="18" />
+        <state relative-caret-position="-326">
+          <caret line="10" column="9" lean-forward="true" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneBase.lua">
+    <entry file="file://$PROJECT_DIR$/Framework/Updater/UpdateManager.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="24" column="39" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="39" />
+        <state relative-caret-position="240">
+          <caret line="48" column="31" lean-forward="true" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Framework/Updater/Coroutine.lua">
+    <entry file="file://$PROJECT_DIR$/Framework/Updater/TimerManager.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="129" column="25" selection-start-line="129" selection-start-column="15" selection-end-line="129" selection-end-column="25" />
+        <state relative-caret-position="435">
+          <caret line="155" column="14" lean-forward="true" selection-start-line="155" selection-start-column="14" selection-end-line="155" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/UnityEngine/LayerMask.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="28" lean-forward="true" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/event.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="121" column="44" selection-start-line="121" selection-start-column="44" selection-end-line="121" selection-end-column="44" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneManager.lua">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="61" column="32" lean-forward="true" selection-start-line="61" selection-start-column="32" selection-end-line="61" selection-end-column="32" />
+        <state relative-caret-position="440">
+          <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Scene/LoginScene.lua">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="680">
+          <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Common/Tools/strict.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Define/Global.lua">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="500">
-          <caret line="34" column="44" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="44" />
+          <caret line="25" column="46" selection-start-line="25" selection-start-column="46" selection-end-line="25" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Util/LuaUtil.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UI/View/Main/ui_main.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1240">
+          <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Util/StringUtil.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Define/Config.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Framework/Scene/SceneBase.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="22" column="18" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Main.lua">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
         </state>
       </provider>
     </entry>

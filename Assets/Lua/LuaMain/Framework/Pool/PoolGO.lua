@@ -13,6 +13,9 @@ function PoolGO:__init(go, parent, size, ctor, dtor)
         GoUtil.SetActive(newObj, false)
         GoUtil.SetParent(newObj, self.mParentObj)
         table.insert(self.mNotUseList, newObj)
+        if(self.mCtor ~= nil) then
+            self.mCtor(newObj)
+        end
     end
 end
 
@@ -28,10 +31,9 @@ function PoolGO:Spawn()
         newObj = table.remove(self.mNotUseList)
     else
         newObj = CS.UnityEngine.GameObject.Instantiate(self.mGoTemplate)
-    end
-
-    if(self.mCtor ~= nil) then
-        self.mCtor(newObj)
+        if(self.mCtor ~= nil) then
+            self.mCtor(newObj)
+        end
     end
 
     table.insert(self.mUseList, newObj)
