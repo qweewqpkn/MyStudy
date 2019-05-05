@@ -582,7 +582,7 @@ PlayerSettings:
   webGLUseWasm: 0
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
-    1: LOG_OPEN
+    1: 
     4: 
     7: LOG_OPEN
   platformArchitecture: {}

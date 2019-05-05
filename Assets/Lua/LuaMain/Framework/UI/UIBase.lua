@@ -13,6 +13,7 @@ function UIBase:__init(...)
     self.mIsRestore = false --战斗返回需要恢复的界面
     self.mUseSelfSorting = false --是否使用自带层级
     self.mUseLayer = 1 --界面使用了多少层级，默认为1
+    self.mSortingOrder = 0 --界面使用的层级
 end
 
 function UIBase:OpenPanel(...)
@@ -34,30 +35,12 @@ function UIBase:OpenPanel(...)
                 return
             end
 
-            --处理栈逻辑
-            if self.mIsStack then
-                --如果新打开的界面是全屏界面,那么就将栈顶的界面隐藏
-                if(self.mIsFullScreen)then
-                    local view = UIManager:GetInstance().mViewStack:Peek()
-                    if view ~= nil then
-                        view:HidePanel()
-                    end
-                end
-
-                UIManager:GetInstance().mViewStack:Push(self)
-
-                --如果有
-                if UIManager:GetInstance():IsStackHaveFullScreen() then
-                    if UIManager:GetInstance().mMainUI ~= nil then
-                        UIManager:GetInstance().mMainUI:HidePanel()
-                    end
-                end
-            end
-
             --绑定ui的控件
             CS.UIComponentBind.BindToLua(obj, self)
             --把界面加载指定层级
             UIManager:GetInstance():AddLayer(self)
+            --处理栈逻辑
+            self:StackProcess()
             --绑定
             self:OnBind()
             --初始化
@@ -67,15 +50,36 @@ function UIBase:OpenPanel(...)
         end)
     elseif self.mPanelState == 3 then
         self:ShowPanel(...)
+        self:StackProcess()
+    end
+end
+
+--栈处理　
+function UIBase:StackProcess()
+    if self.mIsStack then
+        if(self.mIsFullScreen)then
+            local view = UIManager:GetInstance().mViewStack:Peek()
+            if view ~= nil then
+                view:HidePanel()
+            end
+        end
+        UIManager:GetInstance().mViewStack:Push(self)
+
+        --如果有
+        if UIManager:GetInstance():IsStackHaveFullScreen() then
+            if UIManager:GetInstance().mMainUI ~= nil then
+                UIManager:GetInstance().mMainUI:HidePanel()
+            end
+        end
     end
 end
 
 --显示界面
 function UIBase:ShowPanel(...)
+    self.mPanelState = 2
     if self.gameObject ~= nil then
         self.gameObject:SetActive(true)
     end
-    self.mPanelState = 2
     self:AnimationIn()
     self:SetCanvas()
     self:OnShow(...)
@@ -134,16 +138,7 @@ function UIBase:SetCanvas()
         return
     end
     canvas.overrideSorting = true
-    if(self.mIsMainUI)then
-        UIManager:GetInstance().mPanelSortingOrder = 0
-        canvas.sortingOrder = 0
-        UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.mUseLayer
-        return
-    end
-
-    canvas.sortingOrder = UIManager:GetInstance().mPanelSortingOrder + 1
-    UIManager:GetInstance().mPanelSortingOrder = UIManager:GetInstance().mPanelSortingOrder + self.mUseLayer
-    --canvas.sortingOrder = UIManager:GetInstance().mPanelSortingOrder
+    canvas.sortingOrder = self.mSortingOrder
 end
 
 --绑定各种事情(为了让子类重写)

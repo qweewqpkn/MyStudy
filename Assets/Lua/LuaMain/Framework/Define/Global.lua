@@ -51,3 +51,7 @@ UpdateManager = require "Framework.Updater.UpdateManager"
 
 UIManager:GetInstance()
 UpdateManager:GetInstance()
+
+require "UI.View.Main.ui_main"
+require "UI.View.Test.ui_test"
+require "UI.View.Mail.ui_mail"

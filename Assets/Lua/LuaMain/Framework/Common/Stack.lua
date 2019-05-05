@@ -1,7 +1,11 @@
 local Stack = BaseClass("Stack")
 
-function Stack:ctor(...)
+function Stack:__init(...)
     self.list = {}
+end
+
+function Stack:__delete()
+    self.list = nil
 end
 
 function Stack:Clear()

@@ -13,18 +13,8 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    --self.mPoolGo = PoolManager:GetInstance():GetPoolGO(self.b_t_items, 10)
---
-    --self.newObj1 = self.mPoolGo:Spawn()
-    --self.newObj2 = self.mPoolGo:Spawn()
-    --self.newObj3 = self.mPoolGo:Spawn()
-
-    for i = 1, 100000 do
-        --if(i == 10000001) then
-        --    print("输出了")
-        --end
-        --Debuger.Log("other", "输出了")
-        end
+    UIManager:GetInstance():OpenPanel("ui_test")
+    --UIManager:GetInstance():OpenPanel("ui_mail")
 end
 
 function ui_main:OnRelease()
@@ -36,6 +26,7 @@ end
 function ui_main:__init(...)
 	self.mAbPath = 'ui_main'
     self.mIsDontDestroy = true
+    self.mIsMainUI = true
 end
 
 --绑定事件(一次)

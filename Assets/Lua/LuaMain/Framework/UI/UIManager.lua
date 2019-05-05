@@ -16,8 +16,9 @@ function UIManager:__init(...)
     self.mCurrentView = nil
     self.mViewStack = Stack.New() --存放进栈的界面
     self.mMainUI = nil --主界面
+    self.mMainUIName = nil --主界面名字
     self.mInShowViewList = {} --显示的UI界面
-    self.mPanelSortingOrder = 0--界面排序，打开界面后+1
+    self.mSortingOrder = 0--界面排序，打开界面后+1
     self.mRestoreList = {} --战斗中返回，需要恢复的界面
     self.mCloseCallBack = nil --关闭页面的回调
 end
@@ -27,7 +28,7 @@ function UIManager:RegisterCreateFunc(uiName,func)
     self.mCreateUIFuncList[uiName] = tab
 end
 
-function UIManager:GetPanel(uiName,log)
+function UIManager:GetPanel(uiName)
     local ret = nil
 
     for _,v in ipairs(self.mViewList) do
@@ -36,14 +37,7 @@ function UIManager:GetPanel(uiName,log)
             break
         end
     end
-    if nil == ret and log then
-        Logger.LogWarning(Logger.Module.UI, "UIManager.GetPanel,panel is null,uiname=",uiName)
-    end
-    return ret
-end
 
-function UIManager:OpenPanel(uiName, ...)
-    local ret = self:GetPanel(uiName,false)
     if nil == ret then
         if self.mCreateUIFuncList[uiName] ~= nil then
             ret = self.mCreateUIFuncList[uiName].func()
@@ -52,14 +46,22 @@ function UIManager:OpenPanel(uiName, ...)
         end
     end
 
-    if nil ~= ret then
-        if ret.mIsMainUI then
-            self.mMainUI = ret
-        end
-
-        self:SetCurrentView(ret)
-        ret:OpenPanel(...)
+    if ret.mIsMainUI then
+        self.mMainUI = ret
+        self.mMainUIName = uiName
+        self.mSortingOrder = 0 --打开主界面，那么重置界面order
     end
+
+    --设置界面的层级
+    ret.mSortingOrder =  self.mSortingOrder
+    self.mSortingOrder =  self.mSortingOrder + ret.mUseLayer
+    self:SetCurrentView(ret)
+    return ret
+end
+
+function UIManager:OpenPanel(uiName, ...)
+    local ret = self:GetPanel(uiName)
+    ret:OpenPanel(...)
     return ret
 end
 
@@ -108,7 +110,6 @@ function UIManager:ClosePanel(uiName)
                 self.mViewStack:Pop()
                 if self.mViewStack:Count() > 0 then
                     view = self.mViewStack:Peek()
-                    --view:OpenPanel(view.mPanelData)
                     view:ShowPanel()
                 end
             else
@@ -129,7 +130,7 @@ function UIManager:ClosePanel(uiName)
         if(not(self.mIsInMiniGame))then
             if not self:IsStackHaveFullScreen() then
                 if self.mMainUI ~= nil then
-                    self.mMainUI:OpenPanel(self.mMainUI.mPanelData)
+                    self:OpenPanel(self.mMainUIName, self.mMainUI.mPanelData)
                 end
             end
         end
@@ -203,6 +204,7 @@ function UIManager:DisposeAllPanel()
     self.mViewList = {}
     self.mViewStack:Clear()
     self.mMainUI = nil
+    self.mMainUIName = nil
     self.mInShowViewList = {}
 end
 

@@ -14,17 +14,19 @@ function Test:Start()
     --local t = testUpdatable.New()
 
     --测试类的继承构造函数和析构函数
-    --local testSubClass = require "Test.TestClass.TestSubClass"
-    --local t = testSubClass.New(123, "测试lua")
-    --t:Delete()
+    local testSubClass = require "Test.TestClass.TestSubClass"
+    local t = testSubClass.New(123, "测试lua")
+    t:Test()
+    t:Delete()
 
     --测试Messenger框架内的消息通信
     --local testMessenger = require "Test.TestMessenger"
     --testMessenger:Test3()
 
     --测试协程
-    local testCoroutine = require "Test.TestCoroutine"
-    testCoroutine:Test1()
+    --local testCoroutine = require "Test.TestCoroutine"
+    --testCoroutine:Test1()
+    --testCoroutine:Test2()
 end
 
 return Test

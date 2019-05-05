@@ -24,7 +24,6 @@ function BaseClass(classname, super)
 	class_type.__cname = classname
 	class_type.__ctype = ClassType.class
 
-	class_type.super = super
 	class_type.New = function(...)
 		-- 生成一个类对象
 		local obj = {}
@@ -77,6 +76,7 @@ function BaseClass(classname, super)
 		__index = vtbl,
 	})
 
+	class_type.super = super
 	if super then
 		setmetatable(vtbl, {
 			__index = function(t,k)
