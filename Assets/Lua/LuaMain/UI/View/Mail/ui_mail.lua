@@ -9,7 +9,6 @@ local ui_mail = BaseClass("ui_mail", UIBase)
 function ui_mail:__init(...)
 	self.mAbPath = 'ui_mail'
     self.mIsStack = true
-    self.mIsFullScreen = true
 end
 
 function ui_mail:OnBack()

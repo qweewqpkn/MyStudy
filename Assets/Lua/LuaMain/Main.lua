@@ -9,13 +9,9 @@ local function Start()
 	Logger.Log(Logger.Module.COMMON, "logic start")
 	UpdateManager:GetInstance():Startup()
 	TimerManager:GetInstance():Startup()
-	UIManager:GetInstance():OpenPanel("ui_main")
-	UIManager:GetInstance():OpenPanel("ui_test")
-	UIManager:GetInstance():OpenPanel("ui_test")
-	UIManager:GetInstance():OpenPanel("ui_mail")
+	--UIManager:GetInstance():OpenPanel("ui_mail")
 	--NetMessageMgr:GetInstance():InitNet();
-	--local Test = require "Test.Test"
-	--Test:Start()
+	UIManager:GetInstance():OpenPanel("ui_main")
 end
 
 Main.Start = Start

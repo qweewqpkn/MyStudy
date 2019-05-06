@@ -9,7 +9,6 @@ local ui_test = BaseClass("ui_test", UIBase)
 function ui_test:__init(...)
 	self.mAbPath = 'ui_test'
     self.mIsStack = true
-    self.mIsFullScreen = true
     self.mUseLayer = 5
     self.mIsDontDestroy = true
 end

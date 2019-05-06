@@ -13,8 +13,8 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    UIManager:GetInstance():OpenPanel("ui_test")
-    --UIManager:GetInstance():OpenPanel("ui_mail")
+    local Test = require "Test.Test"
+    Test:Start()
 end
 
 function ui_main:OnRelease()

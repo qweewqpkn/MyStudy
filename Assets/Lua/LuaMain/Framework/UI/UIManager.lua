@@ -13,14 +13,11 @@ function UIManager:__init(...)
     self.mLayerAlert = self.mUIRoot:Find("LayerAlert") --警告层
     self.mViewList = {} --存放所有打开的界面(不论隐藏与否)
     self.mCreateUIFuncList = {}
-    self.mCurrentView = nil
     self.mViewStack = Stack.New() --存放进栈的界面
     self.mMainUI = nil --主界面
     self.mMainUIName = nil --主界面名字
     self.mInShowViewList = {} --显示的UI界面
     self.mSortingOrder = 0--界面排序，打开界面后+1
-    self.mRestoreList = {} --战斗中返回，需要恢复的界面
-    self.mCloseCallBack = nil --关闭页面的回调
 end
 
 function UIManager:RegisterCreateFunc(uiName,func)
@@ -49,13 +46,9 @@ function UIManager:GetPanel(uiName)
     if ret.mIsMainUI then
         self.mMainUI = ret
         self.mMainUIName = uiName
-        self.mSortingOrder = 0 --打开主界面，那么重置界面order
     end
 
-    --设置界面的层级
-    ret.mSortingOrder =  self.mSortingOrder
-    self.mSortingOrder =  self.mSortingOrder + ret.mUseLayer
-    self:SetCurrentView(ret)
+    self:AddInShowViewList(ret)
     return ret
 end
 
@@ -65,133 +58,38 @@ function UIManager:OpenPanel(uiName, ...)
     return ret
 end
 
+function UIManager:ClosePanel(uiName)
+    for k,v in ipairs(self.mViewList) do
+        if v.mUIName == uiName then
+            self:RemoveInShowViewList(uiName)
+            v:ExitStack()
+            v:ClosePanel()
+            break
+        end
+    end
+end
 
 function UIManager:SwitchPanel(uiName, data)
     if #self.mInShowViewList > 0 then
         for i = #self.mInShowViewList,1,-1 do
             self:ClosePanel(self.mInShowViewList[i].mUIName)
         end
-        self.mCurrentView = nil
     end
 
     return self:OpenPanel(uiName, data)
 end
 
-function UIManager:RemoveInShowViewList(uiname)
-    for k,v in ipairs(self.mInShowViewList) do
-        if v.mUIName == uiname then
-            table.remove(self.mInShowViewList, k)
-            break
-        end
-    end
-    
-end
-
-function UIManager:ClosePanel(uiName)
-    local ret = nil
-    for k,v in ipairs(self.mViewList) do
-        if v.mUIName == uiName then
-            self:RemoveInShowViewList(uiName)
-            if v:ClosePanel() then 
-                table.remove( self.mViewList,k)
-            end
-            if v == self.mCurrentView then
-                self.mCurrentView = nil
-            end
-            ret = v
-            break
-        end
-    end
-
-    if nil ~= ret and ret.mIsStack then
-        local view = self.mViewStack:Peek()
-        if view ~= nil then
-            if view.mUIName == uiName then
-                self.mViewStack:Pop()
-                if self.mViewStack:Count() > 0 then
-                    view = self.mViewStack:Peek()
-                    view:ShowPanel()
-                end
-            else
-                while true do
-                    view = self.mViewStack:Pop()
-                    if view == nil or view.mUIName == uiName then
-                        break
-                    end
-                end
-
-                view = self.mViewStack:Peek()
-                if view ~= nil then
-                    view:ShowPanel()
-                end
-            end
-        end
-
-        if(not(self.mIsInMiniGame))then
-            if not self:IsStackHaveFullScreen() then
-                if self.mMainUI ~= nil then
-                    self:OpenPanel(self.mMainUIName, self.mMainUI.mPanelData)
-                end
-            end
-        end
-    end
-
-    if self.mCloseCallBack ~= nil then
-        self.mCloseCallBack(uiName)
-    end
-    return ret
-end
-
-function UIManager:SetCurrentView(view)
-    self.mCurrentView = view
-
-    local ret = false
-    for _,v in ipairs(self.mInShowViewList) do
-        if v.mUIName == view.mUIName then
-            ret = true
-            break
-        end
-    end
-    if not ret then
-        table.insert(self.mInShowViewList,view)
-    end
-end
-
-function UIManager:GetCurrentViewName()
-    if nil ~= self.mCurrentView then
-        return self.mCurrentView.mUIName
-    else
-        return nil
-    end
-end
-
 function UIManager:HideAllPanel()
-    for _,v in pairs(self.mViewList) do
-        if(v.mIsRestore)then
-            table.insert(self.mRestoreList, v)
-        end
-        v:HidePanel()
+    for i = #self.mViewList,1,-1 do
+        self.mViewList[i]:HidePanel()
     end
     self.mViewStack:Clear()
     self.mInShowViewList = {}
-    self.mCurrentView = nil
-end
-
-function UIManager:RestorePanel()
-    for k, v in pairs(self.mRestoreList) do
-        if(v.mIsRestore)then
-            self:OpenPanel(v.mUIName, v.mPanelData)
-            v:ShowPanel()
-        end
-    end
-    self.mRestoreList = {}
 end
 
 function UIManager:CloseAllPanel()
     for i = #self.mViewList,1,-1 do
-        if self.mViewList[i]:ClosePanel() then
-            table.remove( self.mViewList,i) --如果是销毁页面的，直接将对应的UI表也消除
-        end
+        self.mViewList[i]:ClosePanel()
     end
     self.mViewStack:Clear()
     self.mInShowViewList = {}
@@ -203,20 +101,52 @@ function UIManager:DisposeAllPanel()
     end
     self.mViewList = {}
     self.mViewStack:Clear()
+    self.mInShowViewList = {}
     self.mMainUI = nil
     self.mMainUIName = nil
-    self.mInShowViewList = {}
 end
 
-function UIManager:AddLayer(ui)
-    if ui.mLayer == 1 then
-        ui.transform:SetParent(self.mLayerBG, false)
-    elseif ui.mLayer ==2 then
-        ui.transform:SetParent(self.mLayerWindow, false)
-    elseif ui.mLayer ==3 then
-        ui.transform:SetParent(self.mLayerAlert, false)
-    elseif ui.mLayer == 4 then
-        ui.transform:SetParent(self.mLayerGuide, false)
+function UIManager:AddInShowViewList(view)
+    local ret = false
+    for _,v in ipairs(self.mInShowViewList) do
+        if v.mUIName == view.mUIName then
+            ret = true
+            break
+        end
+    end
+
+    if not ret then
+        table.insert(self.mInShowViewList, view)
+    end
+end
+
+function UIManager:RemoveInShowViewList(uiName)
+    for k,v in ipairs(self.mInShowViewList) do
+        if v.mUIName == uiName then
+            table.remove(self.mInShowViewList, k)
+            break
+        end
+    end
+end
+
+function UIManager:RemoveViewList(uiName)
+    for k,v in ipairs(self.mViewList) do
+        if v.mUIName == uiName then
+            table.remove(self.mViewList, k)
+            break
+        end
+    end
+end
+
+function UIManager:AddLayer(layer, trans)
+    if layer== 1 then
+        trans:SetParent(self.mLayerBG, false)
+    elseif layer ==2 then
+        trans:SetParent(self.mLayerWindow, false)
+    elseif layer==3 then
+        trans:SetParent(self.mLayerAlert, false)
+    elseif layer == 4 then
+        trans:SetParent(self.mLayerGuide, false)
     end
 end
 
@@ -232,13 +162,13 @@ end
 
 function UIManager:OnDisconnect()
     for i, v in ipairs(self.mViewList) do
-        v:OnDisconect()
+        v:OnDisconnect()
     end
 end
 
 function UIManager:OnReconnect()
     for i, v in ipairs(self.mViewList) do
-        v:OnReconect()
+        v:OnReconnect()
     end
 end
 
