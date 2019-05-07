@@ -1,9 +1,11 @@
 local Test = BaseClass("Test")
 
 function Test:Start()
+    xx = nil
+
     --测试计时器
-    --local testTimer = require "Test.TestTimer"
-    --testTimer:Test3()
+    local testTimer = require "Test.TestTimer"
+    testTimer:Test4()
 
     --测试缓存池
     --local testPoolManager = require "Test.TestPoolManager"
@@ -29,14 +31,18 @@ function Test:Start()
     --testCoroutine:Test2()
 
     --测试ui
-    local testUI = require "Test.TestUI"
+    --local testUI = require "Test.TestUI"
     --testUI:Test1()
     --testUI:Test2()
     --testUI:Test3()
     --testUI:Test4()
     --testUI:Test5()
     --testUI:Test6()
-    testUI:Test7()
+    --testUI:Test7()
+
+    --测试场景
+    --local testScene = require "Test.TestScene"
+    --testScene:Test1()
 end
 
 return Test

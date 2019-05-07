@@ -20,6 +20,16 @@ function TestTimer:OnTimer5()
     Logger.Log(Logger.Module.COMMON, "Late Timer is call : ")
 end
 
+function TestTimer:OnTimer6()
+    if(self.count == 10) then
+        self.timer1:Stop()
+        return
+    end
+
+    self.count = self.count + 1
+    Logger.Log(Logger.Module.COMMON, "OnTimer6 is call : " .. self.count)
+end
+
 function TestTimer:Test1()
     --无限循环，每隔0.5s调用一次OnTimer1
     local timer = TimerManager:GetInstance():GetTimer(0.5, TestTimer.OnTimer1, self, -1, false, false)
@@ -40,6 +50,12 @@ function TestTimer:Test3()
     timer1:Start()
     timer2:Start()
     timer3:Start()
+end
+
+function TestTimer:Test4()
+    self.count = 1
+    self.timer1 = TimerManager:GetInstance():GetTimer(1, TestTimer.OnTimer6, self, -1, false, false)
+    self.timer1:Start()
 end
 
 return TestTimer

@@ -46,9 +46,4 @@ function ui_loading:OnRefresh(...)
     self.b_progress.text = tostring(args[2])
 end
 
-local function Register()
-    UIManager: GetInstance():RegisterCreateFunc('ui_loading', ui_loading.New)
-end
-Register()
-
 return ui_loading

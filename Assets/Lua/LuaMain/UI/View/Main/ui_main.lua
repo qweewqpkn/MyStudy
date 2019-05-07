@@ -71,9 +71,4 @@ function ui_main:OnRefresh1(...)
     end
 end
 
-local function Register()
-    UIManager: GetInstance():RegisterCreateFunc('ui_main', ui_main.New)
-end
-Register()
-
 return ui_main

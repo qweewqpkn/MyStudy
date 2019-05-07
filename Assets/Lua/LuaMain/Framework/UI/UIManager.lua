@@ -12,17 +12,11 @@ function UIManager:__init(...)
     self.mLayerGuide = self.mUIRoot:Find("LayerGuide") --引导层
     self.mLayerAlert = self.mUIRoot:Find("LayerAlert") --警告层
     self.mViewList = {} --存放所有打开的界面(不论隐藏与否)
-    self.mCreateUIFuncList = {}
     self.mViewStack = Stack.New() --存放进栈的界面
     self.mMainUI = nil --主界面
     self.mMainUIName = nil --主界面名字
     self.mInShowViewList = {} --显示的UI界面
     self.mSortingOrder = 0--界面排序，打开界面后+1
-end
-
-function UIManager:RegisterCreateFunc(uiName,func)
-    local tab = {name = uiName,func = func}
-    self.mCreateUIFuncList[uiName] = tab
 end
 
 function UIManager:GetPanel(uiName)
@@ -36,8 +30,8 @@ function UIManager:GetPanel(uiName)
     end
 
     if nil == ret then
-        if self.mCreateUIFuncList[uiName] ~= nil then
-            ret = self.mCreateUIFuncList[uiName].func()
+        if(UIConfig[uiName] ~= nil) then
+            ret = UIConfig[uiName].type.New()
             ret.mUIName = uiName
             table.insert(self.mViewList, ret) --添加到界面管理器中
         end

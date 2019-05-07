@@ -12,7 +12,7 @@ function ui_mail:__init(...)
 end
 
 function ui_mail:OnBack()
-    UIManager:GetInstance():ClosePanel(Consts.UINAME.ui_mail)
+    UIManager:GetInstance():ClosePanel(UIConfig.ui_mail.name)
 end
 
 --绑定事件(一次)
@@ -39,10 +39,5 @@ end
 function ui_mail:OnClose()
 
 end
-
-local function Register()
-    UIManager: GetInstance():RegisterCreateFunc('ui_mail', ui_mail.New)
-end
-Register()
 
 return ui_mail

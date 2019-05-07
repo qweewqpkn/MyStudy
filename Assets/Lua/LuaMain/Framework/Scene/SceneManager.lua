@@ -31,7 +31,7 @@ function SceneManager:CoSwitchScene(sceneConfig)
 	--关闭所有界面
 	UIManager:GetInstance():CloseAllPanel()
 	--打开loading界面
-	UIManager:GetInstance():OpenPanel(Consts.UINAME.ui_loading)
+	UIManager:GetInstance():OpenPanel(UIConfig.ui_loading.name)
 	if(self.mCurScene ~= nil) then
 		self.mCurScene:UnLoad()
 		self.mCurScene:OnExit()
@@ -69,7 +69,7 @@ function SceneManager:CoSwitchScene(sceneConfig)
 		Messenger:GetInstance():Broadcast(MsgEnum.ui_loading_refresh, "完成", model)
 		coroutine.waitforseconds(0.5)
 		--关闭loading界面
-		UIManager:GetInstance():ClosePanel(Consts.UINAME.ui_loading)
+		UIManager:GetInstance():ClosePanel(UIConfig.ui_loading.name)
 
 		self.mSwitching = false
 	end

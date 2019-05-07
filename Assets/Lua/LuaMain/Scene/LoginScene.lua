@@ -32,11 +32,7 @@ end
 
 function LoginScene:OnEnter()
     Logger.Log(Logger.Module.SCENE, "LoginScene Enter")
-    ResourceManager.Instance:LoadPrefabAsync("female_hair_01", "female_hair_01", function(obj)
-        if(not IsNull(obj)) then
-            obj.name = "哈哈哈"
-        end
-    end)
+    local t = ResourceManager.Instance:LoadPrefab("female_hair_01", "female_hair_01")
 end
 
 function LoginScene:OnExit()

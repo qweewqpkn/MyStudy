@@ -1,4 +1,4 @@
-require "Framework..Common.Tools.strict"
+require "Framework.Common.Tools.strict"
 require "Framework.Common.BaseClass"
 require "Framework.Define.Rename"
 require "Framework.Define.Consts"
@@ -35,6 +35,7 @@ require "Framework.Common.Tools.event"
 Messenger = require "Framework.Common.Messenger"
 Config = require "Framework.Define.Config"
 UIBase = require "Framework.UI.UIBase"
+UIConfig = require "Framework.UI.UIConfig"
 UIManager = require "Framework.UI.UIManager"
 SceneBase = require "Framework.Scene.SceneBase"
 SceneConfig = require "Framework.Scene.SceneConfig"
@@ -51,7 +52,3 @@ UpdateManager = require "Framework.Updater.UpdateManager"
 
 UIManager:GetInstance()
 UpdateManager:GetInstance()
-
-require "UI.View.Main.ui_main"
-require "UI.View.Test.ui_test"
-require "UI.View.Mail.ui_mail"

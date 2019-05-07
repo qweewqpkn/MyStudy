@@ -7,7 +7,8 @@ public class IsNull : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if(obj)
+        Destroy(obj);
+        if (obj)
         {
             Debug.Log("it is not null");
         }
@@ -15,7 +16,6 @@ public class IsNull : MonoBehaviour {
         {
             Debug.Log("it is null");
         }
-
         Debug.Log("obj == null : " + (obj == null));
         Debug.Log("(object)obj == null : " + ((object)obj == null));
         Debug.Log("object.ReferenceEquals(obj, null) : " + object.ReferenceEquals(obj, null));

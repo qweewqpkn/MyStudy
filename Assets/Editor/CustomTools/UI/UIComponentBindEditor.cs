@@ -228,11 +228,6 @@ function xxxx:OnClose()
 
 end
 
-local function Register()
-    UIManager: GetInstance():RegisterCreateFunc('xxxx', xxxx.New)
-end
-Register()
-
 return xxxx".Replace("xxxx", name));
         }
         

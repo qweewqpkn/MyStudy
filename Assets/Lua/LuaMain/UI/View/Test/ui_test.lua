@@ -14,7 +14,7 @@ function ui_test:__init(...)
 end
 
 function ui_test:OnBack()
-    UIManager:GetInstance():ClosePanel(Consts.UINAME.ui_test)
+    UIManager:GetInstance():ClosePanel(UIConfig.ui_test.name)
 end
 
 --绑定事件(一次)
@@ -41,10 +41,5 @@ end
 function ui_test:OnClose()
 
 end
-
-local function Register()
-    UIManager: GetInstance():RegisterCreateFunc('ui_test', ui_test.New)
-end
-Register()
 
 return ui_test

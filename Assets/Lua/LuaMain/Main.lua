@@ -9,9 +9,7 @@ local function Start()
 	Logger.Log(Logger.Module.COMMON, "logic start")
 	UpdateManager:GetInstance():Startup()
 	TimerManager:GetInstance():Startup()
-	--UIManager:GetInstance():OpenPanel("ui_mail")
-	--NetMessageMgr:GetInstance():InitNet();
-	UIManager:GetInstance():OpenPanel("ui_main")
+	UIManager:GetInstance():OpenPanel(UIConfig.ui_main.name)
 end
 
 Main.Start = Start
