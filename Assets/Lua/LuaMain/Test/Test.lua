@@ -1,8 +1,6 @@
 local Test = BaseClass("Test")
 
 function Test:Start()
-    xx = nil
-
     --测试计时器
     local testTimer = require "Test.TestTimer"
     testTimer:Test4()
