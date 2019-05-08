@@ -7,10 +7,6 @@ local Stack = require("Framework.Common.Stack")
 function UIManager:__init(...)
     --获取默认的根节点
     self.mUIRoot = CS.UnityEngine.GameObject.Find("UIRoot").transform
-    self.mLayerBG = self.mUIRoot:Find("LayerBG") --背景层
-    self.mLayerWindow = self.mUIRoot:Find("LayerWindow") --窗口层
-    self.mLayerGuide = self.mUIRoot:Find("LayerGuide") --引导层
-    self.mLayerAlert = self.mUIRoot:Find("LayerAlert") --警告层
     self.mViewList = {} --存放所有打开的界面(不论隐藏与否)
     self.mViewStack = Stack.New() --存放进栈的界面
     self.mMainUI = nil --主界面
@@ -129,18 +125,6 @@ function UIManager:RemoveViewList(uiName)
             table.remove(self.mViewList, k)
             break
         end
-    end
-end
-
-function UIManager:AddLayer(layer, trans)
-    if layer== 1 then
-        trans:SetParent(self.mLayerBG, false)
-    elseif layer ==2 then
-        trans:SetParent(self.mLayerWindow, false)
-    elseif layer==3 then
-        trans:SetParent(self.mLayerAlert, false)
-    elseif layer == 4 then
-        trans:SetParent(self.mLayerGuide, false)
     end
 end
 

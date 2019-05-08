@@ -2,7 +2,6 @@ local UIBase = BaseClass("UIBase")
 
 function UIBase:__init(...)
     self.mAbPath = "" --ab资源路径
-    self.mLayer = 1 --界面层级
     self.mUIName = "" --界面名字
     self.mIsFullScreen = true --是否是全屏界面,全屏界面会隐藏之前的界面
     self.mIsStack = false --是否进栈界面,为了支持返回时能返回之前的界面
@@ -37,7 +36,7 @@ function UIBase:OpenPanel(...)
             end
 
             --把界面加载指定层级
-            UIManager:GetInstance():AddLayer(self.mLayer, obj.transform)
+            obj.transform:SetParent(UIManager:GetInstance().mUIRoot, false)
             --绑定ui的控件
             CS.UIComponentBind.BindToLua(obj, self)
             --绑定

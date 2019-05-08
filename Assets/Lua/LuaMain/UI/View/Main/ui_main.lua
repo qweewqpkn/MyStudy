@@ -13,7 +13,7 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    local Test = require "Test.Test"
+    local Test = require "Framework.Test.Test"
     Test:Start()
 end
 

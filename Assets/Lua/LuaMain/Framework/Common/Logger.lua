@@ -8,6 +8,7 @@ function Logger.Init()
         BATTLE = "BATTLE",
         SCENE = "SCENE",
         COMMON = "COMMON",
+        LOGIN = "LOGIN",
     }
 
     if(Logger.IsOpenLog) then

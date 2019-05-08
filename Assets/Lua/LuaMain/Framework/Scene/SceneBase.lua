@@ -1,7 +1,8 @@
-local SceneBase = BaseClass("SceneBase")
+local SceneBase = BaseClass("SceneBase", Updatable)
 
 function SceneBase:__init()
     self.mPreLoadList = {} --子类填充该预加载表
+    self.mIsShowLoadingUI = true --是否显示loading界面
 end
 
 function SceneBase:__delete()
@@ -37,12 +38,27 @@ function SceneBase:UnLoad()
 end
 
 --子类重载
-function SceneBase:OnEnter()
+function SceneBase:Enter()
 
 end
 
 --子类重载
-function SceneBase:OnExit()
+function SceneBase:Exit()
+
+end
+
+--子类重载
+function SceneBase:Update()
+
+end
+
+--子类重载
+function SceneBase:LateUpdate()
+
+end
+
+--子类重载
+function SceneBase:FixedUpdate()
 
 end
 
