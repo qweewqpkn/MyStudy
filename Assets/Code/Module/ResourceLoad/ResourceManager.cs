@@ -63,34 +63,40 @@ namespace AssetLoad
         #endregion
 
         #region prefab
-        //异步加载prefab
-        public void LoadPrefabAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
-        {
-            HPrefab.LoadAsync(abName, assetName, callback, args);
-        }
-
-        //协程加载prefab
-        public AsyncRequest LoadPrefabRequest(string abName, string assetName, params object[] args)
-        {
-            return HPrefab.LoadAsync(abName, assetName, args);
-        }
-
-        //预加载prefab
-        public void PreLoadPrefabAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
-        {
-            HPrefab.PreLoadAsync(abName, assetName, callback, args);
-        }
-
-        //预加载prefab协程形式
-        public AsyncRequest PreLoadPrefabRequest(string abName, string assetName, params object[] args)
-        {
-            return HPrefab.PreLoadAsync(abName, assetName, args);
-        }
-
-        //同步加载prefab
+        //加载prefab同步
         public GameObject LoadPrefab(string abName, string assetName)
         {
-            return HPrefab.Load(abName, assetName);
+            return HPrefab.Load(abName, assetName, false);
+        }
+
+        //加载prefab异步
+        public void LoadPrefabAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
+        {
+            HPrefab.LoadAsync(abName, assetName, false, callback, args);
+        }
+
+        //加载prefab协程
+        public AsyncRequest LoadPrefabCoRequest(string abName, string assetName, params object[] args)
+        {
+            return HPrefab.LoadCoRequest(abName, assetName, false, args);
+        }
+
+        //预加载prefab同步(返回原始prefab,不实例)
+        public GameObject PreLoadPrefab(string abName, string assetName)
+        {
+            return HPrefab.Load(abName, assetName, true);
+        }
+
+        //预加载prefab异步(返回原始prefab,不实例)
+        public void PreLoadPrefabAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
+        {
+            HPrefab.LoadAsync(abName, assetName, true, callback, args);
+        }
+
+        //预加载prefab协程(返回原始prefab,不实例)
+        public AsyncRequest PreLoadPrefabCoRequest(string abName, string assetName, params object[] args)
+        {
+            return HPrefab.LoadCoRequest(abName, assetName, true, args);
         }
         #endregion
 

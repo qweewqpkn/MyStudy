@@ -39,8 +39,8 @@ function Test:Start()
     --testUI:Test7()
 
     --测试场景
-    local testScene = require "Framework.Test.TestScene"
-    testScene:Test1()
+    --local testScene = require "Framework.Test.TestScene"
+    --testScene:Test1()
 end
 
 return Test

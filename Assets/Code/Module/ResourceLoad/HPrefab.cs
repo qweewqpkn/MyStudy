@@ -7,6 +7,14 @@ namespace AssetLoad
 {   
     class HPrefab : HRes
     {
+        //原始prefab
+        public GameObject Prefab
+        {
+            get;
+            set;
+        }
+
+        //实例obj
         public GameObject InstObj
         {
             get;
@@ -17,85 +25,8 @@ namespace AssetLoad
         {
         }
 
-        public static void LoadAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
-        {
-            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
-            {
-                Debug.LogError("abName or assetName is null!!!");
-                if (callback != null)
-                {
-                    callback(null, null);
-                }
-                return;
-            }
-
-            Action<UnityEngine.Object> tCallBack = null;
-            if (callback != null)
-            {
-                tCallBack = (obj) =>
-                {
-                    callback(obj as GameObject, args);
-                };
-            }
-
-            HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(false, false, false, tCallBack);
-        }
-
-        //使用协程等待异步请求，而不用回调的形式
-        public static AsyncRequest LoadAsync(string abName, string assetName, params object[] args)
-        {
-            AsyncRequest request = new AsyncRequest();
-            LoadAsync(abName, assetName, (obj, datas) =>
-            {
-                request.isDone = true;
-                request.progress = 1;
-                request.Asset = obj;
-            }, args);
-
-            return request;
-        }
-
-        //预加载资源(与LoadAsync的区别是从AB中加载出了prefab后，不进行实例化而已)
-        public static void PreLoadAsync(string abName, string assetName, Action<GameObject, object[]> callback, params object[] args)
-        {
-            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
-            {
-                Debug.LogError("abName or assetName is null!!!");
-                if (callback != null)
-                {
-                    callback(null, null);
-                }
-                return;
-            }
-
-            Action<UnityEngine.Object> tCallBack = null;
-            if (callback != null)
-            {
-                tCallBack = (obj) =>
-                {
-                    callback(obj as GameObject, args);
-                };
-            }
-
-            HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(false, false, true, tCallBack);
-        }
-
-        public static AsyncRequest PreLoadAsync(string abName, string assetName, params object[] args)
-        {
-            AsyncRequest request = new AsyncRequest();
-            PreLoadAsync(abName, assetName, (obj, datas) =>
-            {
-                request.isDone = true;
-                request.progress = 1;
-                request.Asset = obj;
-            }, args);
-
-            return request;
-        }
-
-        public static GameObject Load(string abName, string assetName)
+        //同步请求prefab
+        public static GameObject Load(string abName, string assetName, bool isPreLoad)
         {
             if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
             {
@@ -104,14 +35,63 @@ namespace AssetLoad
             }
 
             HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
-            res.StartLoad(true, false, false, null);
-            return res.InstObj as GameObject;
+            res.StartLoad(true, false, isPreLoad, null);
+            if(isPreLoad)
+            {
+                return res.Prefab;
+            }
+            else
+            {
+                return res.InstObj;
+            }
+        }
+
+        //异步请求prefab
+        public static void LoadAsync(string abName, string assetName, bool isPreLoad, Action<GameObject, object[]> callback, params object[] args)
+        {
+            if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(assetName))
+            {
+                Debug.LogError("abName or assetName is null!!!");
+                if (callback != null)
+                {
+                    callback(null, null);
+                }
+                return;
+            }
+
+            Action<UnityEngine.Object> tCallBack = null;
+            if (callback != null)
+            {
+                tCallBack = (obj) =>
+                {
+                    callback(obj as GameObject, args);
+                };
+            }
+
+            HPrefab res = Get<HPrefab>(abName, assetName, AssetType.ePrefab);
+            res.StartLoad(false, false, isPreLoad, tCallBack);
+        }
+
+        //协程请求prefab
+        public static AsyncRequest LoadCoRequest(string abName, string assetName, bool isPreLoad, params object[] args)
+        {
+            AsyncRequest request = new AsyncRequest();
+            LoadAsync(abName, assetName, isPreLoad, (obj, datas) =>
+            {
+                request.isDone = true;
+                request.progress = 1;
+                request.Asset = obj;
+            }, args);
+
+            return request;
         }
 
         protected override void OnCompleted(bool isPreLoad, Action<UnityEngine.Object> callback)
         {
             if (Asset != null)
             {
+                Prefab = Asset as GameObject;
+
                 if (isPreLoad)
                 {
                     if (callback != null)

@@ -20,7 +20,7 @@ function SceneBase:PreLoad()
 
     for _,v in ipairs(self.mPreLoadList) do
         Logger.Log(Logger.Module.SCENE, "self.mPreLoadList start" .. v.abName)
-        local request = ResourceManager.Instance:PreLoadPrefabRequest(v.abName, v.assetName)
+        local request = ResourceManager.Instance:PreLoadPrefabCoRequest(v.abName, v.assetName)
         coroutine.waitforasyncop(request, function () end)
         loadCount = loadCount + 1
         coroutine.yieldreturn(loadCount * 1.0 / totalCount)

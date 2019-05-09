@@ -13,17 +13,17 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    local Test = require "Framework.Test.Test"
-    Test:Start()
+    self.testPoolObj:Test1()
 end
 
 function ui_main:OnRelease()
-    PoolManager:GetInstance():ReleasePoolGO(self.b_t_items)
-    SingletonManager:GetInstance():Release()
+    self.testPoolObj:Test2()
 end
 
 --构造函数
 function ui_main:__init(...)
+    local testPoolType = require "Framework.Test.TestPoolManager"
+    self.testPoolObj = testPoolType.New()
 	self.mAbPath = 'ui_main'
     self.mIsDontDestroy = true
     self.mIsMainUI = true

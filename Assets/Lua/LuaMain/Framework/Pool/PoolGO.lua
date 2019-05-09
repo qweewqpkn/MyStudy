@@ -1,21 +1,19 @@
 local PoolGO = BaseClass("PoolGO")
 
-function PoolGO:__init(go, parent, size, ctor, dtor)
+function PoolGO:__init(go, root, size)
+    size = size or 1
     self.mUseList = {}
     self.mNotUseList = {}
     self.mGoTemplate = go
-    self.mParentObj = parent
-    self.mCtor = ctor
-    self.mDtor = dtor
-    size = size or 2
+    self.mParentObj = CS.UnityEngine.GameObject()
+    self.mParentObj.name = go.name .. "(PoolGo)"
+    GoUtil.SetParent(self.mParentObj, root)
+
     for i = 1, size do
         local newObj = CS.UnityEngine.GameObject.Instantiate(self.mGoTemplate)
         GoUtil.SetActive(newObj, false)
         GoUtil.SetParent(newObj, self.mParentObj)
         table.insert(self.mNotUseList, newObj)
-        if(self.mCtor ~= nil) then
-            self.mCtor(newObj)
-        end
     end
 end
 
@@ -31,9 +29,6 @@ function PoolGO:Spawn()
         newObj = table.remove(self.mNotUseList)
     else
         newObj = CS.UnityEngine.GameObject.Instantiate(self.mGoTemplate)
-        if(self.mCtor ~= nil) then
-            self.mCtor(newObj)
-        end
     end
 
     table.insert(self.mUseList, newObj)
@@ -45,20 +40,20 @@ end
 --回收一个对象
 function PoolGO:DeSpawn(go)
     if(not IsNull(go)) then
+        local bFind = false
         for i = 1, #self.mUseList do
             if(self.mUseList[i] ==  go) then
+                bFind = true
                 table.remove(self.mUseList, i)
                 break
             end
         end
 
-        if(self.mDtor ~= nil) then
-            self.mDtor(go)
+        if(bFind) then
+            GoUtil.SetActive(go, false)
+            GoUtil.SetParent(go, self.mParentObj)
+            table.insert(self.mNotUseList, go)
         end
-
-        GoUtil.SetActive(go, false)
-        GoUtil.SetParent(go, self.mParentObj)
-        table.insert(self.mNotUseList, go)
     end
 end
 

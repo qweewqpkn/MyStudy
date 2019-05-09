@@ -46,6 +46,7 @@ SceneManager = require "Framework.Scene.SceneManager"
 Logger = require "Framework.Common.Logger"
 PoolManager = require "Framework.Pool.PoolManager"
 Updatable = require "Framework.Common.Updatable"
+SmartGOManager = require "Framework.Common.SmartGOManager"
 
 -- update & time
 require "Framework.Updater.Coroutine"
