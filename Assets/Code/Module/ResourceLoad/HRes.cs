@@ -132,16 +132,14 @@ namespace AssetLoad
                 yield return null;
             }
 
-            //拿到资源
-            Asset = AssetRequest.Asset;
-
             //回调
-            OnCompleted(isPreLoad, callback);
+            OnCompleted(AssetRequest, isPreLoad, callback);
         }
 
-        protected virtual void OnCompleted(bool isPreLoad, Action<UnityEngine.Object> callback) 
+        protected virtual void OnCompleted(AssetRequest request, bool isPreLoad, Action<UnityEngine.Object> callback) 
         {
-            if(callback != null)
+            Asset = request.Asset;
+            if (callback != null)
             {
                 callback(Asset);
             }

@@ -86,8 +86,9 @@ namespace AssetLoad
             return request;
         }
 
-        protected override void OnCompleted(bool isPreLoad, Action<UnityEngine.Object> callback)
+        protected override void OnCompleted(AssetRequest request, bool isPreLoad, Action<UnityEngine.Object> callback)
         {
+            Asset = request.Asset;
             if (Asset != null)
             {
                 Prefab = Asset as GameObject;

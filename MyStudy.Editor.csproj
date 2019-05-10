@@ -296,6 +296,12 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/P/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="DOTweenEditor">
+      <HintPath>Assets/Plugin/DOTween/Editor/DOTweenEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>Assets/Plugin/DOTween/DOTween.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="MyStudy.csproj">
@@ -341,11 +347,40 @@
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelUtility.cs" />
     <Compile Include="Assets\Editor\CustomTools\UI\UIComponentBindEditor.cs" />
     <Compile Include="Assets\Editor\XLua\GenWrapConfig.cs" />
-    <Compile Include="Assets\XLua\Examples\13_BuildFromCLI\Editor\BuildFromCLI.cs" />
-    <Compile Include="Assets\XLua\Src\Editor\Generator.cs" />
-    <Compile Include="Assets\XLua\Src\Editor\Hotfix.cs" />
-    <Compile Include="Assets\XLua\Src\Editor\LinkXmlGen\LinkXmlGen.cs" />
-    <Compile Include="Assets\XLua\Src\Editor\TemplateRef.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\pbase\QBaseComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QChildrenCountComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QColorComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QComponentsComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QErrorComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QGameObjectIconComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QLayerIconComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QLockComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QMonoBehaviorIconComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QPrefabComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QRendererComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QSeparatorComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QStaticComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QTagIconComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QTagLayerComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QTreeMapComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QVerticesAndTrianglesCountComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QVisibilityComponent.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pdata\QResources.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pdata\QSettings.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pdata\QSettingsObject.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QColorPickerWindow.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QColorUtils.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QComponentsOrderList.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QObjectListInspector.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QObjectListManager.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phierarchy\QHierarchy.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phierarchy\QHierarchySettingsWindow.cs" />
+    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\QHierarchyInitializer.cs" />
+    <Compile Include="Assets\Plugin\XLua\Examples\13_BuildFromCLI\Editor\BuildFromCLI.cs" />
+    <Compile Include="Assets\Plugin\XLua\Src\Editor\Generator.cs" />
+    <Compile Include="Assets\Plugin\XLua\Src\Editor\Hotfix.cs" />
+    <Compile Include="Assets\Plugin\XLua\Src\Editor\LinkXmlGen\LinkXmlGen.cs" />
+    <Compile Include="Assets\Plugin\XLua\Src\Editor\TemplateRef.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Code\Module\AudioManager\音频优化规则.txt" />
@@ -420,36 +455,39 @@
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Export\Shader\Testlala.shader" />
     <None Include="Assets\Export\Texture\Shader\ShaderTest.shader" />
+    <None Include="Assets\Plugin\DOTween\DOTween.XML" />
+    <None Include="Assets\Plugin\DOTween\Editor\DOTweenEditor.XML" />
+    <None Include="Assets\Plugin\DOTween\readme.txt" />
+    <None Include="Assets\Plugin\XLua\CHANGELOG.txt" />
+    <None Include="Assets\Plugin\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Examples\03_UIEvent\ButtonInteraction.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Examples\06_Coroutine\Resources\coruntine_test.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Examples\06_Coroutine\Resources\cs_coroutine.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\async_test.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\message_box.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Gen\link.xml" />
+    <None Include="Assets\Plugin\XLua\Resources\perf\memory.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Resources\perf\profiler.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Resources\tdr\tdr.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Resources\xlua\util.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\LinkXmlGen\LinkXmlGen.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaClassWrap.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaClassWrapGCM.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaDelegateBridge.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaDelegateWrap.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaEnumWrap.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaEnumWrapGCM.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaInterfaceBridge.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaRegister.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaRegisterGCM.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\LuaWrapPusher.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\PackUnpack.tpl.txt" />
+    <None Include="Assets\Plugin\XLua\Src\Editor\Template\TemplateCommon.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
     <None Include="Assets\Shader\Effect\Effect_Particles_Addmask.shader" />
     <None Include="Assets\Shader\Effect\Effect_Particles_AlphaBlended.shader" />
     <None Include="Assets\Shader\custom\AlphaTest.shader" />
     <None Include="Assets\StreamingAssets\ClientRes\Windows\VersionRes.txt" />
-    <None Include="Assets\XLua\CHANGELOG.txt" />
-    <None Include="Assets\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
-    <None Include="Assets\XLua\Examples\03_UIEvent\ButtonInteraction.lua.txt" />
-    <None Include="Assets\XLua\Examples\06_Coroutine\Resources\coruntine_test.lua.txt" />
-    <None Include="Assets\XLua\Examples\06_Coroutine\Resources\cs_coroutine.lua.txt" />
-    <None Include="Assets\XLua\Examples\07_AsyncTest\Resources\async_test.lua.txt" />
-    <None Include="Assets\XLua\Examples\07_AsyncTest\Resources\message_box.lua.txt" />
-    <None Include="Assets\XLua\Gen\link.xml" />
-    <None Include="Assets\XLua\Resources\perf\memory.lua.txt" />
-    <None Include="Assets\XLua\Resources\perf\profiler.lua.txt" />
-    <None Include="Assets\XLua\Resources\tdr\tdr.lua.txt" />
-    <None Include="Assets\XLua\Resources\xlua\util.lua.txt" />
-    <None Include="Assets\XLua\Src\Editor\LinkXmlGen\LinkXmlGen.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaClassWrap.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaClassWrapGCM.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaDelegateBridge.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaDelegateWrap.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaEnumWrap.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaEnumWrapGCM.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaInterfaceBridge.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaRegister.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaRegisterGCM.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\LuaWrapPusher.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\PackUnpack.tpl.txt" />
-    <None Include="Assets\XLua\Src\Editor\Template\TemplateCommon.lua.txt" />
-    <None Include="Assets\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

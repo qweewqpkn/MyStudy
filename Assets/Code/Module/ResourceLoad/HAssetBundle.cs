@@ -113,7 +113,7 @@ namespace AssetLoad
             }
 
             Asset = AB;
-            OnCompleted(isPreLoad, callback);
+            OnCompleted(null, isPreLoad, callback);
         }
 
         public override void AddRef()
