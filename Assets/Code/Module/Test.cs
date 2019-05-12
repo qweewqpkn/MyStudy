@@ -28,7 +28,7 @@ public class Test : MonoBehaviour {
             //LoadTest1();
             //LoadTest2();
             //LoadTest3();
-            //LoadTest4();
+            LoadTest4();
             //LoadTest5();
             //LoadTest6();
             //LoadTest7();
@@ -36,7 +36,7 @@ public class Test : MonoBehaviour {
             //LoadTest9();
             //LoadSprite();
             //PreLoad();
-            ReleaseTest();
+            //ReleaseTest();
         });
     }
 

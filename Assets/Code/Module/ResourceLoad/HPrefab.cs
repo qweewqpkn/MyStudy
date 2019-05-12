@@ -7,13 +7,6 @@ namespace AssetLoad
 {   
     class HPrefab : HRes
     {
-        //原始prefab
-        public GameObject Prefab
-        {
-            get;
-            set;
-        }
-
         //实例obj
         public GameObject InstObj
         {
@@ -38,7 +31,7 @@ namespace AssetLoad
             res.StartLoad(true, false, isPreLoad, null);
             if(isPreLoad)
             {
-                return res.Prefab;
+                return res.AssetData.mAsset as GameObject;
             }
             else
             {
@@ -59,12 +52,19 @@ namespace AssetLoad
                 return;
             }
 
-            Action<UnityEngine.Object> tCallBack = null;
+            Action<AssetLoadData> tCallBack = null;
             if (callback != null)
             {
-                tCallBack = (obj) =>
+                tCallBack = (data) =>
                 {
-                    callback(obj as GameObject, args);
+                    if(data != null)
+                    {
+                        callback(data.mAsset as GameObject, args);
+                    }
+                    else
+                    {
+                        callback(null, args);
+                    }
                 };
             }
 
@@ -86,28 +86,27 @@ namespace AssetLoad
             return request;
         }
 
-        protected override void OnCompleted(AssetRequest request, bool isPreLoad, Action<UnityEngine.Object> callback)
+        protected override void OnCompleted(AssetRequest request, bool isPreLoad, Action<AssetLoadData> callback)
         {
-            Asset = request.Asset;
-            if (Asset != null)
+            AssetData = new AssetLoadData();
+            AssetData.mAsset = request.Asset;
+            if (AssetData.mAsset != null)
             {
-                Prefab = Asset as GameObject;
-
                 if (isPreLoad)
                 {
                     if (callback != null)
                     {
-                        callback(Asset);
+                        callback(AssetData);
                     }
                 }
                 else
                 {
-                    InstObj = GameObject.Instantiate(Asset as GameObject);
+                    InstObj = GameObject.Instantiate(AssetData.mAsset as GameObject);
                     PrefabAutoDestroy autoDestroy = InstObj.AddComponent<PrefabAutoDestroy>();
                     autoDestroy.mRes = this;
                     if (callback != null)
                     {
-                        callback(InstObj);
+                        callback(AssetData);
                     }
                 }
             }
@@ -115,7 +114,7 @@ namespace AssetLoad
             {
                 if(callback != null)
                 {
-                    callback(null);
+                    callback(AssetData);
                 }
             }
         }

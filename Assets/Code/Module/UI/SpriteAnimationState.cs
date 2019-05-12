@@ -3,17 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpriteAnimationState{
-    private SpriteAnimationAction mAction;
-    private float mLength;
-    private string mName;
-    private float mSpeed = 1;
+    public SpriteAnimationClip Clip
+    {
+        get;
+        set;
+    }
 
-    private float mNormalizedTime;
+    public SpriteAnimation.AnimationWrapMode WrapMode
+    {
+        get;
+        set;
+    }
+
+    public float Length
+    {
+        get
+        {
+            if(Clip != null)
+            {
+                return Clip.SpriteCount * 1.0f / Clip.FPS;
+            }
+
+            return 0;
+        }
+    }
+
+    private float mSpeed = 1;
+    public float Speed
+    {
+        get
+        {
+            return mSpeed;
+        }
+        set
+        {
+            mSpeed = value;
+        }
+    }
+
+    private float mNormalizedTime = 0;
     public float NormalizedTime
     {
         get
         {
-            mNormalizedTime = CurTime % mLength;
+            mNormalizedTime = Mathf.Floor(CurTime / Length) + CurTime % Length / Length;
             return mNormalizedTime;
         }
 
@@ -29,21 +62,62 @@ public class SpriteAnimationState{
         set;
     }
 
-    public void Init(SpriteAnimationAction action)
+    public bool IsOver
     {
-        mAction = action;
+        get;
+        set;
     }
 
     public void Update()
     {
-        CurTime = CurTime + Time.deltaTime;
+        if(IsOver)
+        {
+            return;
+        }
+
+        switch(WrapMode)
+        {
+            case SpriteAnimation.AnimationWrapMode.eLoop:
+                {
+                    CurTime = CurTime + Time.deltaTime * Speed;
+                }
+                break;
+            case SpriteAnimation.AnimationWrapMode.eOnce:
+                {
+                    if (CurTime < Length)
+                    {
+                        CurTime = CurTime + Time.deltaTime * Speed;
+                        CurTime = Mathf.Clamp(CurTime, CurTime, Length);
+                    }    
+                    else
+                    {
+                        Stop();
+                    }
+                }
+                break;
+        }
     }
 
-    public void Sample()
+    public void Start()
     {
-        if(mAction != null)
+        IsOver = false;
+        CurTime = 0;
+    }
+
+    public void Stop()
+    {
+        IsOver = true;
+        CurTime = 0;
+    }
+
+    public Sprite Sample()
+    {
+        if(Clip != null)
         {
-            mAction.Trigger(NormalizedTime);
+            int index = (int)(CurTime * Clip.FPS) % Clip.SpriteCount;
+            return Clip.GetSprite(index);
         }
+
+        return null;
     }
 }

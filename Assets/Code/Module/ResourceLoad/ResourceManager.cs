@@ -18,6 +18,7 @@ namespace AssetLoad
         eLua,
         eManifest,
         eMaterial,
+        eSpriteAtlas,
     }
 
     public class ResourceManager : SingletonMono<ResourceManager>
@@ -43,6 +44,12 @@ namespace AssetLoad
         #endregion
 
         #region text
+        //同步加载text
+        public TextAsset LoadText(string abName, string assetName)
+        {
+            return HText.Load(abName, assetName);
+        }
+
         //异步加载text
         public void LoadTextAsync(string abName, string assetName, Action<TextAsset> callback)
         {
@@ -50,15 +57,9 @@ namespace AssetLoad
         }
 
         //协程加载text
-        public AsyncRequest LoadTextRequest(string abName, string assetName)
+        public AsyncRequest LoadTextCoRequest(string abName, string assetName)
         {
-            return HText.LoadAsync(abName, assetName);
-        }
-
-        //同步加载text
-        public TextAsset LoadText(string abName, string assetName)
-        {
-            return HText.Load(abName, assetName);
+            return HText.LoadCoRequest(abName, assetName);
         }
         #endregion
 
@@ -108,9 +109,9 @@ namespace AssetLoad
         }
 
         //协程加载图集
-        public AsyncRequest LoadSpriteRequest(string abName, string assetName)
+        public AsyncRequest LoadSpriteCoRequest(string abName, string assetName)
         {
-            return HSprite.LoadAsync(abName, assetName);
+            return HSprite.LoadCoRequest(abName, assetName);
         }
 
         //同步加载图集
@@ -128,9 +129,9 @@ namespace AssetLoad
         }
 
         //协程加载贴图
-        public AsyncRequest LoadTextureRequest(string abName, string assetName)
+        public AsyncRequest LoadTextureCoRequest(string abName, string assetName)
         {
-            return HTexture.LoadAsync(abName, assetName);
+            return HTexture.LoadCoRequest(abName, assetName);
         }
 
         //同步加载贴图
@@ -148,9 +149,9 @@ namespace AssetLoad
         }
 
         //协程加载贴图
-        public AsyncRequest LoadAudioClipRequest(string abName, string assetName)
+        public AsyncRequest LoadAudioClipCoRequest(string abName, string assetName)
         {
-            return HAudioCilp.LoadAsync(abName, assetName);
+            return HAudioCilp.LoadCoRequest(abName, assetName);
         }
 
         //同步加载音频
@@ -168,9 +169,9 @@ namespace AssetLoad
         }
 
         //协程加载材质
-        public AsyncRequest LoadMaterialRequest(string abName, string assetName)
+        public AsyncRequest LoadMaterialCoRequest(string abName, string assetName)
         {
-            return HMaterial.LoadAsync(abName, assetName);
+            return HMaterial.LoadCoRequest(abName, assetName);
         }
 
         //同步加载材质
@@ -188,9 +189,9 @@ namespace AssetLoad
         }
 
         //协程加载shader
-        public AsyncRequest LoadShaderRequest(string abName, string assetName)
+        public AsyncRequest LoadShaderCoRequest(string abName, string assetName)
         {
-            return HShader.LoadAsync(abName, assetName);
+            return HShader.LoadCoRequest(abName, assetName);
         }
 
         //同步加载shader
@@ -208,9 +209,9 @@ namespace AssetLoad
         }
 
         //协程加载lua
-        public AsyncRequest LoadLuaRequest(string abName, string assetName)
+        public AsyncRequest LoadLuaCoRequest(string abName, string assetName)
         {
-            return HLua.LoadAsync(abName, assetName);
+            return HLua.LoadCoRequest(abName, assetName);
         }
 
         //同步加载lua

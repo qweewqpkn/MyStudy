@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace AssetLoad
 {
+    public class AssetLoadData
+    {
+        public UnityEngine.Object mAsset;
+        public List<UnityEngine.Object> mAssets;
+    }
+
 
     public class HRes
     {
@@ -25,7 +31,13 @@ namespace AssetLoad
         }
 
         //最终加载出来的资源对象
-        public UnityEngine.Object Asset
+        //public UnityEngine.Object Asset
+        //{
+        //    get;
+        //    set;
+        //}
+
+        public AssetLoadData AssetData
         {
             get;
             set;
@@ -109,12 +121,12 @@ namespace AssetLoad
             AssetType = assetType;
         }
 
-        protected virtual void StartLoad(bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
+        protected virtual void StartLoad(bool isSync, bool isAll, bool isPreLoad, Action<AssetLoadData> callback)
         {
             ResourceManager.Instance.StartCoroutine(CoLoad(isSync, isAll, isPreLoad, callback));
         }
 
-        protected virtual IEnumerator CoLoad(bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
+        protected virtual IEnumerator CoLoad(bool isSync, bool isAll, bool isPreLoad, Action<AssetLoadData> callback)
         {
             ABDep = Get<HAssetBundle>(ABName, "", AssetType.eAB);
 
@@ -136,12 +148,13 @@ namespace AssetLoad
             OnCompleted(AssetRequest, isPreLoad, callback);
         }
 
-        protected virtual void OnCompleted(AssetRequest request, bool isPreLoad, Action<UnityEngine.Object> callback) 
+        protected virtual void OnCompleted(AssetRequest request, bool isPreLoad, Action<AssetLoadData> callback) 
         {
-            Asset = request.Asset;
+            AssetData = new AssetLoadData();
+            AssetData.mAsset = request.Asset;
             if (callback != null)
             {
-                callback(Asset);
+                callback(AssetData);
             }
         }
 

@@ -64,12 +64,12 @@ namespace AssetLoad
                 return;
             }
 
-            Action<UnityEngine.Object> tCallBack = null;
+            Action<AssetLoadData> tCallBack = null;
             if(callback != null)
             {
-                tCallBack = (obj) =>
+                tCallBack = (data) =>
                 {
-                    callback(obj as AssetBundle);
+                    callback(data.mAsset as AssetBundle);
                 };
             }
 
@@ -101,10 +101,10 @@ namespace AssetLoad
 
             HAssetBundle res = Get<HAssetBundle>(abName, "", AssetType.eAB);
             res.StartLoad(true, false, false, null);
-            return res.Asset as AssetBundle;
+            return res.AssetData.mAsset as AssetBundle;
         }
 
-        protected override IEnumerator CoLoad(bool isSync, bool isAll, bool isPreLoad, Action<UnityEngine.Object> callback)
+        protected override IEnumerator CoLoad(bool isSync, bool isAll, bool isPreLoad, Action<AssetLoadData> callback)
         {
             ABRequest.Load(this, isSync, AssetType);
             while(!ABRequest.IsComplete)
@@ -112,7 +112,6 @@ namespace AssetLoad
                 yield return null;
             }
 
-            Asset = AB;
             OnCompleted(null, isPreLoad, callback);
         }
 

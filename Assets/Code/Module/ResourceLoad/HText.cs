@@ -25,12 +25,12 @@ namespace AssetLoad
                 return;
             }
 
-            Action<UnityEngine.Object> tCallBack = null;
+            Action<AssetLoadData> tCallBack = null;
             if(callback != null)
             {
-                tCallBack = (obj) =>
+                tCallBack = (data) =>
                 {
-                    callback(obj as TextAsset);
+                    callback(data.mAsset as TextAsset);
                 };
             }
 
@@ -39,7 +39,7 @@ namespace AssetLoad
         }
 
         //使用协程等待异步请求，而不用回调的形式
-        public static AsyncRequest LoadAsync(string abName, string assetName)
+        public static AsyncRequest LoadCoRequest(string abName, string assetName)
         {
             AsyncRequest request = new AsyncRequest();
             LoadAsync(abName, assetName, (obj) =>
@@ -62,7 +62,7 @@ namespace AssetLoad
 
             HText res = Get<HText>(abName, assetName, AssetType.eText);
             res.StartLoad(true, false, false, null);
-            return res.Asset as TextAsset;
+            return res.AssetData.mAsset as TextAsset;
         }
     }
 }

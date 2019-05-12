@@ -1,6 +1,7 @@
 ﻿
 
 using System.Collections;
+using System.Collections.Generic;
 
 namespace AssetLoad
 {
@@ -33,6 +34,12 @@ namespace AssetLoad
         }
 
         public UnityEngine.Object Asset
+        {
+            get;
+            set;
+        }
+
+        public List<UnityEngine.Object> Assets
         {
             get;
             set;

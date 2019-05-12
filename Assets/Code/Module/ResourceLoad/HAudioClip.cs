@@ -25,12 +25,12 @@ namespace AssetLoad
                 return;
             }
 
-            Action<UnityEngine.Object> tCallBack = null;
+            Action<AssetLoadData> tCallBack = null;
             if (callback != null)
             {
-                tCallBack = (obj) =>
+                tCallBack = (data) =>
                 {
-                    callback(obj as AudioClip);
+                    callback(data.mAsset as AudioClip);
                 };
             }
 
@@ -39,7 +39,7 @@ namespace AssetLoad
         }
 
         //使用协程等待异步请求，而不用回调的形式
-        public static AsyncRequest LoadAsync(string abName, string assetName)
+        public static AsyncRequest LoadCoRequest(string abName, string assetName)
         {
             AsyncRequest request = new AsyncRequest();
             LoadAsync(abName, assetName, (obj) =>
@@ -62,7 +62,7 @@ namespace AssetLoad
 
             HAudioCilp res = Get<HAudioCilp>(abName, assetName, AssetType.eAudioClip);
             res.StartLoad(true, false, false, null);
-            return res.Asset as AudioClip;
+            return res.AssetData.mAsset as AudioClip;
         }
     }
 }

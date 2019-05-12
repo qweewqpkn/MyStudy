@@ -25,12 +25,12 @@ namespace AssetLoad
                 return;
             }
 
-            Action<UnityEngine.Object> tCallBack = null;
+            Action<AssetLoadData> tCallBack = null;
             if (callback != null)
             {
-                tCallBack = (obj) =>
+                tCallBack = (data) =>
                 {
-                    callback(obj as Material);
+                    callback(data.mAsset as Material);
                 };
             }
 
@@ -39,7 +39,7 @@ namespace AssetLoad
         }
 
         //使用协程等待异步请求，而不用回调的形式
-        public static AsyncRequest LoadAsync(string abName, string assetName)
+        public static AsyncRequest LoadCoRequest(string abName, string assetName)
         {
             AsyncRequest request = new AsyncRequest();
             LoadAsync(abName, assetName, (obj) =>
@@ -62,7 +62,7 @@ namespace AssetLoad
 
             HMaterial res = Get<HMaterial>(abName, assetName, AssetType.eMaterial);
             res.StartLoad(true, false, false, null);
-            return res.Asset as Material;
+            return res.AssetData.mAsset as Material;
         }
     }
 }
