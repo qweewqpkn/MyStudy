@@ -46,22 +46,35 @@ public class SpriteAnimation : MonoBehaviour {
         }
     }
 
+    private Dictionary<string, SpriteAnimationState> mStateMap = new Dictionary<string, SpriteAnimationState>();
+    public Dictionary<string, SpriteAnimationState> StateMap
+    {
+        get
+        {
+            return mStateMap;
+        }
+    }
+
     private SpriteRenderer mSpriteRenderer;
     private SpriteAnimationState mCurState;
-    private Dictionary<string, SpriteAnimationState> mStateMap = new Dictionary<string, SpriteAnimationState>();
+
+    public void Awake()
+    {
+        mSpriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     public void Init(List<SpriteAnimationClip> clipList)
     {
-        mSpriteRenderer = GetComponent<SpriteRenderer>();
         for (int i = 0;  i < clipList.Count; i++)
         {
             SpriteAnimationState state = new SpriteAnimationState();
             state.Clip = clipList[i];
+            state.WrapMode = clipList[i].WrapMode;
             mStateMap.Add(clipList[i].Name, state);
         }
     }
 
-    public void Play(string name)
+    public void Play(string name, bool isBack = false)
     {
         if(mStateMap.ContainsKey(name))
         {
@@ -72,6 +85,7 @@ public class SpriteAnimation : MonoBehaviour {
                     //切换动画
                     mCurState.Stop();
                     mCurState = mStateMap[name];
+                    mCurState.IsBack = isBack;
                     mCurState.Start();
                 }
                 else
@@ -79,6 +93,7 @@ public class SpriteAnimation : MonoBehaviour {
                     if(mCurState.IsOver)
                     {
                         //播放完了,重新播放
+                        mCurState.IsBack = isBack;
                         mCurState.Start();
                     }
                 }
@@ -87,6 +102,7 @@ public class SpriteAnimation : MonoBehaviour {
             {
                 //第一次播放
                 mCurState = mStateMap[name];
+                mCurState.IsBack = isBack;
                 mCurState.Start();
             }
         }

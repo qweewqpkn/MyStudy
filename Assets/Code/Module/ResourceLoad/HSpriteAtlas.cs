@@ -31,10 +31,7 @@ namespace AssetLoad
                     if(data != null && data.mAssets != null)
                     {
                         List<Sprite> spriteList = new List<Sprite>();
-                        for (int i = 0; i < data.mAssets.Count; i++)
-                        {
-                            spriteList.Add(data.mAssets[i] as Sprite);
-                        }
+                        spriteList = data.mAssets.ConvertAll((item) => { return item as Sprite; });
                         callback(spriteList);
                     }
                     else
@@ -44,22 +41,22 @@ namespace AssetLoad
                 };
             }
 
-            HSpriteAtlas res = Get<HSpriteAtlas>(abName, "*", AssetType.eSprite);
+            HSpriteAtlas res = Get<HSpriteAtlas>(abName, "*", AssetType.eSpriteAtlas);
             res.StartLoad(false, true, false, tCallBack);
         }
 
-        //public static AsyncRequest LoadCoRequest(string abName)
-        //{
-        //    AsyncRequest request = new AsyncRequest();
-        //    LoadAsync(abName, (obj) =>
-        //    {
-        //        request.isDone = true;
-        //        request.progress = 1;
-        //        request.Assets = obj;
-        //    });
-        //
-        //    return request;
-        //}
+        public static AsyncRequest LoadCoRequest(string abName)
+        {
+            AsyncRequest request = new AsyncRequest();
+            LoadAsync(abName, (obj) =>
+            {
+                request.isDone = true;
+                request.progress = 1;
+                request.Assets = obj.ConvertAll((item)=> { return item as UnityEngine.Object; });
+            });
+        
+            return request;
+        }
 
         public static List<Sprite> Load(string abName)
         {
@@ -69,7 +66,7 @@ namespace AssetLoad
                 return null;
             }
 
-            HSpriteAtlas res = Get<HSpriteAtlas>(abName, "*", AssetType.eSprite);
+            HSpriteAtlas res = Get<HSpriteAtlas>(abName, "*", AssetType.eSpriteAtlas);
             res.StartLoad(true, true, false, null);
             List<Sprite> spriteList = new List<Sprite>();
             for (int i = 0; i < res.AssetData.mAssets.Count; i++)

@@ -13,6 +13,8 @@ namespace AssetLoad
             public Dictionary<string, UnityEngine.Object> mAssetMap = new Dictionary<string, UnityEngine.Object>();
             //AB中所有资源的请求
             public AssetBundleRequest mAllAssetRequest;
+            //AB中的所有资源列表
+            public List<UnityEngine.Object> mAssetList = new List<UnityEngine.Object>();
             //AB中的每个资源对应了一个请求
             public Dictionary<string, AssetBundleRequest> mAssetRequestMap = new Dictionary<string, AssetBundleRequest>();
         }
@@ -27,6 +29,12 @@ namespace AssetLoad
         }
 
         public UnityEngine.Object Asset
+        {
+            get;
+            private set;
+        }
+
+        public List<UnityEngine.Object> Assets
         {
             get;
             private set;
@@ -67,7 +75,6 @@ namespace AssetLoad
                         mAssetDataMap.Add(ab.name, cacheData);
                     }
 
-                    //是否有该资源的缓存
                     if(!cacheData.mAssetMap.ContainsKey(assetName))
                     {
                         if (isSync)
@@ -75,6 +82,8 @@ namespace AssetLoad
                             if (isAll)
                             {
                                 UnityEngine.Object[] assetList = ab.LoadAllAssets();
+                                cacheData.mAssetList.AddRange(assetList);
+                                cacheData.mAssetMap["*"] = new UnityEngine.Object();
                                 for (int i = 0; i < assetList.Length; i++)
                                 {
                                     cacheData.mAssetMap[assetList[i].name.ToLower()] = assetList[i];
@@ -135,6 +144,15 @@ namespace AssetLoad
                                 }
                             }
 
+                            if(isAll)
+                            {
+                                if(cacheData.mAssetList.Count == 0)
+                                {
+                                    cacheData.mAssetMap["*"] = new UnityEngine.Object();
+                                    cacheData.mAssetList.AddRange(cacheRequest.allAssets);
+                                }
+                            }
+
                             for (int i = 0; i < cacheRequest.allAssets.Length; i++)
                             {
                                 cacheData.mAssetMap[cacheRequest.allAssets[i].name.ToLower()] = cacheRequest.allAssets[i];
@@ -144,7 +162,14 @@ namespace AssetLoad
 
                     if(cacheData.mAssetMap.ContainsKey(assetName))
                     {
-                        Asset = cacheData.mAssetMap[assetName];
+                        if(assetName == "*")
+                        {
+                            Assets = cacheData.mAssetList;
+                        }
+                        else
+                        {
+                            Asset = cacheData.mAssetMap[assetName];
+                        }
                     }
                     else
                     {

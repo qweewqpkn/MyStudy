@@ -121,6 +121,27 @@ namespace AssetLoad
         }
         #endregion
 
+        #region sprite atlas
+        //异步加载图集 
+        public void LoadSpriteAtlasAsync(string abName, Action<List<Sprite>> callback)
+        {
+            HSpriteAtlas.LoadAsync(abName, callback);
+        }
+
+        //协程加载图集
+        public AsyncRequest LoadSpriteAtlasCoRequest(string abName)
+        {
+            return HSpriteAtlas.LoadCoRequest(abName);
+        }
+
+        //同步加载图集
+        public List<Sprite> LoadSpriteAtlas(string abName, string assetName)
+        {
+            return HSpriteAtlas.Load(abName);
+        }
+
+        #endregion
+
         #region texture
         //异步加载贴图
         public void LoadTextureAsync(string abName, string assetName, Action<Texture> callback)

@@ -88,7 +88,6 @@ namespace AssetLoad
 
         protected override void OnCompleted(AssetRequest request, bool isPreLoad, Action<AssetLoadData> callback)
         {
-            AssetData = new AssetLoadData();
             AssetData.mAsset = request.Asset;
             if (AssetData.mAsset != null)
             {

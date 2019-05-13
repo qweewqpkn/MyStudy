@@ -89,6 +89,7 @@ namespace AssetLoad
         {
             ABRequest = new ABRequest();
             AssetRequest = new AssetRequest();
+            AssetData = new AssetLoadData();
         }
 
         public static string GetResName(string abName, string assetName)
@@ -150,8 +151,8 @@ namespace AssetLoad
 
         protected virtual void OnCompleted(AssetRequest request, bool isPreLoad, Action<AssetLoadData> callback) 
         {
-            AssetData = new AssetLoadData();
             AssetData.mAsset = request.Asset;
+            AssetData.mAssets = request.Assets;
             if (callback != null)
             {
                 callback(AssetData);

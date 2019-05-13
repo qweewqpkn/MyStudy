@@ -68,6 +68,12 @@ public class SpriteAnimationState{
         set;
     }
 
+    public bool IsBack
+    {
+        get;
+        set;
+    }
+
     public void Update()
     {
         if(IsOver)
@@ -115,6 +121,10 @@ public class SpriteAnimationState{
         if(Clip != null)
         {
             int index = (int)(CurTime * Clip.FPS) % Clip.SpriteCount;
+            if(IsBack)
+            {
+                index = Clip.SpriteCount - index - 1;
+            }
             return Clip.GetSprite(index);
         }
 

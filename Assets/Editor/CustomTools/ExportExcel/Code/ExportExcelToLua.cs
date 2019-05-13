@@ -32,6 +32,7 @@ class ExportExcelToLua
             }
         }
 
+        Debug.Log("导出配置成功");
         AssetDatabase.Refresh();
     }
 

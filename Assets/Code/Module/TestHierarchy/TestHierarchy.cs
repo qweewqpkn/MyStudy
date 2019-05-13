@@ -1,12 +1,12 @@
-﻿using UnityEditor;
+﻿//using UnityEditor;
 using UnityEngine;
 
-[InitializeOnLoad]
+//[InitializeOnLoad]
 public class TestHierarchy {
     
     static TestHierarchy()
     {
-        EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindow;
+        //EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyWindow;
     }
 
     public static void OnHierarchyWindow(int instanceID, Rect selectionRect)
