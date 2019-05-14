@@ -103,6 +103,7 @@ namespace AssetLoad
                     InstObj = GameObject.Instantiate(AssetData.mAsset as GameObject);
                     PrefabAutoDestroy autoDestroy = InstObj.AddComponent<PrefabAutoDestroy>();
                     autoDestroy.mRes = this;
+                    AssetData.mAsset = InstObj;
                     if (callback != null)
                     {
                         callback(AssetData);

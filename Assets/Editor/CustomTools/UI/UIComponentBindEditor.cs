@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+//using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -107,30 +108,36 @@ public class UIComponentBindEditor {
             data.type = "ScrollRect";
             data.component = obj.GetComponent<ScrollRect>();
         }
-        else if (obj.GetComponent<Image>() != null)
-        {
-            data.type = "Image";
-            data.component = obj.GetComponent<Image>();
-        }
         else if (obj.GetComponent<ImageExt>() != null)
         {
             data.type = "ImageExt";
             data.component = obj.GetComponent<ImageExt>();
         }
-        else if (obj.GetComponent<RawImage>() != null)
+        else if (obj.GetComponent<Image>() != null)
         {
-            data.type = "RawImage";
-            data.component = obj.GetComponent<RawImage>();
+            data.type = "Image";
+            data.component = obj.GetComponent<Image>();
         }
         else if (obj.GetComponent<RawImageExt>() != null)
         {
             data.type = "RawImageExt";
             data.component = obj.GetComponent<RawImageExt>();
         }
+        else if (obj.GetComponent<RawImage>() != null)
+        {
+            data.type = "RawImage";
+            data.component = obj.GetComponent<RawImage>();
+        }
+        //else if(obj.GetComponent<TextMeshProUGUI>() != null)
+        //{
+        //    data.type = "TextMeshProUGUI";
+        //    data.component = obj.GetComponent<TextMeshProUGUI>();
+        //}
         else if (obj.GetComponent<Text>() != null)
         {
-            data.type = "Text";
-            data.component = obj.GetComponent<Text>();
+            Debug.LogError("请不要使用Text组件了,使用新版的TextMeshPro组件");
+            //data.type = "Text";
+            //data.component = obj.GetComponent<Text>();
         }
         else if (obj.GetComponent<RectTransform>() != null)
         {

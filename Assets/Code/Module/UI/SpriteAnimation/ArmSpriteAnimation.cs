@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArmSpriteAnimationAction : MonoBehaviour {
+public class ArmSpriteAnimation : MonoBehaviour {
     private string mAtlasName;
     private int mDir;
     private int mFPS;
@@ -19,7 +19,7 @@ public class ArmSpriteAnimationAction : MonoBehaviour {
         Parse(atlasName, FPS, mWrapMode, callback);
     }
 
-    public void Parse(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode, Action callback)
+    private void Parse(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode, Action callback)
     {
         ResourceManager.Instance.LoadSpriteAtlasAsync(atlasName, (spriteList) =>
         {
@@ -82,6 +82,14 @@ public class ArmSpriteAnimationAction : MonoBehaviour {
         if(mAnimation != null)
         {
             mAnimation.Play(name, isBack);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if(!string.IsNullOrEmpty(mAtlasName))
+        {
+            ResourceManager.Instance.Release(mAtlasName, "*");
         }
     }
 }

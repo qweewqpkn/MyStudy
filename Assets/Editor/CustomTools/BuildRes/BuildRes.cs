@@ -216,6 +216,11 @@ public class BuildRes
                         AssetImporter ai = AssetImporter.GetAtPath(files[i]);
                         ai.assetBundleName = "allshader";
                     }
+                    else if(files[i].Contains("Font"))
+                    {
+                        AssetImporter ai = AssetImporter.GetAtPath(files[i]);
+                        ai.assetBundleName = "font";
+                    }
                     else
                     {
                         string fileName = Path.GetFileNameWithoutExtension(files[i]);

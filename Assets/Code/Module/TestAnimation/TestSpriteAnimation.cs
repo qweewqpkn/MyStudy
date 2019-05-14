@@ -14,13 +14,14 @@ public class TestSpriteAnimation : MonoBehaviour {
         //mAnimation = GetComponent<Animation>();
         //mAnimation.wrapMode = WrapMode.Loop;
 
-        ArmSpriteAnimationAction action = GetComponent<ArmSpriteAnimationAction>();
+ 
+        ArmSpriteAnimation action = GetComponent<ArmSpriteAnimation>();
         action.Init("archer_sprite", 16, SpriteAnimation.AnimationWrapMode.eLoop, () =>
         {
             action.SetDir(0);
             action.Play("attack");
         });
-
+        
         mButton1.onClick.AddListener(() =>
         {
             action.Play("idle");

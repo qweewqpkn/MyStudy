@@ -305,13 +305,13 @@
     <Compile Include="Assets\Code\Module\TestLua\TestLua.cs" />
     <Compile Include="Assets\Code\Module\TestLua\TestLuaCallCS.cs" />
     <Compile Include="Assets\Code\Module\TextureDestroy\TextureDestroy.cs" />
-    <Compile Include="Assets\Code\Module\UI\ArmSpriteAnimationAction.cs" />
     <Compile Include="Assets\Code\Module\UI\ImageExt.cs" />
     <Compile Include="Assets\Code\Module\UI\MirrorSprite.cs" />
     <Compile Include="Assets\Code\Module\UI\RawImageExt.cs" />
-    <Compile Include="Assets\Code\Module\UI\SpriteAnimation.cs" />
-    <Compile Include="Assets\Code\Module\UI\SpriteAnimationClip.cs" />
-    <Compile Include="Assets\Code\Module\UI\SpriteAnimationState.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\ArmSpriteAnimation.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\SpriteAnimation.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\SpriteAnimationClip.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\SpriteAnimationState.cs" />
     <Compile Include="Assets\Code\Module\UI\TextColorGradient.cs" />
     <Compile Include="Assets\Code\Module\UI\UIComponentBind.cs" />
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGif.cs" />

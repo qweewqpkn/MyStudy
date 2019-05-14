@@ -109,7 +109,6 @@ namespace Tutorial
 
             LuaFunction d_e = luaenv.Global.Get<LuaFunction>("e");
             d_e.Call();
-
         }
 
         // Update is called once per frame
