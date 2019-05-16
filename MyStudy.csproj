@@ -319,6 +319,7 @@
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGifDecoder.cs" />
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGifExtension.cs" />
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGifFormatter.cs" />
+    <Compile Include="Assets\Code\Module\UI\YYEmpty4RaycastBtn.cs" />
     <Compile Include="Assets\Code\Module\UI\YYUIWarpContent.cs" />
     <Compile Include="Assets\Code\Module\UI\YYUIWarpContentItem.cs" />
     <Compile Include="Assets\Code\Module\UISceneAdapter\UISceneAdapter.cs" />

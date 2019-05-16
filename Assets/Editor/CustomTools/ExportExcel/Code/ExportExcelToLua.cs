@@ -18,21 +18,35 @@ class ExportExcelToLua
         mCodePath = PathManager.LUA_ROOT_PATH + "/LuaMain/Config/";
         mExcelPath = Application.dataPath + "/Excel";
 
-        //所有excel配置
-        string[] allExcelPath = Directory.GetFiles(mExcelPath);
-        for (int i = 0; i < allExcelPath.Length; i++)
+        FileStream excelFS = null;
+        string name = "";
+        try
         {
-            string extensionName = Path.GetExtension(allExcelPath[i]);
-            if (extensionName == ".xlsx" || extensionName == ".xls")
+            //所有excel配置
+            string[] allExcelPath = Directory.GetFiles(mExcelPath);
+            for (int i = 0; i < allExcelPath.Length; i++)
             {
-                FileStream excelFS = File.Open(allExcelPath[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                IExcelDataReader reader = ExcelReaderFactory.CreateReader(excelFS);
-                DataSet book = reader.AsDataSet();
-                ExportLua(book.Tables[0], allExcelPath[i]);
+                string extensionName = Path.GetExtension(allExcelPath[i]);
+                if (extensionName == ".xlsx" || extensionName == ".xls")
+                {
+                    name = allExcelPath[i];
+                    excelFS = File.Open(allExcelPath[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    IExcelDataReader reader = ExcelReaderFactory.CreateReader(excelFS);
+                    DataSet book = reader.AsDataSet();
+                    ExportLua(book.Tables[0], allExcelPath[i]);
+                    excelFS.Close();
+                }
             }
+
+            Debug.Log("导出配置成功");
+        }
+        catch
+        {
+            excelFS.Close();
+            Debug.LogError("导出配置失败 : " + name);
         }
 
-        Debug.Log("导出配置成功");
+
         AssetDatabase.Refresh();
     }
 
@@ -64,6 +78,24 @@ class ExportExcelToLua
         int rowNum = sheet.Rows.Count;
         int columnNum = ExportExcelUtility.GetRealColumns(sheet.Columns.Count, nameRow);
 
+        //寻找作为lua table的键值
+        int keyColumn = -1;
+        for(int i = 0; i < columnNum; i++)
+        {
+            string value = commentRow[i].ToString();
+            if (value.ToLower() == "id" )
+            {
+                keyColumn = i;
+            }
+        }
+        string keyType = "";
+        if(keyColumn != -1)
+        {
+            keyType = typeRow[keyColumn].ToString().ToLower();
+        }
+
+
+
         StringBuilder sb = new StringBuilder();
         sb.AppendLine(startFlag);
         sb.AppendFormat("local {0} = {1}\r\n", fileName, "{"); 
@@ -72,6 +104,24 @@ class ExportExcelToLua
         {
             DataRow dataRow = sheet.Rows[i];
 
+            //处理该行的键值
+            if(keyColumn != -1)
+            {
+                if(keyType == "int")
+                {
+                    sb.Append(string.Format("[{0}] = ", dataRow[keyColumn]));
+                }
+                else
+                {
+                    sb.Append(string.Format("[\"{0}\"] = ", dataRow[keyColumn]));
+                }
+            }
+            else
+            {
+                sb.Append(string.Format("[{0}] = ", i - 4 + 1));
+            }
+
+            //导出一行数据
             sb.Append("{");
             for (int j = 0; j < columnNum; j++)
             {
@@ -191,7 +241,7 @@ class ExportExcelToLua
                         default:
                             {
                                 Debug.LogError(string.Format("配置表{0}, 第{1}列类型指定错误, 请检查配置表!", fileName, j + 1));
-                                return;
+                                throw new System.ArgumentException("Parameter problem");
                             }
                     }
                 }
