@@ -16,7 +16,7 @@ class ExportExcelToLua
     public static void Export()
     {
         mCodePath = PathManager.LUA_ROOT_PATH + "/LuaMain/Config/";
-        mExcelPath = Application.dataPath + "/Excel";
+        mExcelPath = Application.dataPath + "/../../Config/";
 
         FileStream excelFS = null;
         string name = "";
