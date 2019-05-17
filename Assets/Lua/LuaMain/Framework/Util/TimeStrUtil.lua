@@ -23,10 +23,11 @@ function TimeStrUtil.TimeToString2(time)
 		time = 0
 	end
 
-	local hour = time / 3600
-    local minute = time % 3600 /  60
+	local hour = math.floor(time / 3600)
+    local minute = math.floor(time % 3600 / 60)
     local second = time % 60
-    return string.format("%.2d:%.2d:%.2d", hour, minute, second)
+
+    return string.format("%02d:%02d:%02d", hour, minute, second)
 end
 
 function TimeStrUtil.TimeToString3(time)

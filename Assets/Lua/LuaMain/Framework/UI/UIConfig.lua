@@ -17,7 +17,7 @@ local UIConfig = {
     ui_test = {
         name = "ui_test",
         type = require "UI.View.Test.ui_test",
-    }
+    }    ,
 }
 
 return UIConfig

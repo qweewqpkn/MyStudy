@@ -54,5 +54,8 @@ Timer = require "Framework.Updater.Timer"
 TimerManager = require "Framework.Updater.TimerManager"
 UpdateManager = require "Framework.Updater.UpdateManager"
 
+SmartGOManager = require "Framework.Common.SmartGOManager"
+
+
 UIManager:GetInstance()
 UpdateManager:GetInstance()

@@ -57,7 +57,6 @@ function SmartGOManager:Release(abName, assetName)
     local isPool, prefab = self:IsPool(abName, assetName)
     if(isPool) then
         self.mPoolList[name] = nil
-        ResourceManager.Instance:Release(abName, assetName)
         PoolManager:GetInstance():Release(prefab)
     end
 end

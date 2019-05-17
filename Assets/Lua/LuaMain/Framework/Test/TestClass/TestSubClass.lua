@@ -1,4 +1,4 @@
-local TestBaseClass = require "Test.TestClass.TestBaseClass"
+local TestBaseClass = require "Framework.Test.TestClass.TestBaseClass"
 local TestSubClass = BaseClass("TestSubClass", TestBaseClass)
 
 function TestSubClass:__init(...)
@@ -12,6 +12,10 @@ end
 function TestSubClass:Test()
     self.super.Test(self)
     Logger.Log(Logger.Module.COMMON, "TestSubClass Test" .. self.testValue)
+end
+
+function TestSubClass:ShowValue(val)
+    self.super.SetForward(self, val)
 end
 
 return TestSubClass

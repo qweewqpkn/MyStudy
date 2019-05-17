@@ -5,29 +5,46 @@ meta.__mode = "k"
 
 local AllGoComponents = {}
 
-function LuaComponentHelper:AddLuaBehaviour(go, luatable)
+local function GetCompleteClassName(t)
+	if t.super == nil then
+		return t.__cname
+	end
+
+	return GetCompleteClassName(t.super).."."..t.__cname
+end
+
+function LuaComponentHelper:AddLuaBehaviour(go, luamonoclass)
 	if AllGoComponents[go] == nil then
 		AllGoComponents[go] = {}
 	end
 
-	local lb = luatable.New(go)
-	AllGoComponents[go][lb._class_type.__cname] = lb
+	local luamono = luamonoclass.New(go)
+	local key = GetCompleteClassName(luamonoclass)
+	AllGoComponents[go][key] = luamono
 
-	return lb
+	return luamono
 end
 
-function LuaComponentHelper:GetLuaBehaviour(go, cname)
+function LuaComponentHelper:GetLuaBehaviour(go, luamonoclass)
 	local all = AllGoComponents[go]
 	if all == nil then
 		return nil
 	end
 
-	return all[cname]
+	local key = GetCompleteClassName(luamonoclass)
+	for k,v in pairs(all) do
+		local b, _, endpos = string.startswith(k, key)
+		if b and (endpos == string.len(k) or string.sub(k, endpos, endpos + 1) == ".") then
+			return v
+		end
+	end
+
+	return nil
 end
 
 function LuaComponentHelper:DestroyImmediate(go)
 	if AllGoComponents[go] == nil then
-		CS.UnityEngine.GameObject.DestroyImmediate(go)
+		SmartGOManager:GetInstance():DeSpawn(go)
 		go = nil
 	else
 		for k,v in pairs(AllGoComponents[go]) do
@@ -35,6 +52,7 @@ function LuaComponentHelper:DestroyImmediate(go)
 			v = nil
 		end
 		AllGoComponents[go] = nil
+		SmartGOManager:GetInstance():DeSpawn(go)
 		go = nil
 	end
 end

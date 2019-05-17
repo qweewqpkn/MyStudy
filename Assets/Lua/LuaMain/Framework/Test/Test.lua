@@ -41,6 +41,21 @@ function Test:Start()
     --测试场景
     --local testScene = require "Framework.Test.TestScene"
     --testScene:Test1()
+
+    --测试super
+    local testSubClass = require "Framework.Test.TestClass.TestSubClass"
+    local testBaseClass = require "Framework.Test.TestClass.TestBaseClass"
+    local a = testSubClass.New()
+    Logger.Log(Logger.Module.CONFIG, "xxxxxxxxxxxxxxxxxxxx" .. testBaseClass.testValue) -- 10
+    Logger.Log(Logger.Module.CONFIG, "xxxxxxxxxxxxxxxxxxxx" .. a.testValue) -- 10
+    a.testValue = 100
+    Logger.Log(Logger.Module.CONFIG, "xxxxxxxxxxxxxxxxxxxx" .. testBaseClass.testValue) -- 10
+    Logger.Log(Logger.Module.CONFIG, "xxxxxxxxxxxxxxxxxxxx" .. a.testValue) -- 100
+    --a:ShowValue(10)
+    --local b = testSubClass.New()
+    --b:ShowValue(100)
+    --Logger.Log(Logger.Module.CONFIG, "xxxxxxxxxxxxxxxxxxxx" .. a.forward)
+    --Logger.Log(Logger.Module.CONFIG, "xxxxxxxxxxxxxxxxxxxx" .. b.forward)
 end
 
 return Test

@@ -65,7 +65,7 @@ end
 function startswith(target_string, start_pattern, plain)
 	plain = plain or true
 	local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, 1, plain)
-	return find_pos_begin == 1
+	return find_pos_begin == 1, find_pos_begin, find_pos_end
 end
 
 -- 以某个字符串结尾

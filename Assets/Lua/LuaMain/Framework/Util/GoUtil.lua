@@ -32,7 +32,7 @@ end
 
 function GoUtil.Destroy(obj)
     if(obj ~= nil) then
-        CS.UnityEngine.GameObject.Destroy(obj)
+        SmartGOManager:GetInstance():DeSpawn(obj)
     end
 end
 

@@ -29,7 +29,7 @@ function UIBase:OpenPanel(...)
             end
 
             --加载完成后，界面被标记为销毁
-            if self.mPanelState == 4then
+            if self.mPanelState == 4 then
                 Logger.Log(Logger.Module.UI, string.format("加载界面完成后, 立刻就被销毁了, 界面名字: %s", self.mAbPath))
                 self:ClosePanel()
                 return
@@ -42,7 +42,7 @@ function UIBase:OpenPanel(...)
             --绑定
             self:OnBind()
             --初始化
-            self:OnInit()
+            self:OnInit(SafeUnpack(self.mPanelData))
             --加载完成后，界面被标记为隐藏
             if self.mPanelState == 5 then
                 Logger.Log(Logger.Module.UI, string.format("加载界面完成后, 立刻就被隐藏了, 界面名字: %s", self.mAbPath))
@@ -86,7 +86,7 @@ end
 
 --离栈
 function UIBase:ExitStack()
-    Logger.LogError(Logger.Module.UI, "ExitStack call : " .. self.mUIName)
+    Logger.Log(Logger.Module.UI, "ExitStack call : " .. self.mUIName)
     if self.mIsStack and self.mPanelState == 2 then
         local viewStack = UIManager:GetInstance().mViewStack
         local view = viewStack:Peek()
@@ -115,7 +115,6 @@ function UIBase:ExitStack()
 
     if not UIManager:GetInstance():IsStackHaveFullScreen() then
         if UIManager:GetInstance().mMainUI ~= nil and UIManager:GetInstance().mMainUI.mPanelState == 3 then
-            Logger.LogError(Logger.Module.UI, "打开主界面")
             UIManager:GetInstance().mMainUI:ShowPanel(UIManager:GetInstance().mMainUI.mPanelData)
         end
     end
@@ -179,6 +178,19 @@ function UIBase:ClosePanel()
     elseif(self.mPanelState == 5) then
         --界面标记为隐藏
         self:HidePanel()
+    end
+end
+
+--是否界面被销毁
+function UIBase:IsDestroy()
+    if(self == nil) then
+        return true
+    else
+        if(self.mPanelState == 0) then
+            return true
+        end
+
+        return false
     end
 end
 

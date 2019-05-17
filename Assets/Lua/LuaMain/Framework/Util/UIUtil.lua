@@ -4,10 +4,15 @@ local UIUtil = BaseClass("UIUtil")
 --obj 添加事件的对象
 --callback 回调函数
 --data 自定义数据
-function UIUtil.AddButtonEvent(self, obj, callback, ...)
+function UIUtil.AddButtonEvent(obj, callback, self, ...)
+    if(IsNull(obj)) then
+        Logger.LogError(Logger.Module.COMMON, "UIUtil.AddButtonEvent obj is null")
+        return
+    end
+
     local btn = obj.gameObject:GetComponent("Button")
     if(btn == nil) then
-        btn = obj.gameObject:AddComponent(typeof(Button))
+        btn = obj.gameObject:AddComponent(typeof(CS.UnityEngine.UI.Button))
     end
     local params = SafePack(...)
     btn.onClick:RemoveAllListeners()
@@ -21,24 +26,63 @@ end
 --toggle 添加事件的对象
 --callback 回调函数
 --data 自定义数据
-function UIUtil.AddValueChangedEvent(component, callback, data)
-    component.onValueChanged:RemoveAllListeners()
-    component.onValueChanged:AddListener(function (t)
+function UIUtil.AddValueChangedEvent(obj, callback, self, ...)
+    if(IsNull(obj)) then
+        Logger.LogError(Logger.Module.COMMON, "UIUtil.AddValueChangedEvent obj is null")
+        return
+    end
+
+    local toggle = obj.gameObject:GetComponent("Toggle")
+    if(IsNull(toggle)) then
+        Logger.LogError(Logger.Module.COMMON, "UIUtil.AddValueChangedEvent toggle is null")
+        return
+    end
+
+    local params = SafePack(...)
+    toggle.onValueChanged:RemoveAllListeners()
+    toggle.onValueChanged:AddListener(function (isToggle)
         --ComponentClick(component, data)
-        callback(component, t, data)
+        callback(self, toggle, isToggle, SafeUnpack(params))
     end)
 end
 
 --template 模版对象
 --parent 父对象
---t table表其中包含模版对象的导出的控件元素
-function UIUtil.SpawnGridItem(template, parent, t)
-    local newItem = CS.UnityEngine.GameObject.Instantiate(template)
+--这里内部使用了对象池，所以你得配合DestroyGridAllItem 和 DeSpawnGridAllItem使用
+function UIUtil.SpawnGridItem(template, parent)
+    if(IsNull(template) or IsNull(parent)) then
+        Logger.LogError(Logger.Module.UI, "UIUtil.SpawnGridItem template or parent is nil")
+        return
+    end
+
+    local t = {}
+    local newItem = PoolManager:GetInstance():Spawn(template)
     newItem.gameObject:SetActive(true)
     newItem.transform:SetParent(parent.transform, false)
     CS.UIComponentBind.BindToLua(newItem.gameObject, t)
     newItem.transform.rotation = Quaternion.identity
     newItem.transform.localScale = Vector3.one
+    return t
+end
+
+--销毁这个模板的所有实例对象
+function UIUtil.DestroyGridAllItem(template)
+    if(IsNull(template)) then
+        Logger.LogError(Logger.Module.UI, "DestroyGridAllItem template is nil")
+        return
+    end
+
+    PoolManager:GetInstance():Release(template)
+end
+
+--回收这个模板对象的所有实例
+function UIUtil.DeSpawnGridAllItem(template)
+    if(IsNull(template)) then
+        Logger.LogError(Logger.Module.UI, "DeSpawnGridAllItem template is nil")
+        return
+    end
+
+    PoolManager:GetInstance():DeSpawnTemplate(template)
 end
 
 function UIUtil.SetSprite(image, abName, spriteName, isGray)
@@ -48,24 +92,10 @@ function UIUtil.SetSprite(image, abName, spriteName, isGray)
     imageExt:SetGray(isGray)
 end
 
-function UIUtil.SetUrlSprite(image, url, isGray)
-    isGray = isGray or false
-    local imageExt = image.gameObject:GetComponent(typeof(ImageExt))
-    imageExt:SetUrlSprite(url)
-    imageExt:SetGray(isGray)
-end
-
 --通过texture名字加载本地纹理
 function UIUtil.SetRawImage(rawImage, textureName, isGray, callBack)
     local rawImageExt = rawImage.gameObject:GetComponent(typeof(RawImageExt))
     rawImageExt:SetTexture(textureName, callBack)
-    rawImageExt:SetGray(isGray)
-end
-
---通过texture字节填充一张纹理
-function UIUtil.SetRawImage(rawImage, textureBytes, isGray)
-    local rawImageExt = rawImage.gameObject:GetComponent(typeof(RawImageExt))
-    rawImageExt:SetTextureBytes(textureBytes)
     rawImageExt:SetGray(isGray)
 end
 

@@ -21,55 +21,61 @@ function PoolManager:__delete()
 end
 
 --创建一个缓存池
-function PoolManager:CreatePool(prefab, size)
-    if( self.mPoolGoList[prefab] == nil) then
-        self.mPoolGoList[prefab] = PoolGO.New(prefab, self.mRootObj, size)
-        return self.mPoolGoList[prefab]
+function PoolManager:GetPoolOrCreate(template, size)
+    if( self.mPoolGoList[template] == nil) then
+        self.mPoolGoList[template] = PoolGO.New(template, self.mRootObj, size)
+        return self.mPoolGoList[template]
     else
-        Logger.LogError(Logger.Module.COMMON, "PoolManager CreatePool is failed, have same prafab exist")
+        return self.mPoolGoList[template]
     end
 end
 
 --获取一个缓存池
-function PoolManager:GetPool(prefab)
-    if(IsNull(prefab)) then
+function PoolManager:GetPool(template)
+    if(IsNull(template)) then
         Logger.LogError(Logger.Module.COMMON, "PoolManager GetPoolGo arg go is nil")
         return
     end
 
-    return self.mPoolGoList[prefab]
+    return self.mPoolGoList[template]
 end
 
 
---根据prefab获取一个go
-function PoolManager:Spawn(prefab)
-    local pool = self:GetPool(prefab)
-    if(pool == nil) then
-        pool = self:CreatePool(prefab, 1)
-    end
+--根据template获取一个实例go
+function PoolManager:Spawn(template)
+    local pool = self:GetPoolOrCreate(template, 1)
     local newGO = pool:Spawn()
-    self.mInstMapPrefabList[newGO] = prefab
+    self.mInstMapPrefabList[newGO] = template
     return newGO
 end
 
 --回收一个实例go
-function PoolManager:DeSpawn(go)
-    local isPool, prefab = self:IsPoolInst(go)
+function PoolManager:DeSpawn(inst)
+    local isPool, template = self:IsPoolInst(inst)
     if(isPool) then
-        local poolGO = self:GetPool(prefab)
+        local poolGO = self:GetPool(template)
         if(poolGO ~= nil) then
-            poolGO:DeSpawn(go)
+            poolGO:DeSpawn(inst)
         end
     end
 end
 
---是否有该name的缓存池
-function PoolManager:IsPoolPrefab(prefab)
-    if(IsNull(go)) then
+--回收一个模板的所有实例对象
+function PoolManager:DeSpawnTemplate(template)
+    for k,v in pairs(self.mInstMapPrefabList) do
+        if(v == template) then
+            self:DeSpawn(k)
+        end
+    end
+end
+
+--是否有该prefab的缓存池
+function PoolManager:IsPoolTemplate(template)
+    if(IsNull(template)) then
         return false
     end
 
-    if(self.mPoolGoList[prefab] ~= nil) then
+    if(self.mPoolGoList[template] ~= nil) then
         return true
     else
         return false
@@ -90,16 +96,16 @@ function PoolManager:IsPoolInst(go)
 end
 
 --释放缓存池
-function PoolManager:Release(prefab)
+function PoolManager:Release(template)
     --释放对象池
-    if(self.mPoolGoList[prefab] ~= nil) then
-        self.mPoolGoList[prefab]:Release()
-        self.mPoolGoList[prefab] = nil
+    if(self.mPoolGoList[template] ~= nil) then
+        self.mPoolGoList[template]:Release()
+        self.mPoolGoList[template] = nil
     end
 
     --移除所有实例对应prefab的缓存
-    for k,v in ipairs(self.mInstMapPrefabList) do
-        if(v == prefab) then
+    for k,v in pairs(self.mInstMapPrefabList) do
+        if(v == template) then
             self.mInstMapPrefabList[k] = nil
         end
     end

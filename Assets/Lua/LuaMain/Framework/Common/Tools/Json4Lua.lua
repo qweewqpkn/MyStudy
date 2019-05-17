@@ -276,7 +276,7 @@ local function encode (v)
   	end
   
   	-- Handle null values
-  	if vtyp == 'function' and v == null then
+  	if vtype == 'function' and v == null then
     	return 'null'
   	end
   
