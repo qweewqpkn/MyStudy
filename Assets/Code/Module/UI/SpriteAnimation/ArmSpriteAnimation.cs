@@ -11,59 +11,52 @@ public class ArmSpriteAnimation : MonoBehaviour {
     private SpriteAnimation.AnimationWrapMode mWrapMode;
     private SpriteAnimation mAnimation;
 
-	public void Init(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode, Action callback)
+	public void Init(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode)
     {
         mAtlasName = atlasName;
         mFPS = FPS;
         mWrapMode = wrapMode;
-        Parse(atlasName, FPS, mWrapMode, callback);
+        Parse(atlasName, FPS, mWrapMode);
     }
 
-    private void Parse(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode, Action callback)
+    private void Parse(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode)
     {
-        ResourceManager.Instance.LoadSpriteAtlasAsync(atlasName, (spriteList) =>
+        List<Sprite> spriteList = ResourceManager.Instance.LoadSpriteAtlas(atlasName);
+        Dictionary<string, SpriteAnimationClip> clipMap = new Dictionary<string, SpriteAnimationClip>();
+        for (int i = 0; i < spriteList.Count; i++)
         {
-            Dictionary<string, SpriteAnimationClip> clipMap = new Dictionary<string, SpriteAnimationClip>();
-            for (int i = 0; i < spriteList.Count; i++)
+            if(spriteList[i] == null)
             {
-                if(spriteList[i] == null)
-                {
-                    continue;
-                }
-
-                string[] names = spriteList[i].name.Split('_');
-                string action = names[0];
-                string dir = names[1];
-                string index = names[2];
-                string clipName = GetClipName(action, dir);
-                SpriteAnimationClip clip = null;
-                if (!clipMap.TryGetValue(clipName, out clip))
-                {
-                    clip = new SpriteAnimationClip();
-                    clipMap[clipName] = clip;
-                    clip.Name = clipName;
-                    clip.FPS = FPS;
-                    clip.WrapMode = wrapMode;
-                    clip.SpriteList = new List<Sprite>();
-                }
-
-                clip.SpriteList.Add(spriteList[i]);
+                continue;
             }
 
-            List<SpriteAnimationClip> clipList = new List<SpriteAnimationClip>();
-            foreach (var item in clipMap)
+            string[] names = spriteList[i].name.Split('_');
+            string action = names[0];
+            string dir = names[1];
+            string index = names[2];
+            string clipName = GetClipName(action, dir);
+            SpriteAnimationClip clip = null;
+            if (!clipMap.TryGetValue(clipName, out clip))
             {
-                clipList.Add(item.Value);
+                clip = new SpriteAnimationClip();
+                clipMap[clipName] = clip;
+                clip.Name = clipName;
+                clip.FPS = FPS;
+                clip.WrapMode = wrapMode;
+                clip.SpriteList = new List<Sprite>();
             }
 
-            mAnimation =  gameObject.AddComponent<SpriteAnimation>();
-            mAnimation.Init(clipList);
+            clip.SpriteList.Add(spriteList[i]);
+        }
 
-            if(callback != null)
-            {
-                callback();
-            }
-        });
+        List<SpriteAnimationClip> clipList = new List<SpriteAnimationClip>();
+        foreach (var item in clipMap)
+        {
+            clipList.Add(item.Value);
+        }
+
+        mAnimation =  gameObject.AddComponent<SpriteAnimation>();
+        mAnimation.Init(clipList);
     }
 
     private string GetClipName(string action, string dir)

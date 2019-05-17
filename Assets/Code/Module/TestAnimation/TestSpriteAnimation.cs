@@ -16,11 +16,7 @@ public class TestSpriteAnimation : MonoBehaviour {
 
  
         ArmSpriteAnimation action = GetComponent<ArmSpriteAnimation>();
-        action.Init("archer_sprite", 16, SpriteAnimation.AnimationWrapMode.eLoop, () =>
-        {
-            action.SetDir(0);
-            action.Play("attack");
-        });
+        action.Init("archer_sprite", 16, SpriteAnimation.AnimationWrapMode.eLoop);
         
         mButton1.onClick.AddListener(() =>
         {

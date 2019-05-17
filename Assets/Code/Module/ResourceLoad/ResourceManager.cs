@@ -135,7 +135,7 @@ namespace AssetLoad
         }
 
         //同步加载图集
-        public List<Sprite> LoadSpriteAtlas(string abName, string assetName)
+        public List<Sprite> LoadSpriteAtlas(string abName)
         {
             return HSpriteAtlas.Load(abName);
         }
