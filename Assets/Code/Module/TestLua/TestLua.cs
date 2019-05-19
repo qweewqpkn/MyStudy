@@ -6,15 +6,6 @@ using UnityEngine.UI;
 using XLua;
 
 public class TestLua : MonoBehaviour {
-    public class DClass
-    {
-        public int f1;
-        public int f2;
-    }
-
-    [CSharpCallLua]
-    public delegate int ShowStr(int a, int b, out DClass dClass);
-
 	// Use this for initialization
 	void Start () {
         Debuger.Init();

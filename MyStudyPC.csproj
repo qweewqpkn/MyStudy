@@ -13,14 +13,12 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2017.4.3f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion>4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -229,6 +227,12 @@
     <Reference Include="DOTween">
       <HintPath>Assets/Plugin/DOTween/DOTween.dll</HintPath>
     </Reference>
+    <Reference Include="TextMeshPro-5.6-Editor">
+      <HintPath>Assets/Plugin/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="TextMeshPro-5.6-Runtime">
+      <HintPath>Assets/Plugin/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>C:/Users/monk/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
     </Reference>
@@ -301,19 +305,23 @@
     <Compile Include="Assets\Code\Module\SpacePartition\QuadTree\QuadMain.cs" />
     <Compile Include="Assets\Code\Module\SpacePartition\QuadTree\QuadTree.cs" />
     <Compile Include="Assets\Code\Module\Test.cs" />
-    <Compile Include="Assets\Code\Module\TestAnimation\TestAnimation.cs" />
+    <Compile Include="Assets\Code\Module\TestAnimation\TestSpriteAnimation.cs" />
     <Compile Include="Assets\Code\Module\TestHierarchy\TestHierarchy.cs" />
     <Compile Include="Assets\Code\Module\TestLua\LuaManager.cs" />
     <Compile Include="Assets\Code\Module\TestLua\TestLua.cs" />
-    <Compile Include="Assets\Code\Module\TestLua\TestLuaCallCS.cs" />
+    <Compile Include="Assets\Code\Module\TestLua\TestLuaFunc.cs" />
     <Compile Include="Assets\Code\Module\TextureDestroy\TextureDestroy.cs" />
-    <Compile Include="Assets\Code\Module\UI\ArmSpriteAnimationAction.cs" />
     <Compile Include="Assets\Code\Module\UI\ImageExt.cs" />
+    <Compile Include="Assets\Code\Module\UI\LoopRect\InitOnStart.cs" />
+    <Compile Include="Assets\Code\Module\UI\LoopRect\LoopHorizontalScrollRect.cs" />
+    <Compile Include="Assets\Code\Module\UI\LoopRect\LoopScrollRect.cs" />
+    <Compile Include="Assets\Code\Module\UI\LoopRect\LoopVerticalScrollRect.cs" />
     <Compile Include="Assets\Code\Module\UI\MirrorSprite.cs" />
     <Compile Include="Assets\Code\Module\UI\RawImageExt.cs" />
-    <Compile Include="Assets\Code\Module\UI\SpriteAnimation.cs" />
-    <Compile Include="Assets\Code\Module\UI\SpriteAnimationClip.cs" />
-    <Compile Include="Assets\Code\Module\UI\SpriteAnimationState.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\ArmSpriteAnimation.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\SpriteAnimation.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\SpriteAnimationClip.cs" />
+    <Compile Include="Assets\Code\Module\UI\SpriteAnimation\SpriteAnimationState.cs" />
     <Compile Include="Assets\Code\Module\UI\TextColorGradient.cs" />
     <Compile Include="Assets\Code\Module\UI\UIComponentBind.cs" />
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGif.cs" />
@@ -321,6 +329,7 @@
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGifDecoder.cs" />
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGifExtension.cs" />
     <Compile Include="Assets\Code\Module\UI\UniGif\UniGifFormatter.cs" />
+    <Compile Include="Assets\Code\Module\UI\YYEmpty4RaycastBtn.cs" />
     <Compile Include="Assets\Code\Module\UI\YYUIWarpContent.cs" />
     <Compile Include="Assets\Code\Module\UI\YYUIWarpContentItem.cs" />
     <Compile Include="Assets\Code\Module\UISceneAdapter\UISceneAdapter.cs" />
@@ -353,6 +362,39 @@
     <Compile Include="Assets\Plugin\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
     <Compile Include="Assets\Plugin\DOTween\Modules\DOTweenModuleUtils.cs" />
     <Compile Include="Assets\Plugin\QHierarchy\Scripts\QObjectList.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
+    <Compile Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\Plugin\XLua\Examples\01_Helloworld\Helloworld.cs" />
     <Compile Include="Assets\Plugin\XLua\Examples\02_U3DScripting\LuaBehaviour.cs" />
     <Compile Include="Assets\Plugin\XLua\Examples\04_LuaObjectOrented\InvokeLua.cs" />
@@ -369,97 +411,6 @@
     <Compile Include="Assets\Plugin\XLua\Examples\10_SignatureLoader\SignatureLoaderTest.cs" />
     <Compile Include="Assets\Plugin\XLua\Examples\11_RawObject\RawObjectTest.cs" />
     <Compile Include="Assets\Plugin\XLua\Examples\12_ReImplementInLua\ReImplementInLua.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\BinaryWriterExtentionsWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\DebugerWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\DelegatesGensBridge.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\EnumWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\PackUnpack.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\SystemCollectionsGenericDictionary2SystemStringUnityEngineGameObjectWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\SystemCollectionsGenericList1SystemInt32Wrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\SystemCollectionsIEnumeratorBridge.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\SystemGCWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\SystemIOBinaryWriterWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\SystemObjectWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\TestBaseWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\TestLuaCallCSWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\TutorialBaseClassWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\TutorialCSCallLuaItfDBridge.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\TutorialDerivedClassExtensionsWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\TutorialDerivedClassWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\TutorialICalcWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineAnimationClipWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineAnimationCurveWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineBehaviourWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineBoundsWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineCanvasWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineColorWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineComponentWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineDebugWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineEventsUnityEventWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineGameObjectWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineKeyframeWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineLayerMaskWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineMathfWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineMonoBehaviourWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineObjectExtentionWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineObjectWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineParticleSystemWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEnginePlaneWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEnginePlayerPrefsWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineQuaternionWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineRay2DWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineRaycastHitWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineRayWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineRectOffsetWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineRectTransformWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineRectWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineRendererWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineResourceRequestWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineResourcesWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineSceneManagementSceneManagerWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineSkinnedMeshRendererWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineSpriteWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineTextAssetWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineTimeWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineTouchWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineTransformWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIButtonButtonClickedEventWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIButtonWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUICanvasScalerWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIContentSizeFitterWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIGraphicRaycasterWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIGridLayoutGroupWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIImageWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIInputFieldWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIScrollbarWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIScrollRectScrollRectEventWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIScrollRectWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUISliderWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUITextWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIToggleGroupWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineUIToggleWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineVector2Wrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineVector3Wrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineVector4Wrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineWaitForEndOfFrameWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineWaitForFixedUpdateWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineWaitForSecondsWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\UnityEngineWWWWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\WrapPusher.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaGenAutoRegister.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestBaseTestWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestFoo1ChildWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestFoo1ParentWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestFoo2ChildWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestFoo2ParentWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestFooExtensionWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestFooWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestIExchangerBridge.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestInvokeLuaICalcBridge.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestLuaBehaviourWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestMyStructWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestNoGcWrap.cs" />
-    <Compile Include="Assets\Plugin\XLua\Gen\XLuaTestPeddingWrap.cs" />
     <Compile Include="Assets\Plugin\XLua\Src\CodeEmit.cs" />
     <Compile Include="Assets\Plugin\XLua\Src\CopyByValue.cs" />
     <Compile Include="Assets\Plugin\XLua\Src\DelegateBridge.cs" />
@@ -572,6 +523,27 @@
     <None Include="Assets\Plugin\DOTween\DOTween.XML" />
     <None Include="Assets\Plugin\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Plugin\DOTween\readme.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\NotoSans - License.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald Bold - OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Plugin\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\Plugin\XLua\CHANGELOG.txt" />
     <None Include="Assets\Plugin\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\03_UIEvent\ButtonInteraction.lua.txt" />
@@ -579,7 +551,6 @@
     <None Include="Assets\Plugin\XLua\Examples\06_Coroutine\Resources\cs_coroutine.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\async_test.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\message_box.lua.txt" />
-    <None Include="Assets\Plugin\XLua\Gen\link.xml" />
     <None Include="Assets\Plugin\XLua\Resources\perf\memory.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\perf\profiler.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\tdr\tdr.lua.txt" />

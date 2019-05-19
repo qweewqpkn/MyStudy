@@ -13,11 +13,14 @@ local ui_main = BaseClass("ui_main", UIBase)
 --@end
 
 function ui_main:OnSet()
-    self.testPoolObj:Test1()
+    local testLuaFunc = self.gameObject:AddComponent(typeof(CS.TestLuaFunc))
+    testLuaFunc:Init(function(s)
+        Logger.Log(Logger.Module.COMMON, s)
+    end)
 end
 
 function ui_main:OnRelease()
-    self.testPoolObj:Test2()
+
 end
 
 --构造函数
@@ -32,8 +35,8 @@ end
 --绑定事件(一次)
 function ui_main: OnBind()
     Logger.Log(Logger.Module.UI, "ui_main OnBind")
-    UIUtil.AddButtonEvent(self, self.b_set, self.OnSet)
-    UIUtil.AddButtonEvent(self, self.b_release, self.OnRelease)
+    UIUtil.AddButtonEvent(self.b_set, self.OnSet, self)
+    UIUtil.AddButtonEvent(self.b_release, self.OnRelease, self)
     Messenger:GetInstance():Register(MsgEnum.MSG_MAIN_REFRESH, self.OnRefresh, self, "第一个参数哦")
     Messenger:GetInstance():Register(MsgEnum.MSG_MAIN_REFRESH, self.OnRefresh1, self, "第xxx个参数哦")
 end

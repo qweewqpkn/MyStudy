@@ -20,6 +20,12 @@ public class UIComponentBind : MonoBehaviour {
     public string mObjName;
     public List<ComponentData> mComponentDataList = new List<ComponentData>();
 
+    public LuaTable CompentsTable
+    {
+        get;
+        private set;
+    }
+
     public T GetComponentData<T>(string name) where T : UnityEngine.Object
     {
         T ret = null;
@@ -32,6 +38,11 @@ public class UIComponentBind : MonoBehaviour {
             }
         }
         return ret;
+    }
+
+    public void OnDestroy()
+    {
+        CompentsTable = null;
     }
 
 
@@ -49,6 +60,7 @@ public class UIComponentBind : MonoBehaviour {
             return;
         }
 
+        bind.CompentsTable = table;
         table.Set("transform", obj.transform);
         table.Set("gameObject", obj);
 

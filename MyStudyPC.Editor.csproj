@@ -284,6 +284,12 @@
     <Reference Include="DOTweenEditor">
       <HintPath>Assets/Plugin/DOTween/Editor/DOTweenEditor.dll</HintPath>
     </Reference>
+    <Reference Include="TextMeshPro-5.6-Editor">
+      <HintPath>Assets/Plugin/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="TextMeshPro-5.6-Runtime">
+      <HintPath>Assets/Plugin/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/monk/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -318,6 +324,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Code\Module\UI\LoopRect\Editor\LoopScrollRectInspector.cs" />
+    <Compile Include="Assets\Code\Module\UI\LoopRect\Editor\SGDefaultControls.cs" />
+    <Compile Include="Assets\Code\Module\UI\LoopRect\Editor\SGMenuOptions.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\AnimationSplit.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\OptmizeAnimationClip.cs" />
     <Compile Include="Assets\Editor\CustomTools\ArtTools\RenderCubeMap.cs" />
@@ -458,6 +467,27 @@
     <None Include="Assets\Plugin\DOTween\DOTween.XML" />
     <None Include="Assets\Plugin\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Plugin\DOTween\readme.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\LiberationSans - OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\NotoSans - License.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald Bold - OFL.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\Plugin\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Plugin\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\Plugin\XLua\CHANGELOG.txt" />
     <None Include="Assets\Plugin\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\03_UIEvent\ButtonInteraction.lua.txt" />
@@ -465,7 +495,6 @@
     <None Include="Assets\Plugin\XLua\Examples\06_Coroutine\Resources\cs_coroutine.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\async_test.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\message_box.lua.txt" />
-    <None Include="Assets\Plugin\XLua\Gen\link.xml" />
     <None Include="Assets\Plugin\XLua\Resources\perf\memory.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\perf\profiler.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\tdr\tdr.lua.txt" />
