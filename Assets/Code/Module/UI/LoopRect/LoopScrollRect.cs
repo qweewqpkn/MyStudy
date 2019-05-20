@@ -14,6 +14,7 @@ namespace UnityEngine.UI
     public abstract class LoopScrollRect : UIBehaviour, IInitializePotentialDragHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IScrollHandler, ICanvasElement, ILayoutElement, ILayoutGroup
     {
         //==========LoopScrollRect==========
+        [CSharpCallLua]
         public delegate void NotifyElement(LuaTable t, int index);
         private NotifyElement mNotifyElement;
 
@@ -282,9 +283,16 @@ namespace UnityEngine.UI
 
         public void Init(int size, NotifyElement notifyElement)
         {
-            mNotifyElement = notifyElement;
-            totalCount = size;
-            RefillCells();
+            if(mNotifyElement == null)
+            {
+                mNotifyElement = notifyElement;
+                totalCount = size;
+                RefillCells();
+            }
+            else
+            {
+                RefreshCells();
+            }
         }
 
         public void ClearCells()
@@ -666,6 +674,8 @@ namespace UnityEngine.UI
             else
             {
                 GameObject obj = Instantiate(mPrefab);
+                LuaTable table = LuaManager.Instance._LuaEnv.NewTable();
+                UIComponentBind.BindToLua(obj, table);
                 return obj;
             }
         }

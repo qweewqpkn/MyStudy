@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using TMPro;
 //using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -103,6 +104,21 @@ public class UIComponentBindEditor {
             data.type = "VerticalLayoutGroup";
             data.component = obj.GetComponent<VerticalLayoutGroup>();
         }
+        else if (obj.GetComponent<HorizontalLayoutGroup>() != null)
+        {
+            data.type = "HorizontalLayoutGroup";
+            data.component = obj.GetComponent<HorizontalLayoutGroup>();
+        }
+        else if(obj.GetComponent<LoopHorizontalScrollRect>() != null)
+        {
+            data.type = "LoopHorizontalScrollRect";
+            data.component = obj.GetComponent<LoopHorizontalScrollRect>();
+        }
+        else if (obj.GetComponent<LoopVerticalScrollRect>() != null)
+        {
+            data.type = "LoopVerticalScrollRect";
+            data.component = obj.GetComponent<LoopVerticalScrollRect>();
+        }
         else if (obj.GetComponent<ScrollRect>() != null)
         {
             data.type = "ScrollRect";
@@ -128,11 +144,11 @@ public class UIComponentBindEditor {
             data.type = "RawImage";
             data.component = obj.GetComponent<RawImage>();
         }
-        //else if(obj.GetComponent<TextMeshProUGUI>() != null)
-        //{
-        //    data.type = "TextMeshProUGUI";
-        //    data.component = obj.GetComponent<TextMeshProUGUI>();
-        //}
+        else if(obj.GetComponent<TextMeshProUGUI>() != null)
+        {
+            data.type = "TextMeshProUGUI";
+            data.component = obj.GetComponent<TextMeshProUGUI>();
+        }
         else if (obj.GetComponent<Text>() != null)
         {
             Debug.LogError("请不要使用Text组件了,使用新版的TextMeshPro组件");

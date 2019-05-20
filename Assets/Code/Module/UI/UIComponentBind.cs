@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using XLua;
@@ -111,6 +112,21 @@ public class UIComponentBind : MonoBehaviour {
                         //table[data.name] = data.component as VerticalLayoutGroup;
                     }
                     break;
+                case "HorizontalLayoutGroup":
+                    {
+                        table.Set(data.name, data.component as HorizontalLayoutGroup);
+                    }
+                    break;
+                case "LoopVerticalScrollRect":
+                    {
+                        table.Set(data.name, data.component as LoopVerticalScrollRect);
+                    }
+                    break;
+                case "LoopHorizontalScrollRect":
+                    {
+                        table.Set(data.name, data.component as  LoopHorizontalScrollRect);
+                    }
+                    break;
                 case "ScrollRect":
                     {
                         table.Set(data.name, data.component as ScrollRect);
@@ -125,7 +141,7 @@ public class UIComponentBind : MonoBehaviour {
                     break;
                 case "ImageExt":
                     {
-                        //table.Set(data.name, data.component as ImageExt);
+                        table.Set(data.name, data.component as ImageExt);
                         //table[data.name] = data.component as ImageExt;
                     }
                     break;
@@ -137,8 +153,13 @@ public class UIComponentBind : MonoBehaviour {
                     break;
                 case "RawImageExt":
                     {
-                        //table.Set(data.name, data.component as RawImageExt);
+                        table.Set(data.name, data.component as RawImageExt);
                         //table[data.name] = data.component as RawImageExt;
+                    }
+                    break;
+                case "TextMeshProUGUI":
+                    {
+                        table.Set(data.name, data.component as TextMeshProUGUI);
                     }
                     break;
                 case "Text":

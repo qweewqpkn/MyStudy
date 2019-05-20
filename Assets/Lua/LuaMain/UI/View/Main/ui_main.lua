@@ -2,21 +2,18 @@ local ui_main = BaseClass("ui_main", UIBase)
 
 --@start 导出的组件列表,使用self.xxx来访问
 --local b_image Image
---local b_text Text
+--local b_text TextMeshProUGUI
 --local b_set Button
 --local b_t_items Image
---local b_content GridLayoutGroup
 --local b_release Button
+--local b_loop_rect LoopVerticalScrollRect
 
 --b_t_items的导出的子元素
---b_text Text
+--b_text TextMeshProUGUI
 --@end
 
 function ui_main:OnSet()
-    local testLuaFunc = self.gameObject:AddComponent(typeof(CS.TestLuaFunc))
-    testLuaFunc:Init(function(s)
-        Logger.Log(Logger.Module.COMMON, s)
-    end)
+
 end
 
 function ui_main:OnRelease()
@@ -43,23 +40,25 @@ end
 
 --第一次打开界面调用(一次)
 function ui_main: OnInit()
-    Logger.Log(Logger.Module.UI, "ui_main OnInit")
 end
 
 --显示时调用(可多次)
 function ui_main: OnShow(...)
     self.b_text.text = "成功啦我们"
-    Logger.Log(Logger.Module.UI, "ui_main OnShow")
+    self.b_loop_rect:Init(20, BindCallback(self, self.OnNotifyElement))
+end
+
+function ui_main:OnNotifyElement(t, index)
+    t.b_text.text = index
+    Logger.Log(Logger.Module.COMMON, "gege" .. index)
 end
 
 --隐藏时调用(可多次)
 function ui_main: OnHide()
-    Logger.Log(Logger.Module.UI, "ui_main OnHide")
 end
 
 --关闭时调用(一次)
 function ui_main: OnClose()
-    Logger.Log(Logger.Module.UI, "ui_main OnClose")
 end
 
 function ui_main:OnRefresh(...)

@@ -1,16 +1,5 @@
 ﻿using System.Collections.Generic;
 
-public class Unit
-{
-    public float mX;
-    public float mY;
-}
-
-public class Grid
-{
-    public List<Unit> mUnits = new List<Unit>();
-}
-
 //思路就是：将世界中的所有物体，根据其坐标位置，分别将其划分到不同的网格之中。
 //好处：
 //1.比如我们要探测附近敌人，我们不用遍历整个世界中的物体，然后判断是否是敌人。
@@ -22,6 +11,18 @@ public class Grid
 //当世界中的物体都聚集在一个网格时，这时候网格划分就没有任何意义了，因为还是要遍历世界中的所有物体。
 public class GridManager
 {
+    public class Unit
+    {
+        public float mX;
+        public float mY;
+    }
+
+    public class Grid
+    {
+        public List<Unit> mUnits = new List<Unit>();
+    }
+
+
     public static GridManager Instance = new GridManager();
     private static int mGridHeight = 100;
     private static int mGridWidth = 100;
