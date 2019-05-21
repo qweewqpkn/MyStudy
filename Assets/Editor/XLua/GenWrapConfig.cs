@@ -32,6 +32,7 @@ public static class GenWrapConfig
         typeof(Delegate),
         typeof(Dictionary<string, GameObject>),
         typeof(UnityEngine.Events.UnityEvent),
+        typeof(UnityEngine.Physics),
 
         // unity结合lua，这部分导出很多功能在lua侧重新实现，没有实现的功能才会跑到cs侧
         typeof(Bounds),

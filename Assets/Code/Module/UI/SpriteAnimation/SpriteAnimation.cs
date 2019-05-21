@@ -74,8 +74,9 @@ public class SpriteAnimation : MonoBehaviour {
         }
     }
 
-    public void Play(string name, bool isBack = false)
+    public void Play(string name, bool isFlipX, bool isBack = false)
     {
+        mSpriteRenderer.flipX = isFlipX;
         if(mStateMap.ContainsKey(name))
         {
             if(mCurState != null)
@@ -105,6 +106,14 @@ public class SpriteAnimation : MonoBehaviour {
                 mCurState.IsBack = isBack;
                 mCurState.Start();
             }
+        }
+    }
+
+    public void Stop(string name)
+    {
+        if(mStateMap.ContainsKey(name))
+        {
+            mStateMap[name].Stop();
         }
     }
 

@@ -9,7 +9,13 @@ public class ArmSpriteAnimation : MonoBehaviour {
     private int mDir;
     private int mFPS;
     private SpriteAnimation.AnimationWrapMode mWrapMode;
-    private SpriteAnimation mAnimation;
+    public SpriteAnimation Animation
+    {
+        get;
+        private set;
+    }
+
+    private bool mFlipX;
 
 	public void Init(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode)
     {
@@ -55,8 +61,8 @@ public class ArmSpriteAnimation : MonoBehaviour {
             clipList.Add(item.Value);
         }
 
-        mAnimation =  gameObject.AddComponent<SpriteAnimation>();
-        mAnimation.Init(clipList);
+        Animation =  gameObject.AddComponent<SpriteAnimation>();
+        Animation.Init(clipList);
     }
 
     private string GetClipName(string action, string dir)
@@ -66,15 +72,38 @@ public class ArmSpriteAnimation : MonoBehaviour {
 
     public void SetDir(int dir)
     {
-        mDir = dir;
+        if(dir == 7)
+        {
+            mDir = 4;
+            mFlipX = false;
+        }
+        else if(dir > 3)
+        {
+            mDir = 6 - dir;
+            mFlipX = true;
+        }
+        else
+        {
+            mDir = dir;
+            mFlipX = false;
+        }
     }
 
     public void Play(string action, bool isBack = false)
     {
         string name = GetClipName(action, mDir.ToString());
-        if(mAnimation != null)
+        if(Animation != null)
         {
-            mAnimation.Play(name, isBack);
+            Animation.Play(name, mFlipX, isBack);
+        }
+    }
+
+    public void Stop(string action)
+    {
+        string name = GetClipName(action, mDir.ToString());
+        if (Animation != null)
+        {
+            Animation.Stop(name);
         }
     }
 

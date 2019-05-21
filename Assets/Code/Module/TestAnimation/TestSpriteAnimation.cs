@@ -20,12 +20,14 @@ public class TestSpriteAnimation : MonoBehaviour {
         
         mButton1.onClick.AddListener(() =>
         {
+            action.SetDir(4);
             action.Play("idle");
         });
         
         mButton2.onClick.AddListener(() =>
         {
-            action.Play("die", true);
+            action.SetDir(1);
+            action.Play("idle");
         });
     }
 	
