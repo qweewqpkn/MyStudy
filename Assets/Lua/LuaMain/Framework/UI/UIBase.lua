@@ -21,6 +21,7 @@ function UIBase:OpenPanel(...)
     if self.mPanelState == 0 then
         self.mPanelState = 1
         Logger.Log(Logger.Module.UI, "UIManager OpenPanel : " .. self.mAbPath)
+        self:OnPreInit()
         --加载界面资源
         ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
             if(IsNull(obj)) then
@@ -95,7 +96,7 @@ function UIBase:ExitStack()
                 viewStack:Pop()
                 if viewStack:Count() > 0 then
                     view = viewStack:Peek()
-                    view:ShowPanel()
+                    view:ShowPanel(SafeUnpack(view.mPanelData))
                 end
             else
                 while true do
@@ -107,7 +108,7 @@ function UIBase:ExitStack()
 
                 view = viewStack:Peek()
                 if view ~= nil then
-                    view:ShowPanel()
+                    view:ShowPanel(SafeUnpack(view.mPanelData))
                 end
             end
         end
@@ -115,7 +116,7 @@ function UIBase:ExitStack()
 
     if not UIManager:GetInstance():IsStackHaveFullScreen() then
         if UIManager:GetInstance().mMainUI ~= nil and UIManager:GetInstance().mMainUI.mPanelState == 3 then
-            UIManager:GetInstance().mMainUI:ShowPanel(UIManager:GetInstance().mMainUI.mPanelData)
+            UIManager:GetInstance().mMainUI:ShowPanel(SafeUnpack(UIManager:GetInstance().mMainUI.mPanelData))
         end
     end
 end
@@ -214,6 +215,11 @@ end
 
 --绑定各种事情(为了让子类重写)
 function UIBase:OnBind()
+
+end
+
+--界面预初始(调用一次,在加载界面prefab之前)
+function UIBase:OnPreInit()
 
 end
 
