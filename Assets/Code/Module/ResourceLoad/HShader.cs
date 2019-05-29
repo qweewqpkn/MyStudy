@@ -35,7 +35,7 @@ namespace AssetLoad
             }
 
             HShader res = Get<HShader>(abName, assetName, AssetType.eShader);
-            res.StartLoad(false, false, false, tCallBack);
+            res.StartLoad(false, true, false, tCallBack);
         }
 
         //使用协程等待异步请求，而不用回调的形式
@@ -61,7 +61,7 @@ namespace AssetLoad
             }
 
             HShader res = Get<HShader>(abName, assetName, AssetType.eShader);
-            res.StartLoad(true, false, false, null);
+            res.StartLoad(true, true, false, null);
             return res.AssetData.mAsset as Shader;
         }
     }

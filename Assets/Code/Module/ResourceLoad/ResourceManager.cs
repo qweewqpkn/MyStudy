@@ -23,6 +23,8 @@ namespace AssetLoad
 
     public class ResourceManager : SingletonMono<ResourceManager>
     {
+        private Dictionary<string, Material> mMaterialMap = new Dictionary<string, Material>();
+
         #region AB
         //异步加载AB
         public void LoadABAsync(string abName, Action<AssetBundle> callback)
@@ -199,6 +201,19 @@ namespace AssetLoad
         public Material LoadMaterial(string abName, string assetName)
         {
             return HMaterial.Load(abName, assetName);
+        }
+
+        //shaderName是shader内部的名字
+        public Material GetMaterial(string shaderName)
+        {
+            if(!mMaterialMap.ContainsKey(shaderName))
+            {
+                Shader shader = LoadShader("allshader", shaderName);
+                Material material = new Material(shader);
+                mMaterialMap[shaderName] = material;
+            }
+
+            return mMaterialMap[shaderName];
         }
         #endregion
 
