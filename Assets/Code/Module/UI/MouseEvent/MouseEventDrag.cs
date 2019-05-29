@@ -7,7 +7,7 @@ using XLua;
 public class MouseEventDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     [CSharpCallLua]
-    public delegate void MouseEvent(GameObject obj, PointerEventData data);
+    public delegate void MouseEvent(GameObject obj);
     public MouseEvent mMouseDrag;
     public MouseEvent mMouseBeginDrag;
     public MouseEvent mMouseEngDrag;
@@ -17,7 +17,7 @@ public class MouseEventDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeg
         //Debug.Log("OnDrag");
         if (mMouseDrag != null)
         {
-            mMouseDrag(gameObject, eventData);
+            mMouseDrag(gameObject);
         }
     }
 
@@ -26,7 +26,7 @@ public class MouseEventDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeg
         //Debug.Log("OnBeginDrag");
         if (mMouseBeginDrag != null)
         {
-            mMouseBeginDrag(gameObject, eventData);
+            mMouseBeginDrag(gameObject);
         }
     }
 
@@ -35,7 +35,7 @@ public class MouseEventDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeg
         //Debug.Log("OnEndDrag");
         if (mMouseEngDrag != null)
         {
-            mMouseEngDrag(gameObject, eventData);
+            mMouseEngDrag(gameObject);
         }
     }
 }

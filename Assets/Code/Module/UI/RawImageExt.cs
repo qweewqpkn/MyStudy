@@ -67,8 +67,7 @@ public class RawImageExt : RawImage
         {
             if (null == mGrayMaterial)
             {
-                Shader shader = Shader.Find("Custom/ImageGray");
-                mGrayMaterial = new Material(shader);
+                mGrayMaterial = ResourceManager.Instance.GetMaterial("Custom/UI/UIGray");
             }
             material = mGrayMaterial;
         }

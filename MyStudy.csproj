@@ -322,7 +322,8 @@
     <Compile Include="Assets\Code\Module\UI\LoopRect\LoopVerticalScrollRect.cs" />
     <Compile Include="Assets\Code\Module\UI\MirrorSprite.cs" />
     <Compile Include="Assets\Code\Module\UI\MouseEvent\MouseEventDrag.cs" />
-    <Compile Include="Assets\Code\Module\UI\MouseEvent\MouseEventListener.cs" />
+    <Compile Include="Assets\Code\Module\UI\MouseEvent\MouseEventPointer.cs" />
+    <Compile Include="Assets\Code\Module\UI\MouseEvent\MouseEventScrollRectDrag.cs" />
     <Compile Include="Assets\Code\Module\UI\RawImageExt.cs" />
     <Compile Include="Assets\Code\Module\UI\SpriteAnimation\ArmSpriteAnimation.cs" />
     <Compile Include="Assets\Code\Module\UI\SpriteAnimation\SpriteAnimation.cs" />

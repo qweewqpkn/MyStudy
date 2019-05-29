@@ -112,9 +112,9 @@ public class ImageExt : Image
     //    byte[] data = texture.EncodeToPNG();
     //    File.WriteAllBytes(save_path, data);
     //
-    //    ResourceManager.instance.mDicUrlSpriteLocal[url] = "file:///" + save_path;
+    //    ResourceManager.Instance.mDicUrlSpriteLocal[url] = "file:///" + save_path;
     //
-    //    ResourceManager.instance.SaveAllLocalUrlImage();
+    //    ResourceManager.Instance.SaveAllLocalUrlImage();
     //}
 
     public bool IsGif(byte[] content)
@@ -138,8 +138,7 @@ public class ImageExt : Image
 			return;
 		if (isGray) {
 			if (null == mGrayMaterial) {
-				Shader shader = Shader.Find("Custom/ImageGray");
-				mGrayMaterial = new Material (shader);
+                mGrayMaterial = ResourceManager.Instance.GetMaterial("Custom/UI/UIGray");
 			}
 			material = mGrayMaterial;
 			if (raycast) {
