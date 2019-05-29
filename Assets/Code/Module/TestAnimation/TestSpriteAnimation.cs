@@ -8,6 +8,7 @@ public class TestSpriteAnimation : MonoBehaviour {
 
     public Button mButton1;
     public Button mButton2;
+    public Button mButton3;
 
     // Use this for initialization
     void Start () {
@@ -16,18 +17,23 @@ public class TestSpriteAnimation : MonoBehaviour {
 
  
         ArmSpriteAnimation action = GetComponent<ArmSpriteAnimation>();
-        action.Init("archer_sprite", 16, SpriteAnimation.AnimationWrapMode.eLoop);
+        action.Init("archer_sprite", 1, SpriteAnimation.AnimationWrapMode.eLoop);
         
         mButton1.onClick.AddListener(() =>
         {
             action.SetDir(4);
-            action.Play("idle");
+            action.Play("attack");
+            action.SetDir(3);
         });
         
         mButton2.onClick.AddListener(() =>
         {
             action.SetDir(1);
-            action.Play("idle");
+        });
+
+        mButton3.onClick.AddListener(() =>
+        {
+            action.SetDir(2);
         });
     }
 	

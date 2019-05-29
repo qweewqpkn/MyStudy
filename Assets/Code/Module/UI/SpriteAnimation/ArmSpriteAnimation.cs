@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ArmSpriteAnimation : MonoBehaviour {
     private string mAtlasName;
+    private string mAction;
     private int mDir;
     private int mFPS;
     private SpriteAnimation.AnimationWrapMode mWrapMode;
@@ -13,6 +14,24 @@ public class ArmSpriteAnimation : MonoBehaviour {
     {
         get;
         private set;
+    }
+
+    public string ClipName
+    {
+        get
+        {
+            if(string.IsNullOrEmpty(mAction))
+            {
+                return "";
+            }
+
+            if(mDir == 0)
+            {
+                return "";
+            }
+
+            return GetClipName(mAction, mDir.ToString());
+        }
     }
 
     private bool mFlipX;
@@ -72,25 +91,49 @@ public class ArmSpriteAnimation : MonoBehaviour {
 
     public void SetDir(int dir)
     {
-        if(dir == 7)
+        if(dir != mDir)
         {
-            mDir = 4;
-            mFlipX = false;
-        }
-        else if(dir > 3)
-        {
-            mDir = 6 - dir;
-            mFlipX = true;
-        }
-        else
-        {
-            mDir = dir;
-            mFlipX = false;
+            float time = 0;
+            if(!string.IsNullOrEmpty(ClipName))
+            {
+                //记录当前动作下的时间
+                if (Animation != null && Animation.StateMap[ClipName] != null)
+                {
+                    time = Animation.StateMap[ClipName].CurTime;
+                }
+            }
+
+            if (dir == 7)
+            {
+                mDir = 4;
+                mFlipX = false;
+            }
+            else if (dir > 3)
+            {
+                mDir = 6 - dir;
+                mFlipX = true;
+            }
+            else
+            {
+                mDir = dir;
+                mFlipX = false;
+            }
+
+            if (!string.IsNullOrEmpty(ClipName))
+            {
+                Play(mAction);
+                if (Animation != null && Animation.StateMap[ClipName] != null)
+                {
+                    //由于只是切换方向，保持之前的时间继续播放
+                    Animation.StateMap[ClipName].CurTime = time;
+                }
+            }
         }
     }
 
     public void Play(string action, bool isBack = false)
     {
+        mAction = action;
         string name = GetClipName(action, mDir.ToString());
         if(Animation != null)
         {
@@ -100,6 +143,10 @@ public class ArmSpriteAnimation : MonoBehaviour {
 
     public void Stop(string action)
     {
+        if(action == mAction)
+        {
+            mAction = "";
+        }
         string name = GetClipName(action, mDir.ToString());
         if (Animation != null)
         {
