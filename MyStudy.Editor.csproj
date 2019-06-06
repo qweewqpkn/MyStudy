@@ -513,9 +513,6 @@
     <None Include="Assets\Plugin\XLua\Src\Editor\Template\PackUnpack.tpl.txt" />
     <None Include="Assets\Plugin\XLua\Src\Editor\Template\TemplateCommon.lua.txt" />
     <None Include="Assets\Plugin\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
-    <None Include="Assets\Shader\Effect\Effect_Particles_Addmask.shader" />
-    <None Include="Assets\Shader\Effect\Effect_Particles_AlphaBlended.shader" />
-    <None Include="Assets\Shader\custom\AlphaTest.shader" />
     <None Include="Assets\StreamingAssets\ClientRes\Windows\VersionRes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

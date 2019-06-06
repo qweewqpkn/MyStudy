@@ -303,7 +303,6 @@
     <Compile Include="Assets\Code\Module\GhostShadow\AnimationCallback.cs" />
     <Compile Include="Assets\Code\Module\GhostShadow\GhostShadow.cs" />
     <Compile Include="Assets\Code\Module\GhostShadow\GhostShadowCreator.cs" />
-    <Compile Include="Assets\Code\Module\IsNull\IsNull.cs" />
     <Compile Include="Assets\Code\Module\LightMap\LoadLightMap.cs" />
     <Compile Include="Assets\Code\Module\LightMap\SceneConfig.cs" />
     <Compile Include="Assets\Code\Module\RenderEffectPerFrame\RenderEffectPerFrame.cs" />
@@ -325,27 +324,29 @@
     <Compile Include="Assets\Code\Module\ResourceLoad\PrefabAutoDestory.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\ResourceManager.cs" />
     <Compile Include="Assets\Code\Module\ResourceUpdate\ResourceUpdateManager.cs" />
-    <Compile Include="Assets\Code\Module\ShaderMultiCompile\ShaderMultiCompile.cs" />
     <Compile Include="Assets\Code\Module\SpacePartition\Grid\GridManager.cs" />
     <Compile Include="Assets\Code\Module\SpacePartition\QuadTree\QuadMain.cs" />
     <Compile Include="Assets\Code\Module\SpacePartition\QuadTree\QuadTree.cs" />
-    <Compile Include="Assets\Code\Module\Test.cs" />
-    <Compile Include="Assets\Code\Module\TestAnimation\TestSpriteAnimation.cs" />
-    <Compile Include="Assets\Code\Module\TestDragObj\CGridPosition.cs" />
-    <Compile Include="Assets\Code\Module\TestDragObj\TestDragComplete.cs" />
-    <Compile Include="Assets\Code\Module\TestDragObj\TestDragObj.cs" />
-    <Compile Include="Assets\Code\Module\TestDragObj\TestGridManager.cs" />
-    <Compile Include="Assets\Code\Module\TestHierarchy\TestHierarchy.cs" />
-    <Compile Include="Assets\Code\Module\TestLua\LuaManager.cs" />
-    <Compile Include="Assets\Code\Module\TestLua\TestLua.cs" />
-    <Compile Include="Assets\Code\Module\TestLua\TestLuaFunc.cs" />
-    <Compile Include="Assets\Code\Module\TextureDestroy\TextureDestroy.cs" />
-    <Compile Include="Assets\Code\Module\UISceneAdapter\UISceneAdapter.cs" />
+    <Compile Include="Assets\Code\Module\Test\IsNull\IsNull.cs" />
+    <Compile Include="Assets\Code\Module\Test\ShaderMultiCompile\ShaderMultiCompile.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestAnimation\TestSpriteAnimation.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestDragObj\CGridPosition.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestDragObj\TestDragComplete.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestDragObj\TestDragObj.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestDragObj\TestGridManager.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestHierarchy\TestHierarchy.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestLua\LuaManager.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestLua\TestLua.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestLua\TestLuaFunc.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestRectTransform\TestRectTransform.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestResLoad\TestResLoad.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestTextureDestroy\TestTextureDestroy.cs" />
+    <Compile Include="Assets\Code\Module\Test\UISceneAdapter\UISceneAdapter.cs" />
+    <Compile Include="Assets\Code\Module\Test\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Code\Module\Utility\CoroutineUtility.cs" />
     <Compile Include="Assets\Code\Module\Utility\FileUtility.cs" />
     <Compile Include="Assets\Code\Module\Utility\Singleton.cs" />
     <Compile Include="Assets\Code\Module\Utility\TextureUtility.cs" />
-    <Compile Include="Assets\Code\Module\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Code\Render\AverageBlur\AverageBlur.cs" />
     <Compile Include="Assets\Code\Render\BillBoard\BillBoard2.cs" />
     <Compile Include="Assets\Code\Render\Depth\DepthToWorldPos\DepthToWorldPos.cs" />
@@ -453,7 +454,6 @@
     <Compile Include="Assets\Plugin\XLua\Tutorial\LoadLuaScript\ByString\ByString.cs" />
     <Compile Include="Assets\Plugin\XLua\Tutorial\LoadLuaScript\Loader\CustomLoader.cs" />
     <Compile Include="Assets\Plugin\XLua\Tutorial\LuaCallCSharp\LuaCallCs.cs" />
-    <Compile Include="Assets\Shader\custom\SetRenderQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Code\Module\AudioManager\音频优化规则.txt" />
@@ -577,9 +577,6 @@
     <None Include="Assets\Plugin\XLua\Src\Editor\Template\PackUnpack.tpl.txt" />
     <None Include="Assets\Plugin\XLua\Src\Editor\Template\TemplateCommon.lua.txt" />
     <None Include="Assets\Plugin\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
-    <None Include="Assets\Shader\Effect\Effect_Particles_Addmask.shader" />
-    <None Include="Assets\Shader\Effect\Effect_Particles_AlphaBlended.shader" />
-    <None Include="Assets\Shader\custom\AlphaTest.shader" />
     <None Include="Assets\StreamingAssets\ClientRes\Windows\VersionRes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

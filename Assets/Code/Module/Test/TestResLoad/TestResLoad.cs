@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class Test : MonoBehaviour {
+public class TestResLoad : MonoBehaviour {
 
     public Button mButton;
     public RawImage mImage;
