@@ -324,11 +324,11 @@
   <ItemGroup>
     <None Include="Assets\Code\Module\AudioManager\音频优化规则.txt" />
     <None Include="Assets\Code\Module\ClickEvent\说明.txt" />
+    <None Include="Assets\Code\Module\Component\UniGif\说明.txt" />
     <None Include="Assets\Code\Module\GhostShadow\GhostShadow.shader" />
     <None Include="Assets\Code\Module\LightMap\LightMap.shader" />
     <None Include="Assets\Code\Module\LightMap\说明.txt" />
     <None Include="Assets\Code\Module\ResourceLoad\测试用例.txt" />
-    <None Include="Assets\Code\Module\UI\UniGif\说明.txt" />
     <None Include="Assets\Code\Render\AverageBlur\AverageBlur.shader" />
     <None Include="Assets\Code\Render\BillBoard\BillBoard.shader" />
     <None Include="Assets\Code\Render\BillBoard\BillBoard1.shader" />
@@ -425,7 +425,6 @@
     <None Include="Assets\Plugin\XLua\Examples\06_Coroutine\Resources\cs_coroutine.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\async_test.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\message_box.lua.txt" />
-    <None Include="Assets\Plugin\XLua\Gen\link.xml" />
     <None Include="Assets\Plugin\XLua\Resources\perf\memory.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\perf\profiler.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\tdr\tdr.lua.txt" />

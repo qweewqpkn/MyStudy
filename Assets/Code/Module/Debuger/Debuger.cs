@@ -40,12 +40,12 @@ public class Debuger
     private static List<string> uiLogList = new List<string>(); //ui日志列表
     private static FileStream fs; 
     private static StreamWriter sw;
-    private static YYUIWarpContent wrapContent; //ui对象的组件
+    private static LoopScrollRect wrapContent; //ui对象的组件
     private static string SERVER_URL = ""; //日志服务器地址
     private static Dictionary<string, List<string>> logBufferMap = new Dictionary<string, List<string>>(); //缓存特定系统的日志
 
 
-    public static void Init(YYUIWarpContent content = null)
+    public static void Init(LoopScrollRect content = null)
     {
         ClearLocalFile();
         Application.logMessageReceived += LogCallback;
@@ -226,9 +226,9 @@ public class Debuger
         {
             wrapContent.Init(uiLogList.Count, (obj, index) =>
             {
-                Text text = obj.GetComponent<Text>();
-                text.text = uiLogList[index];
-            }, null, false);
+                //Text text = obj.GetComponent<Text>();
+                //text.text = uiLogList[index];
+            });
         }
     }
 
