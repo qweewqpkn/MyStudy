@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : SingletonMono<AudioManager>
 {
     private int mID = 0;
     private float mUpdateDelta = 0;
@@ -19,22 +19,13 @@ public class AudioManager : MonoBehaviour
 
     //指定音频类型的音频数据
     private Dictionary<string, AudioTypeData> mAudioTypeDataDict = new Dictionary<string, AudioTypeData>();
+    private Dictionary<int, AudioData> mAudioDataMap = new Dictionary<int, AudioData>();
 
-    private static AudioManager mInstance;
-    public static AudioManager Instance
+    //释放类型
+    public enum AudioReleaseType
     {
-        get
-        {
-            if (mInstance == null)
-            {
-                GameObject obj = new GameObject();
-                obj.name = "AudioManager";
-                mInstance = obj.AddComponent<AudioManager>();
-                mInstance.Init();
-                DontDestroyOnLoad(obj);
-            }
-            return mInstance;
-        }
+        eAuto,
+        eManual,
     }
 
     //空间类型
@@ -51,18 +42,19 @@ public class AudioManager : MonoBehaviour
         eNew, //创建新的播放器
     }
 
+    //播放器的状态
     public enum AudioSourceState
     {
         eIdel,
         eReady,
-        ePlay,
+        ePlaying,
+        ePlayed,
     }
 
     public class AudioData
     {
         public AudioData()
         {
-            mAudioNameList = new List<string>();
         }
 
         //唯一id
@@ -77,6 +69,8 @@ public class AudioManager : MonoBehaviour
         public AudioSpaceType mSpaceType;
         //创建类型
         public AudioCreateType mCreateType;
+        //释放类型
+        public AudioReleaseType mReleaseType;
         //该播放跟随的对象(3D播放器才会有跟随对象)
         public GameObject mFollowObj;
         //计时器id
@@ -85,8 +79,6 @@ public class AudioManager : MonoBehaviour
         public bool mLoop;
         //最大距离
         public float mMaxRange;
-        //播放过的音频列表(主要用于释放这些播放过的音频资源)
-        public List<string> mAudioNameList;
         //当前播放器播放的音频名字
         public string PlayClipName
         {
@@ -109,6 +101,7 @@ public class AudioManager : MonoBehaviour
         {
             mAudioDataList = new List<AudioData>();
             mIsMute = false;
+            Volume = 1.0f;
         }
         //包含具体播放器的信息
         public List<AudioData> mAudioDataList;
@@ -128,35 +121,6 @@ public class AudioManager : MonoBehaviour
                 for (int i = 0; i < mAudioDataList.Count; i++)
                 {
                     mAudioDataList[i].mAudioSource.mute = mIsMute;
-                }
-            }
-        }
-
-        //该类型是否要停止
-        private bool mIsStop;
-        public bool IsStop
-        {
-            get
-            {
-                return mIsStop;
-            }
-
-            set
-            {
-                mIsStop = value;
-                if(mIsStop)
-                {
-                    for (int i = 0; i < mAudioDataList.Count; i++)
-                    {
-                        //延时的播放要停止掉
-                        if (mAudioDataList[i].mTimerID != 0)
-                        {
-                            TimerManager.Instance.StopTimer(mAudioDataList[i].mTimerID);
-                            mAudioDataList[i].mTimerID = 0;
-                        }
-
-                        mAudioDataList[i].mAudioSource.Stop();
-                    }
                 }
             }
         }
@@ -181,7 +145,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private void Init()
+    public void Start()
+    {
+        
+    }
+
+    protected override void Init()
     {
         mAudioListenerObj = new GameObject();
         mAudioListenerObj.name = "AudioListener";
@@ -196,7 +165,7 @@ public class AudioManager : MonoBehaviour
     }
 
     //创建播放器（新增类型要修改这里）
-    private AudioData CreateAudioData(string type, AudioSpaceType spaceType, AudioCreateType createType, AudioTypeData data, GameObject targetObj, float maxRange, bool isLoop)
+    private AudioData CreateAudioData(string type, AudioSpaceType spaceType, AudioCreateType createType, AudioReleaseType releaseType, AudioTypeData data, GameObject targetObj, float maxRange, bool isLoop)
     {
         AudioData audioData = new AudioData();
         audioData.mID = mID++;
@@ -206,6 +175,7 @@ public class AudioManager : MonoBehaviour
         audioData.mType = type;
         audioData.mSpaceType = spaceType;
         audioData.mCreateType = createType;
+        audioData.mReleaseType = releaseType;
         audioData.mLoop = isLoop;
         audioData.mMaxRange = maxRange;
 
@@ -233,12 +203,6 @@ public class AudioManager : MonoBehaviour
         }
 
         return audioData;
-    }
-
-    //为了将lua的音频类型数据初始化到c#这边
-    public void InitAudioTypeData(string type)
-    {
-        AudioTypeData data = GetAudioTypeData(type);
     }
 
     private AudioTypeData GetAudioTypeData(string type)
@@ -275,7 +239,7 @@ public class AudioManager : MonoBehaviour
     }
 
     //获取播放器
-    private AudioData GetAudioSource(string type, AudioSpaceType spaceType, AudioCreateType createType, GameObject targetObj, float maxRange, bool isLoop)
+    private AudioData GetAudioSource(string type, AudioSpaceType spaceType, AudioCreateType createType, AudioReleaseType releaseType, GameObject targetObj, float maxRange, bool isLoop)
     {
         //获取指定type的数据
         AudioTypeData data = GetAudioTypeData(type);
@@ -292,6 +256,11 @@ public class AudioManager : MonoBehaviour
                 {
                     bFree = true;
                     audioData = data.mAudioDataList[i];
+                    if (audioData.mAudioState == AudioSourceState.ePlaying)
+                    {
+                        StopAndDisposeAudioByID(audioData.mID);
+                        audioData.mAudioState = AudioSourceState.eReady;
+                    }
                     break;
                 }
             }
@@ -303,8 +272,8 @@ public class AudioManager : MonoBehaviour
                     data.mAudioDataList[i].mCreateType == createType)
                 {
                     bFree = true;
-                    data.mAudioDataList[i].mAudioState = AudioSourceState.eReady;
                     audioData = data.mAudioDataList[i];
+                    audioData.mAudioState = AudioSourceState.eReady;
                     audioData.mFollowObj = targetObj;
                     audioData.mAudioSource.loop = isLoop;
                     audioData.mAudioSource.maxDistance = maxRange;
@@ -316,8 +285,9 @@ public class AudioManager : MonoBehaviour
         //没有空闲,创建新的
         if (!bFree)
         {
-            audioData = CreateAudioData(type, spaceType, createType, data, targetObj, maxRange, isLoop);
+            audioData = CreateAudioData(type, spaceType, createType, releaseType, data, targetObj, maxRange, isLoop);
             data.mAudioDataList.Add(audioData);
+            mAudioDataMap[audioData.mID] = audioData;
         }
         return audioData;
     }
@@ -341,73 +311,38 @@ public class AudioManager : MonoBehaviour
     //释放指定名字的音频资源
     private void DisposeRes(string name)
     {
-        //if (mAudioClipDict.ContainsKey(name))
+        if (!string.IsNullOrEmpty(name))
         {
             ResourceManager.Instance.Release(name);
-            //mAudioClipDict.Remove(name);
         }
     }
 
     //释放特定类型的所有音频资源
-    public void Dispose(string type)
+    private void DisposeByType(string type)
     {
         AudioTypeData data = GetAudioTypeData(type);
         //遍历指定类型的所有播放器
         for (int i = 0; i < data.mAudioDataList.Count;i++)
         {
-            //遍历指定播放器的所有播放记录
-            for(int j = 0; j < data.mAudioDataList[i].mAudioNameList.Count; j++)
-            {
-                string name = data.mAudioDataList[i].mAudioNameList[j];
-                DisposeRes(name);
-            }
-            data.mAudioDataList[i].mAudioNameList.Clear();
-        }
-    }
-
-    //释放指定播放器中指定name的资源,如果name为空,那么释放该播放器的所有播放记录
-    public void Dispose(int id, string name)
-    {
-        AudioData data = GetAudioData(id);
-        if(data != null)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                for (int i = 0; i < data.mAudioNameList.Count; i++)
-                {
-                    DisposeRes(data.mAudioNameList[i]);
-                }
-                data.mAudioNameList.Clear();
-            }
-            else
-            {
-                for (int i = 0; i < data.mAudioNameList.Count;)
-                {
-                    if (data.mAudioNameList[i] == name)
-                    {
-                        DisposeRes(name);
-                        data.mAudioNameList.RemoveAt(i);
-                    }
-                    else
-                    {
-                        i++;
-                    }
-                }
-            }
+            DisposeRes(data.mAudioDataList[i].PlayClipName);
         }
     }
 
     //停止并且释放指定类型的音频
     public void StopAndDisposeAudio(string type)
     {
-        StopAudio(type);
-        Dispose(type);
+        StopAudioByType(type);
+        DisposeByType(type);
     }
 
-    public void StopAndDisposeAudio(int id, string name)
+    //停止指定类型的播放器
+    public void StopAudioByType(string type)
     {
-        StopAudio(id, name);
-        Dispose(id, name);
+        AudioTypeData data = GetAudioTypeData(type);
+        for (int i = 0; i < data.mAudioDataList.Count; i++)
+        {
+            StopAudioByID(data.mAudioDataList[i].mID);
+        }
     }
 
     //停止并且释放所有音频
@@ -419,38 +354,53 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    //停止指定类型的播放器
-    public void StopAudio(string type)
+    //释放指定播放器中指定name的资源,如果name为空,那么释放该播放器的所有播放记录
+    private void DisposeByID(int id)
     {
-        AudioTypeData data = GetAudioTypeData(type);
-        data.IsStop = true;
+        AudioData data = GetAudioData(id);
+        if (data != null)
+        {
+            DisposeRes(data.PlayClipName);
+        }
     }
 
-    //停止指定id的播放器的指定名字音乐
-    public void StopAudio(int id, string name)
+    //停止并且释放指定id的音频
+    public void StopAndDisposeAudioByID(int id)
+    {
+        StopAudioByID(id);
+        DisposeByID(id);
+    }
+
+    //停止指定id的播放器音乐
+    public void StopAudioByID(int id)
     {
         AudioData data = GetAudioData(id);
         if(data != null)
         {
-            if(string.IsNullOrEmpty(name))
+            if (data.mTimerID != 0)
             {
-                data.mAudioSource.Stop();
+                TimerManager.Instance.StopTimer(data.mTimerID);
+                data.mTimerID = 0;
             }
-            else
-            {
-                if(data.PlayClipName == name)
-                {
-                    data.mAudioSource.Stop();
-                }
-            }
+
+            data.mAudioState = AudioSourceState.eIdel;
+            data.mAudioSource.Stop();
         }
     }
 
     //静音
-    public void MuteAudio(string type, bool bMute)
+    public void MuteAudioByType(string type, bool bMute)
     {
         AudioTypeData data = GetAudioTypeData(type);
         data.IsMute = bMute;
+    }
+
+    public void MuteAudioByID(int id, bool bMute)
+    {
+        if (mAudioDataMap.ContainsKey(id))
+        {
+            mAudioDataMap[id].mAudioSource.mute = bMute;
+        }
     }
 
     //静音所有
@@ -458,15 +408,23 @@ public class AudioManager : MonoBehaviour
     {
         foreach (var item in mAudioTypeDataDict)
         {
-            MuteAudio(item.Key, bMute);
+            MuteAudioByType(item.Key, bMute);
         }
     }
 
     //设置指定类型音频的音量
-    public void SetAudioVolume(string type, float volume)
+    public void SetAudioVolumeByType(string type, float volume)
     {
         AudioTypeData data = GetAudioTypeData(type);
         data.Volume = volume;
+    }
+
+    public void SetAudioVolumeByID(int id, float volume)
+    {
+        if(mAudioDataMap.ContainsKey(id))
+        {
+            mAudioDataMap[id].mAudioSource.volume = volume;
+        }
     }
 
     //获取音频的长度
@@ -484,10 +442,101 @@ public class AudioManager : MonoBehaviour
         });
     }
 
+    //播放背景音乐
+    public int PlayAudioBG(string name, bool isLoop = true, float delayTime = 0.0f)
+    {
+        if(isLoop)
+        {
+            return PlayAudio("bg", name, isLoop, delayTime, AudioCreateType.eOnly, AudioSpaceType.e2D, AudioReleaseType.eManual);
+        }
+        else
+        {
+            return PlayAudio("bg", name, isLoop, delayTime, AudioCreateType.eOnly, AudioSpaceType.e2D, AudioReleaseType.eAuto);
+        }
+    }
+
+    //播放2d音乐
+    public int PlayAudio2D(string name, bool isLoop = false, float delayTime = 0.0f)
+    {
+        if(isLoop)
+        {
+            return PlayAudio("2d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e2D, AudioReleaseType.eManual);
+        }
+        else
+        {
+            return PlayAudio("2d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e2D, AudioReleaseType.eAuto);
+        }
+    }
+
+    //播放3d音乐
+    public int PlayAudio3D(string name, GameObject obj, float maxRange, bool isLoop = false, float delayTime = 0.0f)
+    {
+        if(isLoop)
+        {
+            return PlayAudio("3d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e3D, AudioReleaseType.eManual, obj, maxRange);
+        }
+        else
+        {
+            return PlayAudio("3d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e3D, AudioReleaseType.eAuto, obj, maxRange);
+        }
+    }
+
+    //播放音效
+    //type 音频类型
+    //spaceType 空间类型(2D或者3D)
+    //createType 创建类型(eOnly：唯一播放器  eNew : 多个播放器)
+    //name 音频名字
+    //delayTime 延时时间
+    //obj 3d音效需要指定obj对象
+    //maxRange 3D音效的最大范围
+    //isLoop 是否循环
+    public int PlayAudio(string type, string name, bool isLoop = false, float delayTime = 0.0f,
+        AudioCreateType createType = AudioCreateType.eOnly,
+        AudioSpaceType spaceType = AudioSpaceType.e2D,
+        AudioReleaseType releaseType = AudioReleaseType.eAuto,
+        GameObject obj = null, float maxRange = 0.0f)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return -1;
+        }
+
+        //获取播放器
+        AudioData audioData = GetAudioSource(type, spaceType, createType, releaseType, obj, maxRange, isLoop);
+        //加载音频,然后播放音频
+        GetAudioClip(name, (audioClip) =>
+        {
+            if(audioClip == null)
+            {
+                return;
+            }
+
+            audioData.mAudioSource.clip = audioClip;
+            audioData.mAudioSource.playOnAwake = false;
+            if (Mathf.Abs(delayTime) < Mathf.Epsilon)
+            {
+                audioData.mAudioSource.Play();
+                audioData.mAudioState = AudioSourceState.ePlaying;
+            }
+            else
+            {
+                audioData.mTimerID = TimerManager.Instance.AddTimer(delayTime, 1, () =>
+                {
+                    audioData.mAudioSource.Play();
+                    audioData.mAudioState = AudioSourceState.ePlaying;
+                    audioData.mTimerID = 0;
+                });
+            }
+        });
+
+        return audioData.mID;
+    }
+
     //会过滤掉同一帧重复播放的音乐
     private void PlayAudioFilter(string type, string name, bool isLoop = false, float delayTime = 0.0f,
         AudioCreateType createType = AudioCreateType.eOnly,
-        AudioSpaceType spaceType = AudioSpaceType.e2D, 
+        AudioSpaceType spaceType = AudioSpaceType.e2D,
+        AudioReleaseType releaseType = AudioReleaseType.eAuto,
         GameObject obj = null, float maxRange = 0.0f)
     {
         if (mCurFrameCount != Time.frameCount)
@@ -505,91 +554,7 @@ public class AudioManager : MonoBehaviour
             }
         }
 
-        PlayAudio(type, name, isLoop, delayTime, createType, spaceType, obj, maxRange);
-    }
-
-    //播放音乐(使用唯一播放器，如背景)
-    public int PlayAudioOnly(string type, string name, bool isLoop = false, float delayTime = 0.0f)
-    {
-        return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eOnly, AudioSpaceType.e2D);
-    }
-
-    //播放2d音乐
-    public int PlayAudio2D(string type, string name, bool isLoop = false, float delayTime = 0.0f)
-    {
-        return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e2D);
-    }
-
-    //播放3d音乐
-    public int PlayAudio3D(string type, string name, GameObject obj, float maxRange, bool isLoop = false, float delayTime = 0.0f)
-    {
-        return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e3D, obj, maxRange);
-    }
-
-    //播放音效
-    //type 音频类型
-    //spaceType 空间类型(2D或者3D)
-    //createType 创建类型(eOnly：唯一播放器  eNew : 多个播放器)
-    //name 音频名字
-    //delayTime 延时时间
-    //obj 3d音效需要指定obj对象
-    //maxRange 3D音效的最大范围
-    //isLoop 是否循环
-    private int PlayAudio(string type, string name, bool isLoop = false, float delayTime = 0.0f,
-        AudioCreateType createType = AudioCreateType.eOnly,
-        AudioSpaceType spaceType = AudioSpaceType.e2D,
-        GameObject obj = null, float maxRange = 0.0f)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            return -1;
-        }
-
-        //重置状态和缓存名字
-        AudioTypeData audioTypeData = GetAudioTypeData(type);
-        audioTypeData.IsStop = false;
-        //获取播放器
-        AudioData audioData = GetAudioSource(type, spaceType, createType, obj, maxRange, isLoop);
-        audioData.mAudioNameList.Add(name);
-        //加载音频,然后播放音频
-        GetAudioClip(name, (audioClip) =>
-        {
-            if(audioClip == null)
-            {
-                return;
-            }
-
-            //判断播放前,是否外部已经停止该类型音乐
-            if(audioTypeData.IsStop)
-            {
-                return;
-            }
-
-            audioData.mAudioSource.clip = audioClip;
-            audioData.mAudioSource.playOnAwake = false;
-
-            if (Mathf.Abs(delayTime) < Mathf.Epsilon)
-            {
-                audioData.mAudioSource.Play();
-                audioData.mAudioState = AudioSourceState.ePlay;
-            }
-            else
-            {
-                audioData.mTimerID = TimerManager.Instance.AddTimer(delayTime, -1, () =>
-                {
-                    if (audioTypeData != null && audioTypeData.IsStop)
-                    {
-                        return;
-                    }
-
-                    audioData.mAudioSource.Play();
-                    audioData.mAudioState = AudioSourceState.ePlay;
-                    audioData.mTimerID = 0;
-                });
-            }
-        });
-
-        return audioData.mID;
+        PlayAudio(type, name, isLoop, delayTime, createType, spaceType, releaseType, obj, maxRange);
     }
 
     //更新
@@ -623,11 +588,19 @@ public class AudioManager : MonoBehaviour
                     audioDataList[i].mAudioSource.transform.position = audioDataList[i].mFollowObj.transform.position;
                 }
 
-                if(audioDataList[i].mAudioState == AudioSourceState.ePlay)
+                if(audioDataList[i].mAudioState == AudioSourceState.ePlaying)
                 {
                     if (!audioDataList[i].mAudioSource.isPlaying)
                     {
-                        audioDataList[i].mAudioState = AudioSourceState.eIdel;
+                        if (audioDataList[i].mReleaseType == AudioReleaseType.eAuto)
+                        {
+                            DisposeRes(audioDataList[i].PlayClipName);
+                            audioDataList[i].mAudioState = AudioSourceState.eIdel;
+                        }
+                        else if(audioDataList[i].mReleaseType == AudioReleaseType.eManual)
+                        {
+                            audioDataList[i].mAudioState = AudioSourceState.ePlayed;
+                        }
                     }
                 }
             }
