@@ -291,7 +291,7 @@ namespace UnityEngine.UI
             }
             else
             {
-                RefreshCells();
+                RefreshCells(size);
             }
         }
 
@@ -401,27 +401,98 @@ namespace UnityEngine.UI
             UpdatePrevData();
         }
 
-        public void RefreshCells()
+        public void RefreshCells(int size = 0)
         {
             if (Application.isPlaying && this.isActiveAndEnabled)
             {
-                itemTypeEnd = itemTypeStart;
-                // recycle items if we can
-                for (int i = 0; i < content.childCount; i++)
+                if (totalCount > size)
                 {
-                    if (itemTypeEnd < totalCount)
+                    //总数量减少了
+                    totalCount = size;
+                    int contentCount = content.childCount;
+                    if(contentCount <= size)
                     {
-                        Transform trans = content.GetChild(i);
-                        OnNofityElement(trans, itemTypeEnd);
-                        itemTypeEnd++;
+                        //总数量大于当前的分配子元素
+                        if (itemTypeEnd > size)
+                        {
+                            //当前显示的范围超过了总数量的大小
+                            int differCount = itemTypeEnd - size;
+                            itemTypeStart = (itemTypeStart - differCount) < 0 ? 0 : itemTypeStart - differCount;
+                        }
                     }
                     else
                     {
-                        Transform trans = content.GetChild(i);
-                        DeSpawnGO(trans.gameObject);
-                        //prefabSource.ReturnObject(content.GetChild(i));
-                        i--;
+                        //总数量小于当前的分配子元素
+                        itemTypeStart = 0;
+                        int differCount = contentCount - size;
+                        for(int i = 0; i < differCount; i++)
+                        {
+                            if(content.childCount > 0)
+                            {
+                                Transform trans = content.GetChild(0);
+                                DeSpawnGO(trans.gameObject);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        //更新content的偏移
+                        UpdateBounds();
+                        Vector3 differSize = m_ContentBounds.size - m_ViewBounds.size;
+
+                        if(directionSign == -1)
+                        {
+                            if (differSize.y > 0)
+                            {
+                                //内容大于显示区域的大小
+                                if (m_ContentBounds.min.y > m_ViewBounds.min.y)
+                                {
+                                    float differDis = m_ContentBounds.min.y - m_ViewBounds.min.y;
+                                    m_Content.anchoredPosition += new Vector2(0, differDis);
+                                }
+                            }
+                            else
+                            {
+                                //内容小于显示区域的大小
+                                float differDis = m_ContentBounds.max.y - m_ViewBounds.max.y;
+                                m_Content.anchoredPosition += new Vector2(0, differDis);
+                            }
+                        }
+                        else if(directionSign == 1)
+                        {
+                            if (differSize.x > 0)
+                            {
+                                //内容大于显示区域的大小
+                                if (m_ContentBounds.max.x > m_ViewBounds.max.x)
+                                {
+                                    float differDis = m_ContentBounds.max.x - m_ViewBounds.max.x;
+                                    m_Content.anchoredPosition -= new Vector2(differDis, 0);
+                                }
+                            }
+                            else
+                            {
+                                //内容小于显示区域的大小
+                                float differDis = m_ContentBounds.min.x - m_ViewBounds.min.x;
+                                m_Content.anchoredPosition -= new Vector2(differDis, 0);
+                            }
+                        }
                     }
+                }
+                else if(totalCount < size)
+                {
+                    //总数量增加了
+                    totalCount = size;
+                    UpdateBounds(true);
+                }
+
+                itemTypeEnd = itemTypeStart;
+                for (int i = 0; i < content.childCount; i++)
+                {
+                    Transform trans = content.GetChild(i);
+                    OnNofityElement(trans, itemTypeEnd);
+                    itemTypeEnd++;
                 }
             }
         }

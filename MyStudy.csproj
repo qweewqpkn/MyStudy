@@ -335,6 +335,7 @@
     <Compile Include="Assets\Code\Module\Test\TestDragObj\TestDragObj.cs" />
     <Compile Include="Assets\Code\Module\Test\TestDragObj\TestGridManager.cs" />
     <Compile Include="Assets\Code\Module\Test\TestHierarchy\TestHierarchy.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestLoopRect\TestLoopRect.cs" />
     <Compile Include="Assets\Code\Module\Test\TestLua\LuaManager.cs" />
     <Compile Include="Assets\Code\Module\Test\TestLua\TestLua.cs" />
     <Compile Include="Assets\Code\Module\Test\TestLua\TestLuaFunc.cs" />

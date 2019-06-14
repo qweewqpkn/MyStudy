@@ -329,7 +329,7 @@ public class AudioManager : SingletonMono<AudioManager>
     }
 
     //停止并且释放指定类型的音频
-    public void StopAndDisposeAudio(string type)
+    public void StopAndDisposeAudioByType(string type)
     {
         StopAudioByType(type);
         DisposeByType(type);
@@ -350,7 +350,7 @@ public class AudioManager : SingletonMono<AudioManager>
     {
         foreach(var item in mAudioTypeDataDict)
         {
-            StopAndDisposeAudio(item.Key);
+            StopAndDisposeAudioByType(item.Key);
         }
     }
 
@@ -443,41 +443,41 @@ public class AudioManager : SingletonMono<AudioManager>
     }
 
     //播放背景音乐
-    public int PlayAudioBG(string name, bool isLoop = true, float delayTime = 0.0f)
+    public int PlayAudioBG(string type, string name, bool isLoop = true, float delayTime = 0.0f)
     {
         if(isLoop)
         {
-            return PlayAudio("bg", name, isLoop, delayTime, AudioCreateType.eOnly, AudioSpaceType.e2D, AudioReleaseType.eManual);
+            return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eOnly, AudioSpaceType.e2D, AudioReleaseType.eManual);
         }
         else
         {
-            return PlayAudio("bg", name, isLoop, delayTime, AudioCreateType.eOnly, AudioSpaceType.e2D, AudioReleaseType.eAuto);
+            return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eOnly, AudioSpaceType.e2D, AudioReleaseType.eAuto);
         }
     }
 
     //播放2d音乐
-    public int PlayAudio2D(string name, bool isLoop = false, float delayTime = 0.0f)
+    public int PlayAudio2D(string type, string name, bool isLoop = false, float delayTime = 0.0f)
     {
         if(isLoop)
         {
-            return PlayAudio("2d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e2D, AudioReleaseType.eManual);
+            return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e2D, AudioReleaseType.eManual);
         }
         else
         {
-            return PlayAudio("2d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e2D, AudioReleaseType.eAuto);
+            return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e2D, AudioReleaseType.eAuto);
         }
     }
 
     //播放3d音乐
-    public int PlayAudio3D(string name, GameObject obj, float maxRange, bool isLoop = false, float delayTime = 0.0f)
+    public int PlayAudio3D(string type, string name, GameObject obj, float maxRange, bool isLoop = false, float delayTime = 0.0f)
     {
         if(isLoop)
         {
-            return PlayAudio("3d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e3D, AudioReleaseType.eManual, obj, maxRange);
+            return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e3D, AudioReleaseType.eManual, obj, maxRange);
         }
         else
         {
-            return PlayAudio("3d", name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e3D, AudioReleaseType.eAuto, obj, maxRange);
+            return PlayAudio(type, name, isLoop, delayTime, AudioCreateType.eNew, AudioSpaceType.e3D, AudioReleaseType.eAuto, obj, maxRange);
         }
     }
 
