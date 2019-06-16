@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +17,10 @@ public class TestResLoad : MonoBehaviour {
     public Image mSprite1;
     public AudioSource mAS;
     public GameObject mObj;
+    public TextMeshProUGUI mText;
     public bool mStart;
     public int mFrame;
+    private int mFontState;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +31,7 @@ public class TestResLoad : MonoBehaviour {
             //LoadTest1();
             //LoadTest2();
             //LoadTest3();
-            LoadTest4();
+            //LoadTest4();
             //LoadTest5();
             //LoadTest6();
             //LoadTest7();
@@ -37,7 +40,28 @@ public class TestResLoad : MonoBehaviour {
             //LoadSprite();
             //PreLoad();
             //ReleaseTest();
+            LoadFont();
         });
+    }
+
+    void LoadFont()
+    {
+        if(mFontState == 0)
+        {
+            mFontState = 1;
+            ResourceManager.Instance.LoadFontAsync("Font", "Test Anton SDF", (fontAsset) =>
+            {
+                mText.font = fontAsset;
+            });
+        }
+        else
+        {
+            mFontState = 0;
+            ResourceManager.Instance.LoadFontAsync("Font", "Test Bangers SDF", (fontAsset) =>
+            {
+                mText.font = fontAsset;
+            });
+        }
     }
 
     void ReleaseTest()

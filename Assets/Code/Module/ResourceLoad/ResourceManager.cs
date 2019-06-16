@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using UnityEngine;
 
 namespace AssetLoad
@@ -19,6 +20,7 @@ namespace AssetLoad
         eManifest,
         eMaterial,
         eSpriteAtlas,
+        eFont,
     }
 
     public class ResourceManager : SingletonMono<ResourceManager>
@@ -254,6 +256,26 @@ namespace AssetLoad
         public TextAsset LoadLua(string abName, string assetName)
         {
             return HLua.Load(abName, assetName);
+        }
+        #endregion
+
+        #region Font
+        //异步加载字体
+        public void LoadFontAsync(string abName, string assetName, Action<TMP_FontAsset> callback)
+        {
+            HFont.LoadAsync(abName, assetName, callback);
+        }
+
+        //协程加载贴图
+        public AsyncRequest LoadFontCoRequest(string abName, string assetName)
+        {
+            return HFont.LoadCoRequest(abName, assetName);
+        }
+
+        //同步加载音频
+        public TMP_FontAsset LoadFont(string abName, string assetName)
+        {
+            return HFont.Load(abName, assetName);
         }
         #endregion
 

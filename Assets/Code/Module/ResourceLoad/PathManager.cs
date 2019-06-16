@@ -141,6 +141,7 @@ public class PathManager
             case AssetType.eTexture:
             case AssetType.eText:
             case AssetType.eSpriteAtlas:
+            case AssetType.eFont:
                 {
                     result.Append("Assetbundle");
                 }
