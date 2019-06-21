@@ -802,7 +802,10 @@ namespace UnityEngine.UI
 
             mTypeGODict.Clear();
             mGOTypeDict.Clear();
-            mPrefabTypeList.Clear();
+            if (mPrefabTypeList != null)
+            {
+                mPrefabTypeList.Clear();
+            }
         }
 
         protected override void OnDestroy()
