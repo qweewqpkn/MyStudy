@@ -32,8 +32,10 @@ namespace UnityEngine.UI
             }
         }
 
-        public GameObject mPrefab;
-        private Stack<GameObject> mGOStack = new Stack<GameObject>();
+        public List<GameObject> mPrefabList = new List<GameObject>(); //prefab的列表
+        public Dictionary<int, Stack<GameObject>> mTypeGODict = new Dictionary<int, Stack<GameObject>>(); //缓存每种类型对应实例对象映射
+        public Dictionary<GameObject, int> mGOTypeDict = new Dictionary<GameObject, int>(); //保存实例和类型的映射
+        public List<int> mPrefabTypeList = new List<int>(); //保存每个元素使用哪个prefab
 
         [Tooltip("Total count, negative means INFINITE mode")]
         public int totalCount;
@@ -281,8 +283,9 @@ namespace UnityEngine.UI
 
         //==========LoopScrollRect==========
 
-        public void Init(int size, NotifyElement notifyElement)
+        public void Init(int size, NotifyElement notifyElement, List<int> prefabTypeList = null)
         {
+            mPrefabTypeList = prefabTypeList;
             if(mNotifyElement == null)
             {
                 mNotifyElement = notifyElement;
@@ -711,8 +714,18 @@ namespace UnityEngine.UI
         }
 
         private RectTransform InstantiateNextItem(int itemIdx)
-        {            
-            RectTransform nextItem = SpawnGO().GetComponent<RectTransform>();
+        {
+            int type = 0;
+            if(mPrefabTypeList == null || mPrefabTypeList.Count == 0)
+            {
+                type = 0;
+            }
+            else
+            {
+                type = mPrefabTypeList[itemIdx];
+            }
+
+            RectTransform nextItem = SpawnGO(type).GetComponent<RectTransform>();
             nextItem.transform.SetParent(content, false);
             nextItem.gameObject.SetActive(true);
             nextItem.transform.localScale = Vector3.one;
@@ -734,17 +747,30 @@ namespace UnityEngine.UI
             }
         }
 
-        private GameObject SpawnGO()
+        private GameObject SpawnGO(int type = 0)
         {
-            if(mGOStack.Count > 0)
+            Stack<GameObject> goStack = null;
+            if (!mTypeGODict.ContainsKey(type))
             {
-                GameObject obj = mGOStack.Pop();
+                goStack = new Stack<GameObject>();
+                mTypeGODict.Add(type, goStack);
+            }
+            else
+            {
+                goStack = mTypeGODict[type];
+            }
+
+            if(goStack.Count > 0)
+            {
+                GameObject obj = goStack.Pop();
+                mGOTypeDict.Add(obj, type);
                 obj.SetActive(true);
                 return obj;
             }
             else
             {
-                GameObject obj = Instantiate(mPrefab);
+                GameObject obj = Instantiate(mPrefabList[type]);
+                mGOTypeDict.Add(obj, type);
                 LuaTable table = LuaManager.Instance._LuaEnv.NewTable();
                 UIComponentBind.BindToLua(obj, table);
                 return obj;
@@ -753,18 +779,30 @@ namespace UnityEngine.UI
 
         private void DeSpawnGO(GameObject obj)
         {
-            obj.SetActive(false);
-            obj.transform.SetParent(LoopScrollRectRootGO.transform);
-            mGOStack.Push(obj);
+            if(mGOTypeDict.ContainsKey(obj))
+            {
+                int type = mGOTypeDict[obj];
+                mGOTypeDict.Remove(obj);
+                obj.SetActive(false);
+                obj.transform.SetParent(LoopScrollRectRootGO.transform);
+                mTypeGODict[type].Push(obj);
+            }
         }
 
         private void DestroyAllGO()
         {
-            while(mGOStack.Count > 0)
+            foreach(var item in mTypeGODict)
             {
-                GameObject obj = mGOStack.Pop();
-                Destroy(obj);
+                while (item.Value.Count > 0)
+                {
+                    GameObject obj = item.Value.Pop();
+                    Destroy(obj);
+                }
             }
+
+            mTypeGODict.Clear();
+            mGOTypeDict.Clear();
+            mPrefabTypeList.Clear();
         }
 
         protected override void OnDestroy()

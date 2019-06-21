@@ -305,12 +305,15 @@
     <Compile Include="Assets\Code\Module\GhostShadow\GhostShadowCreator.cs" />
     <Compile Include="Assets\Code\Module\LightMap\LoadLightMap.cs" />
     <Compile Include="Assets\Code\Module\LightMap\SceneConfig.cs" />
+    <Compile Include="Assets\Code\Module\Localization\Localization.cs" />
+    <Compile Include="Assets\Code\Module\Localization\LocalizationManager.cs" />
     <Compile Include="Assets\Code\Module\RenderEffectPerFrame\RenderEffectPerFrame.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\ABRequest.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\AssetRequest.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\AsyncRequest.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\HAssetBundle.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\HAudioClip.cs" />
+    <Compile Include="Assets\Code\Module\ResourceLoad\HFont.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\HLua.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\HMaterial.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\HPrefab.cs" />
@@ -342,6 +345,7 @@
     <Compile Include="Assets\Code\Module\Test\TestRectTransform\TestRectTransform.cs" />
     <Compile Include="Assets\Code\Module\Test\TestResLoad\TestResLoad.cs" />
     <Compile Include="Assets\Code\Module\Test\TestTextureDestroy\TestTextureDestroy.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestTransform\TestTransform.cs" />
     <Compile Include="Assets\Code\Module\Test\UISceneAdapter\UISceneAdapter.cs" />
     <Compile Include="Assets\Code\Module\Test\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Code\Module\Utility\CoroutineUtility.cs" />

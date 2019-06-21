@@ -106,6 +106,7 @@ namespace UnityEngine.UI
             scrollRect.verticalScrollbarSpacing = 0;
             
             root.AddComponent<RectMask2D>();
+            root.AddComponent<YYEmpty4RaycastBtn>(); //为了在任何view的位置都可以拖动
 
             HorizontalLayoutGroup layoutGroup = content.AddComponent<HorizontalLayoutGroup>();
             layoutGroup.childAlignment = TextAnchor.MiddleLeft;
@@ -148,6 +149,7 @@ namespace UnityEngine.UI
             scrollRect.verticalScrollbarSpacing = 0;
 
             root.AddComponent<RectMask2D>();
+            root.AddComponent<YYEmpty4RaycastBtn>(); //为了在任何view的位置都可以拖动
 
             VerticalLayoutGroup layoutGroup = content.AddComponent<VerticalLayoutGroup>();
             layoutGroup.childAlignment = TextAnchor.UpperCenter;

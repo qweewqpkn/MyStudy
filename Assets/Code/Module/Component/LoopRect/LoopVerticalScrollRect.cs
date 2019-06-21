@@ -58,7 +58,7 @@ namespace UnityEngine.UI
                 if (totalSize > 0)
                     changed = true;
             }
-            else if (viewBounds.min.y > contentBounds.min.y + threshold)
+            else if (viewBounds.min.y > contentBounds.min.y + 2 * threshold)
             {
                 float size = DeleteItemAtEnd(), totalSize = size;
                 while (size > 0 && viewBounds.min.y >= contentBounds.min.y + threshold + totalSize)
@@ -81,7 +81,7 @@ namespace UnityEngine.UI
                 if (totalSize > 0)
                     changed = true;
             }
-            else if (viewBounds.max.y < contentBounds.max.y - threshold)
+            else if (viewBounds.max.y < contentBounds.max.y - 2 * threshold)
             {
                 float size = DeleteItemAtStart(), totalSize = size;
                 while (size > 0 && viewBounds.max.y <= contentBounds.max.y - threshold - totalSize)

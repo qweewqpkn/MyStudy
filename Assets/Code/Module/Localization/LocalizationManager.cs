@@ -3,23 +3,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LocalizationManager : MonoBehaviour {
+public class LocalizationManager : Singleton<LocalizationManager> {
 
     public TMP_FontAsset Font
     {
         get
         {
-            
+            return null;
         }
     }
+    
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
