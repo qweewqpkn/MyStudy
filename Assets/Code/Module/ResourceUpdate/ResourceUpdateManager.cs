@@ -19,6 +19,14 @@ public class VersionResData
     public string resMD5;
     public long resLength;
 }
+
+[Serializable]
+public class PatchInfo
+{
+    public int EngineVersion;
+    public int ResVersion;
+    public string ResDataPath;
+}
     
 
 class ResourceUpdateManager : MonoBehaviour
@@ -39,16 +47,21 @@ class ResourceUpdateManager : MonoBehaviour
         }
     }
 
-    //检测资源更新
-    public void CheckResUpdate()
+    public void CheckUpdate()
     {
-        //比对本地和服务器的资源描述文件中的几点
-        //1.版本号，是大版本还是小版本，大版本要更新APK， 小版本更新资源即可
-        //2.如果是小版本，那么我们要确认哪些资源是需要更新的，获得更新列表，进行更新
-        StartCoroutine(LoadVersionRes());
+        StartCoroutine(CoCheckUpdate());
     }
 
-    public IEnumerator LoadVersionRes()
+    public IEnumerator CoCheckUpdate()
+    {
+        yield return null;
+
+
+    }
+
+
+
+    public IEnumerator LoadPatchData()
     {
         //获取服务器的version
         string serverVersionPath = PathManager.GetServerURL("VersionRes");
@@ -188,4 +201,73 @@ class ResourceUpdateManager : MonoBehaviour
         verionFS.Close();
         verionFS.Dispose();
     }
+
+    ////检测更新是否中断
+    //bool CheckUpdateInterrupt()
+    //{
+    //    string path = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/MarkUpdate.text";
+    //    bool isExist = File.Exists(path);
+    //    return isExist;
+    //}
+    //
+    ////标记更新开始
+    //void MarkUpdateStart()
+    //{
+    //    string path = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/MarkUpdate.text";
+    //    if(!File.Exists(path))
+    //    {
+    //        File.Open(path, FileMode.Create);
+    //    }
+    //}
+    //
+    ////标记更新结束
+    //void MarkUpdateEnd()
+    //{
+    //    string path = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/MarkUpdate.text";
+    //    if (File.Exists(path))
+    //    {
+    //        File.Delete(path);
+    //    }
+    //}
+
+    //拷贝stream中的部分文件到Persistent路径
+    void CopyFileStreamToPersistentDir()
+    {
+        //如果存在了就不要拷贝了,
+        //1.PatchData文件
+        //2.ResData文件
+
+    }
+
+    //清理Persistent目录
+    void ClearPersistentDir()
+    {
+
+    }
+
+    //检测网络
+    bool CheckNetwork()
+    {
+        return false;
+    }
+
+    //检测是否是新包
+    bool CheckIsNewPackage()
+    {
+        return false;
+    }
+
+    //检测是否要重新安装APK
+    bool CheckIsNeedReinstallAPK()
+    {
+        return false;
+    }
+
+    //检测是否更新新资源
+    bool CheckIsUpdateRes()
+    {
+        return false;
+    }
+
+
 }

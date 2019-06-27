@@ -38,9 +38,9 @@ public class TestResLoad : MonoBehaviour {
             //LoadTest8();
             //LoadTest9();
             //LoadSprite();
-            //PreLoad();
+            PreLoad();
             //ReleaseTest();
-            LoadFont();
+            //LoadFont();
         });
     }
 
@@ -86,12 +86,12 @@ public class TestResLoad : MonoBehaviour {
         Debuger.Log("test", "111 Frame Count : " + Time.frameCount);
         yield return ResourceManager.Instance.PreLoadPrefabCoRequest("cube", "cube");
         Debuger.Log("test", "start Frame Count : " + Time.frameCount);
-        //ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (obj, args)=>
-        //{
-        //    Debuger.Log("test", "over Frame Count : " + Time.frameCount);
-        //});
+        ResourceManager.Instance.LoadPrefabAsync("cube", "cube", (obj, args)=>
+        {
+            Debuger.Log("test", "over Frame Count : " + Time.frameCount);
+        });
 
-        GameObject obj1 = ResourceManager.Instance.LoadPrefab("cube", "cube");
+        //GameObject obj1 = ResourceManager.Instance.LoadPrefab("cube", "cube");
     }
 
     IEnumerator CoLoad()
