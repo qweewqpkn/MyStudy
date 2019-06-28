@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [Serializable]
 public class VersionRes
@@ -21,31 +22,34 @@ public class VersionResData
 }
 
 [Serializable]
-public class PatchInfo
+public class PatchVersion
 {
     public int EngineVersion;
     public int ResVersion;
-    public string ResDataPath;
+    public string PatchResPath;
+}
+
+[Serializable]
+public class PatchRes
+{
+    public List<PatchResInfo> resList;
+}
+
+[Serializable]
+public class PatchResInfo
+{
+    public string resName;
+    public string resMD5;
+    public long resLength;
 }
     
 
-class ResourceUpdateManager : MonoBehaviour
+class ResourceUpdateManager : SingletonMono<ResourceUpdateManager>
 {
-    private static ResourceUpdateManager mInstance;
-    public static ResourceUpdateManager Instance
-    {
-        get
-        {
-            if (mInstance == null)
-            {
-                GameObject obj = new GameObject();
-                obj.name = "ResourceUpdateManager";
-                mInstance = obj.AddComponent<ResourceUpdateManager>();
-            }
-
-            return mInstance;
-        }
-    }
+    private PatchVersion mPatchVersionLocal;
+    private PatchVersion mPatchVersionServer;
+    private PatchRes mPatchResLocal;
+    private PatchRes mPatchResServer;
 
     public void CheckUpdate()
     {
@@ -54,123 +58,163 @@ class ResourceUpdateManager : MonoBehaviour
 
     public IEnumerator CoCheckUpdate()
     {
-        yield return null;
-
-
+        yield return InitPatchData();
     }
 
-
-
-    public IEnumerator LoadPatchData()
+    IEnumerator InitPatchData()
     {
-        //获取服务器的version
-        string serverVersionPath = PathManager.GetServerURL("VersionRes");
-        WWW serverWWW = new WWW(serverVersionPath);
-        yield return serverWWW;
-        VersionRes serverVersionRes = JsonUtility.FromJson<VersionRes>(serverWWW.text);
-
-        //获取streamingAssetsPath的version
-        string streamVersionPath = PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/VersionRes.txt";
-        WWW streamWWW = new WWW(streamVersionPath);
-        yield return streamWWW;
-        VersionRes streamVersionRes = JsonUtility.FromJson<VersionRes>(streamWWW.text);
-
-        //获取persistentDataPath的version
-        VersionRes persistentVersionRes = null;
-        string persistentVersionPath = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/VersionRes.txt";
-        if (File.Exists(persistentVersionPath))
+        //获取本地的path res信息
+        string persistentPatchResPath = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/PatchRes.text";
+        if(File.Exists(persistentPatchResPath))
         {
-            string str = File.ReadAllText(persistentVersionPath);
-            persistentVersionRes = JsonUtility.FromJson<VersionRes>(str);
-        }
-
-        int persistentVersion = 0;
-        if (persistentVersionRes != null)
-        {
-            Int32.TryParse(persistentVersionRes.version.Replace(".", ""), out persistentVersion);
-        }
-
-        int streamVersion = 0;
-        if(streamVersionRes != null)
-        {
-            Int32.TryParse(streamVersionRes.version.Replace(".", ""), out streamVersion);
-        }
-
-        int serverVersion = 0;
-        if (serverVersionRes != null)
-        {
-            Int32.TryParse(serverVersionRes.version.Replace(".", ""), out serverVersion);
-        }
-
-        int localVersion = 0;
-        VersionRes localVersionRes = null;
-        if(persistentVersion != 0)
-        {
-            if (streamVersion > persistentVersion)
+            using (FileStream fs = File.Open(persistentPatchResPath, FileMode.Open, FileAccess.ReadWrite))
+            using (StreamReader sr = new StreamReader(fs))
             {
-                //热更新过，并且覆盖安装了apk
-                localVersion = streamVersion;
-                localVersionRes = streamVersionRes;
+                string content = sr.ReadToEnd();
+                mPatchResLocal = JsonUtility.FromJson<PatchRes>(content);
+            }
+        }
+        else
+        {
+            string streamPatchResPath = PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/PatchRes.text";
+            using (UnityWebRequest request = new UnityWebRequest(streamPatchResPath))
+            {
+                yield return request.SendWebRequest();
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debuger.LogError("common", request.error);
+                }
+                else
+                {
+                    using (FileStream fs = File.Open(persistentPatchResPath, FileMode.CreateNew, FileAccess.ReadWrite))
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        string content = request.downloadHandler.text;
+                        sw.Write(content);
+                        sw.Flush();
+                        mPatchResLocal = JsonUtility.FromJson<PatchRes>(content);
+                    }
+                }
+            }
+        }
+
+        //获取本地的path version信息
+        string persistentPatchVersionPath = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/PatchVersion.text";
+        if (File.Exists(persistentPatchVersionPath))
+        {
+            using (FileStream fs = File.Open(persistentPatchVersionPath, FileMode.Open, FileAccess.ReadWrite))
+            using (StreamReader sr = new StreamReader(fs))
+            {
+                string content = sr.ReadToEnd();
+                mPatchVersionLocal = JsonUtility.FromJson<PatchVersion>(content);
+            }
+        }
+        else
+        {
+            string streamPatchVersionPath = PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/PatchVersion.text";
+            using (UnityWebRequest request = new UnityWebRequest(streamPatchVersionPath))
+            {
+                yield return request.SendWebRequest();
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debuger.LogError("common", request.error);
+                }
+                else
+                {
+                    using (FileStream fs = File.Open(persistentPatchVersionPath, FileMode.CreateNew, FileAccess.ReadWrite))
+                    using (StreamWriter sw = new StreamWriter(fs))
+                    {
+                        string content = request.downloadHandler.text;
+                        sw.Write(content);
+                        sw.Flush();
+                        mPatchVersionLocal = JsonUtility.FromJson<PatchVersion>(content);
+                    }
+                }
+            }
+        }
+
+        //获取服务器的patch version信息
+        string serverPatchVersionPath = PathManager.GetServerURL("PatchVersion.text");
+        using (UnityWebRequest request = new UnityWebRequest(serverPatchVersionPath))
+        {
+            yield return request.SendWebRequest();
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debuger.LogError("common", request.error);
             }
             else
             {
-                //热更新过
-                localVersion = persistentVersion;
-                localVersionRes = persistentVersionRes;
+                string content = request.downloadHandler.text;
+                mPatchVersionServer = JsonUtility.FromJson<PatchVersion>(content);
             }
         }
-        else
+
+        //更新APK
+        if (mPatchVersionLocal.EngineVersion < mPatchVersionServer.EngineVersion)
         {
-            //还未热更新过
-            localVersion = streamVersion;
-            localVersionRes = streamVersionRes;
+            Application.Quit();
+            yield break;
         }
-        
-        if(serverVersion > localVersion)
+
+        //更新资源
+        if (mPatchVersionLocal.ResVersion < mPatchVersionServer.ResVersion)
         {
-            Debug.Log("serverVersion > localVersion 需要热更新");
-            StartCoroutine(StartUpdate(serverVersionRes, localVersionRes));
+            string serverPatchResPath = PathManager.GetServerURL(mPatchVersionServer.PatchResPath + "/PatchRes.text");
+            using (UnityWebRequest request = new UnityWebRequest(serverPatchResPath))
+            {
+                yield return request.SendWebRequest();
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debuger.LogError("common", request.error);
+                }
+                else
+                {
+                    string content = request.downloadHandler.text;
+                    mPatchResServer = JsonUtility.FromJson<PatchRes>(content);
+                }
+            }
+
+            yield return StartCoroutine(StartUpdateRes());
+
+            //更新批次数据
+            UpdatePatchData();
         }
-        else if(serverVersion == localVersion)
+        else if(mPatchVersionLocal.ResVersion > mPatchVersionServer.ResVersion)
         {
-            Debug.Log("serverVersion == localVersion 无须热更新");
-        }
-        else
-        {
-            Debug.LogError("serverVersion < localVersion 出错了,请检查！！！");
+            Debuger.LogError("common", "mPatchVersionLocal.ResVersion > mPatchVersionServer.ResVersion");
         }
     }
 
-    public IEnumerator StartUpdate(VersionRes server, VersionRes local)
+    public IEnumerator StartUpdateRes()
     {
-        //对比本地和服务器的MD5值，找出需要更新的文件
-        List<VersionResData> updateList = new List<VersionResData>();
-        for(int i = 0; i < server.resList.Count; i++)
+        List<PatchResInfo> updateList = new List<PatchResInfo>();
+        for (int i = 0; i < mPatchResServer.resList.Count; i++)
         {
-            string resName = server.resList[i].resName;
-            VersionResData resData = local.resList.Find((item)=> { return item.resName == resName; });
-            if(resData != null)
+            string resName = mPatchResServer.resList[i].resName;
+            PatchResInfo resData = mPatchResLocal.resList.Find((item) => { return item.resName == resName; });
+            if (resData != null)
             {
-                if(resData.resMD5 != server.resList[i].resMD5)
+                if (resData.resMD5 != mPatchResServer.resList[i].resMD5)
                 {
-                    updateList.Add(server.resList[i]);
+                    updateList.Add(mPatchResServer.resList[i]);
+                    resData.resMD5 = mPatchResServer.resList[i].resMD5;
                 }
             }
         }
 
         //开始加载资源
-        for(int i = 0; i < updateList.Count; i++)
+        for (int i = 0; i < updateList.Count; i++)
         {
             //首先要判断这个文件是否存在，并且MD5码是否匹配，来判断是否下载这个文件。（因为这个文件可能没写入完成，用户就退出了，有这种情况）
-            string filePath = string.Format("{0}/{1}/{2}", PathManager.RES_PERSISTENT_ROOT_PATH, PathManager.GetRuntimePlatform(), updateList[i].resName);
+            string resPath = string.Format("{0}/{1}/{2}", PathManager.RES_PERSISTENT_ROOT_PATH, PathManager.GetRuntimePlatform(), updateList[i].resName);
             bool isLoad = false;
-            if(File.Exists(filePath))
+            if (File.Exists(resPath))
             {
-                string md5 = FileUtility.MD5File(filePath);
-                if(md5 != updateList[i].resMD5)
+                string md5 = FileUtility.MD5File(resPath);
+                if (md5 != updateList[i].resMD5)
                 {
                     isLoad = true;
-                    File.Delete(filePath);
+                    File.Delete(resPath);
                 }
             }
             else
@@ -178,28 +222,45 @@ class ResourceUpdateManager : MonoBehaviour
                 isLoad = true;
             }
 
-            if(isLoad)
+            if (isLoad)
             {
-                WWW www = new WWW(PathManager.GetServerURL(updateList[i].resName));
-                yield return www;
-                string directoryPath = Path.GetDirectoryName(filePath);
-                FileUtility.CreateDirectory(directoryPath);
-                FileStream fs = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite);
-                BinaryWriter bw = new BinaryWriter(fs);
-                bw.Write(www.bytes);
-                bw.Close();
-                fs.Close();
-                fs.Dispose();
+                using (UnityWebRequest request = new UnityWebRequest(PathManager.GetServerURL(mPatchVersionServer.ResVersion + "/" + updateList[i].resName)))
+                {
+                    yield return request;
+                    string dirPath = Path.GetDirectoryName(resPath);
+                    FileUtility.CreateDirectory(dirPath);
+                    using (FileStream fs = File.Open(resPath, FileMode.Create, FileAccess.ReadWrite))
+                    using (BinaryWriter bw = new BinaryWriter(fs))
+                    {
+                        bw.Write(request.downloadHandler.data);
+                        bw.Flush();
+                    }
+                }
             }
         }
+    }
 
-        string str = JsonUtility.ToJson(server);
-        FileStream verionFS = File.Open(PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/VersionRes.txt", FileMode.Create, FileAccess.ReadWrite);
-        StreamWriter sw = new StreamWriter(verionFS);
-        sw.Write(str);
-        sw.Close();
-        verionFS.Close();
-        verionFS.Dispose();
+    void UpdatePatchData()
+    {
+        //更新patch version
+        string persistentPatchVersionPath = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/PatchVersion.text";
+        using (FileStream fs = File.Open(persistentPatchVersionPath, FileMode.Create, FileAccess.ReadWrite))
+        using (StreamWriter sw = new StreamWriter(fs))
+        {
+            string content = JsonUtility.ToJson(mPatchVersionServer);
+            sw.Write(content);
+            sw.Flush();
+        }
+
+        //更新patch res
+        string persistentPatchResPath = PathManager.RES_PERSISTENT_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/PatchRes.text";
+        using (FileStream fs = File.Open(persistentPatchResPath, FileMode.Create, FileAccess.ReadWrite))
+        using (StreamWriter sw = new StreamWriter(fs))
+        {
+            string content = JsonUtility.ToJson(mPatchVersionLocal);
+            sw.Write(content);
+            sw.Flush();
+        }
     }
 
     ////检测更新是否中断
@@ -229,15 +290,6 @@ class ResourceUpdateManager : MonoBehaviour
     //        File.Delete(path);
     //    }
     //}
-
-    //拷贝stream中的部分文件到Persistent路径
-    void CopyFileStreamToPersistentDir()
-    {
-        //如果存在了就不要拷贝了,
-        //1.PatchData文件
-        //2.ResData文件
-
-    }
 
     //清理Persistent目录
     void ClearPersistentDir()

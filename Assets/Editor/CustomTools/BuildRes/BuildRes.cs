@@ -127,23 +127,21 @@ public class BuildRes
         string path = PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform();
         string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
         StringBuilder sb = new StringBuilder();
-        VersionRes version = new VersionRes();
-        version.version = "1.00";
-        version.resList = new List<VersionResData>(); 
+        PatchRes patch = new PatchRes();
+        patch.resList = new List<PatchResInfo>(); 
         for(int i = 0; i < files.Length; i++)
         {
-            VersionResData resData = new VersionResData();
+            PatchResInfo resData = new PatchResInfo();
             resData.resLength = FileUtility.GetFileLength(files[i]);
             resData.resMD5 = FileUtility.MD5File(files[i]);
             resData.resName = files[i].Replace("\\", "/").Replace(path + "/", "");
-            version.resList.Add(resData);
-            //sb.AppendLine(string.Format("{0}|{1}|{2}", files[i].Replace("\\", "/").Replace(path + "/", ""), hash, fs.Length));
+            patch.resList.Add(resData);
         }
 
-        string versionJson = JsonUtility.ToJson(version);
-        FileStream md5FS = File.Open(path + "/VersionRes.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+        string patchJson = JsonUtility.ToJson(patch);
+        FileStream md5FS = File.Open(path + "/PatchRes.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
         StreamWriter sw = new StreamWriter(md5FS);
-        sw.Write(versionJson);
+        sw.Write(patchJson);
         sw.Close();
         md5FS.Close();
         md5FS.Dispose();
