@@ -57,6 +57,13 @@ public class SpriteAnimation : MonoBehaviour {
 
     private SpriteRenderer mSpriteRenderer;
     private SpriteAnimationState mCurState;
+    public SpriteAnimationState CurState
+    {
+        get
+        {
+            return mCurState;
+        }
+    }
 
     public void Awake()
     {

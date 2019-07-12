@@ -1,11 +1,11 @@
 ﻿<Properties StartupItem="MyStudy.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Code\Module\TestDragObj\TestDragObj.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Code\Module\Component\SpriteAnimation\ArmSpriteAnimation.cs">
     <Files>
       <File FileName="Assets\Editor\AssetBundles-Browser-master\Tests\Editor\ABModelTests.cs" Line="1" Column="1" />
       <File FileName="Assets\Code\Module\ResourceLoad\HPrefab.cs" Line="1" Column="1" />
       <File FileName="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToLua.cs" Line="1" Column="1" />
-      <File FileName="Assets\Code\Module\TestDragObj\TestDragObj.cs" Line="1" Column="1" />
+      <File FileName="Assets\Code\Module\Component\SpriteAnimation\ArmSpriteAnimation.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

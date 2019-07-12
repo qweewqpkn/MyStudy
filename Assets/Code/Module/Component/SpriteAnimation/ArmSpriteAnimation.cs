@@ -3,17 +3,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XLua;
 
 public class ArmSpriteAnimation : MonoBehaviour {
     private string mAtlasName;
     private string mAction;
     private int mDir;
     private int mFPS;
-    private SpriteAnimation.AnimationWrapMode mWrapMode;
     public SpriteAnimation Animation
     {
         get;
         private set;
+    }
+
+    public SpriteAnimationState CurState
+    {
+        get
+        {
+            if(Animation != null)
+            {
+                return Animation.CurState;
+            }
+
+            return null;
+        }
     }
 
     public string ClipName
@@ -36,15 +49,14 @@ public class ArmSpriteAnimation : MonoBehaviour {
 
     private bool mFlipX;
 
-	public void Init(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode)
+	public void Init(string atlasName, int FPS, LuaTable wrapModeTable)
     {
         mAtlasName = atlasName;
         mFPS = FPS;
-        mWrapMode = wrapMode;
-        Parse(atlasName, FPS, mWrapMode);
+        Parse(atlasName, FPS, wrapModeTable);
     }
 
-    private void Parse(string atlasName, int FPS, SpriteAnimation.AnimationWrapMode wrapMode)
+    private void Parse(string atlasName, int FPS, LuaTable wrapModeTable)
     {
         List<Sprite> spriteList = ResourceManager.Instance.LoadSpriteAtlas(atlasName);
         Dictionary<string, SpriteAnimationClip> clipMap = new Dictionary<string, SpriteAnimationClip>();
@@ -67,7 +79,14 @@ public class ArmSpriteAnimation : MonoBehaviour {
                 clipMap[clipName] = clip;
                 clip.Name = clipName;
                 clip.FPS = FPS;
-                clip.WrapMode = wrapMode;
+                if (wrapModeTable != null && wrapModeTable.ContainsKey<string>(action))
+                {
+                    clip.WrapMode = wrapModeTable.Get<string, SpriteAnimation.AnimationWrapMode>(action);
+                }
+                else
+                {
+                    clip.WrapMode = SpriteAnimation.AnimationWrapMode.eLoop;
+                }
                 clip.SpriteList = new List<Sprite>();
             }
 
