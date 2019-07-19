@@ -305,8 +305,10 @@
     <Compile Include="Assets\Code\Module\GhostShadow\GhostShadowCreator.cs" />
     <Compile Include="Assets\Code\Module\LightMap\LoadLightMap.cs" />
     <Compile Include="Assets\Code\Module\LightMap\SceneConfig.cs" />
+    <Compile Include="Assets\Code\Module\Localization\Localization.cs" />
     <Compile Include="Assets\Code\Module\Localization\LocalizationManager.cs" />
-    <Compile Include="Assets\Code\Module\Localization\TextMeshProUGUIExt.cs" />
+    <Compile Include="Assets\Code\Module\PatchUpdate\PatchTest.cs" />
+    <Compile Include="Assets\Code\Module\PatchUpdate\PatchUpdateManager.cs" />
     <Compile Include="Assets\Code\Module\RenderEffectPerFrame\RenderEffectPerFrame.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\ABRequest.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\AssetRequest.cs" />
@@ -326,7 +328,6 @@
     <Compile Include="Assets\Code\Module\ResourceLoad\PathManager.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\PrefabAutoDestory.cs" />
     <Compile Include="Assets\Code\Module\ResourceLoad\ResourceManager.cs" />
-    <Compile Include="Assets\Code\Module\ResourceUpdate\ResourceUpdateManager.cs" />
     <Compile Include="Assets\Code\Module\SpacePartition\Grid\GridManager.cs" />
     <Compile Include="Assets\Code\Module\SpacePartition\QuadTree\QuadMain.cs" />
     <Compile Include="Assets\Code\Module\SpacePartition\QuadTree\QuadTree.cs" />
@@ -345,6 +346,7 @@
     <Compile Include="Assets\Code\Module\Test\TestRectTransform\TestRectTransform.cs" />
     <Compile Include="Assets\Code\Module\Test\TestResLoad\TestResLoad.cs" />
     <Compile Include="Assets\Code\Module\Test\TestTextureDestroy\TestTextureDestroy.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestTransform\TestTransform.cs" />
     <Compile Include="Assets\Code\Module\Test\UISceneAdapter\UISceneAdapter.cs" />
     <Compile Include="Assets\Code\Module\Test\WorldPos2UIPos\WorldPos2UIPos.cs" />
     <Compile Include="Assets\Code\Module\Utility\CoroutineUtility.cs" />
