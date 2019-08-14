@@ -21,7 +21,7 @@ public class SpriteAnimationState{
         {
             if(Clip != null)
             {
-                return Clip.SpriteCount * 1.0f / Clip.FPS;
+                return Clip.Length;
             }
 
             return 0;
@@ -120,7 +120,7 @@ public class SpriteAnimationState{
     {
         if(Clip != null)
         {
-            int index = (int)(CurTime * Clip.FPS) % Clip.SpriteCount;
+            int index = (int)(CurTime / (Clip.Length / Clip.SpriteCount)) % Clip.SpriteCount;
             if(IsBack)
             {
                 index = Clip.SpriteCount - index - 1;

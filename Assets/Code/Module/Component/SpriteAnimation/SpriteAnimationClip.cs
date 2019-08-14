@@ -10,7 +10,7 @@ public class SpriteAnimationClip {
         set;
     }
 
-    public int FPS
+    public float Length
     {
         get;
         set;
