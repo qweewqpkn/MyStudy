@@ -334,6 +334,7 @@
     <Compile Include="Assets\Code\Module\Test\IsNull\IsNull.cs" />
     <Compile Include="Assets\Code\Module\Test\ShaderMultiCompile\ShaderMultiCompile.cs" />
     <Compile Include="Assets\Code\Module\Test\TestAnimation\TestSpriteAnimation.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestDOTween\TestDOTween.cs" />
     <Compile Include="Assets\Code\Module\Test\TestDragObj\CGridPosition.cs" />
     <Compile Include="Assets\Code\Module\Test\TestDragObj\TestDragComplete.cs" />
     <Compile Include="Assets\Code\Module\Test\TestDragObj\TestDragObj.cs" />
