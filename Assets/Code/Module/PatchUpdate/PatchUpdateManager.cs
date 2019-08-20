@@ -96,6 +96,7 @@ class ResourceUpdateManager : SingletonMono<ResourceUpdateManager>
         }
         else
         {
+            //从stream路径拷贝到persistent路径
             string streamPatchVersionPath = PathManager.RES_STREAM_ROOT_PATH + "/" + PathManager.GetRuntimePlatform() + "/PatchVersion.text";
             using (UnityWebRequest request = new UnityWebRequest(streamPatchVersionPath))
             {
