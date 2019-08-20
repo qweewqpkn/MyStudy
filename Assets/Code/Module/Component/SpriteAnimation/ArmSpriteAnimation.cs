@@ -9,7 +9,6 @@ public class ArmSpriteAnimation : MonoBehaviour {
     private string mAtlasName;
     private string mAction;
     private int mDir;
-    private int mFPS;
     public SpriteAnimation Animation
     {
         get;
@@ -38,10 +37,10 @@ public class ArmSpriteAnimation : MonoBehaviour {
                 return "";
             }
 
-            if(mDir == 0)
-            {
-                return "";
-            }
+            //if(mDir == 0)
+            //{
+            //    return "";
+            //}
 
             return GetClipName(mAction, mDir.ToString());
         }
@@ -49,14 +48,13 @@ public class ArmSpriteAnimation : MonoBehaviour {
 
     private bool mFlipX;
 
-	public void Init(string atlasName, int FPS, LuaTable wrapModeTable)
+	public void Init(string atlasName, LuaTable animationCfg)
     {
         mAtlasName = atlasName;
-        mFPS = FPS;
-        Parse(atlasName, FPS, wrapModeTable);
+        Parse(atlasName, animationCfg);
     }
 
-    private void Parse(string atlasName, int FPS, LuaTable wrapModeTable)
+    private void Parse(string atlasName, LuaTable animationCfg)
     {
         List<Sprite> spriteList = ResourceManager.Instance.LoadSpriteAtlas(atlasName);
         Dictionary<string, SpriteAnimationClip> clipMap = new Dictionary<string, SpriteAnimationClip>();
@@ -78,13 +76,22 @@ public class ArmSpriteAnimation : MonoBehaviour {
                 clip = new SpriteAnimationClip();
                 clipMap[clipName] = clip;
                 clip.Name = clipName;
-                clip.FPS = FPS;
-                if (wrapModeTable != null && wrapModeTable.ContainsKey<string>(action))
+                if (animationCfg != null && animationCfg.ContainsKey<string>(action))
                 {
-                    clip.WrapMode = wrapModeTable.Get<string, SpriteAnimation.AnimationWrapMode>(action);
+                    clip.Length = animationCfg.GetInPath<float>(string.Format("{0}.clip_length", action));
+                    if(animationCfg.GetInPath<string>(string.Format("{0}.loop", action)) == "once")
+                    {
+                        clip.WrapMode = SpriteAnimation.AnimationWrapMode.eOnce;
+                    }
+                    else
+                    {
+                        clip.WrapMode = SpriteAnimation.AnimationWrapMode.eLoop;
+                    }
                 }
                 else
                 {
+                    Debuger.LogError("common", "ArmySpriteAnimation parse animationCfg have problem!");
+                    clip.Length = 1;
                     clip.WrapMode = SpriteAnimation.AnimationWrapMode.eLoop;
                 }
                 clip.SpriteList = new List<Sprite>();
