@@ -5,9 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C67063C8-3517-E8C7-8F14-0C51BD23F2E9}</ProjectGuid>
+    <ProjectGuid>{01B441AF-88CF-005F-B176-75F0E9BDF74E}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+    <AssemblyName>Unity.AssetBundleBrowser.Editor</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
@@ -310,90 +310,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="MyStudyPC.csproj">
-      <Project>{83F2D7B1-4F90-8D22-6F5B-A9F2FFFE1626}</Project>
-      <Name>MyStudyPC</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.AssetBundleBrowser.Editor.csproj">
-      <Project>{01B441AF-88CF-005F-B176-75F0E9BDF74E}</Project>
-      <Name>Unity.AssetBundleBrowser.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.AssetBundleBrowser.Editor.Tests.csproj">
-      <Project>{A3508170-68E2-3FF1-61EC-B37CE2EA610E}</Project>
-      <Name>Unity.AssetBundleBrowser.Editor.Tests</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Assets\Code\Module\Bezier\Editor\BezierPointEditor.cs" />
-    <Compile Include="Assets\Code\Module\Bezier\Editor\BezierSplineEditor.cs" />
-    <Compile Include="Assets\Code\Module\Bezier\Editor\BezierUtils.cs" />
-    <Compile Include="Assets\Code\Module\Bezier\Editor\ParticlesFollowBezierEditor.cs" />
-    <Compile Include="Assets\Code\Module\Component\LoopRect\Editor\LoopScrollRectInspector.cs" />
-    <Compile Include="Assets\Code\Module\Component\LoopRect\Editor\SGDefaultControls.cs" />
-    <Compile Include="Assets\Code\Module\Component\LoopRect\Editor\SGMenuOptions.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ArtTools\AnimationSplit.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ArtTools\OptmizeAnimationClip.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ArtTools\RenderCubeMap.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildAndroid\AutoBuildAndroid.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildIOS\AutoBuildIOS.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\AutoBuildPC\AutoBuildPC.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\AssetCatalog.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\JsonParser.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBX\Elements.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBX\Lexer.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBX\Objects.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBX\Parser.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBX\Sections.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBX\Serializer.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBX\Utils.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBXCapabilityType.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBXPath.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBXProject.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBXProjectData.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PBXProjectExtensions.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\PlistParser.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\ProjectCapabilityManager.cs" />
-    <Compile Include="Assets\Editor\CustomTools\AutoBuild\Xcode\XcScheme.cs" />
-    <Compile Include="Assets\Editor\CustomTools\BuildRes\BuildRes.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToCS.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToLua.cs" />
-    <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelUtility.cs" />
-    <Compile Include="Assets\Editor\CustomTools\UI\UIComponentBindEditor.cs" />
-    <Compile Include="Assets\Editor\XLua\GenWrapConfig.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\pbase\QBaseComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QChildrenCountComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QColorComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QComponentsComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QErrorComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QGameObjectIconComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QLayerIconComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QLockComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QMonoBehaviorIconComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QPrefabComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QRendererComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QSeparatorComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QStaticComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QTagIconComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QTagLayerComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QTreeMapComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QVerticesAndTrianglesCountComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QVisibilityComponent.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pdata\QResources.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pdata\QSettings.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pdata\QSettingsObject.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QColorPickerWindow.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QColorUtils.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QComponentsOrderList.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QObjectListInspector.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phelper\QObjectListManager.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phierarchy\QHierarchy.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\phierarchy\QHierarchySettingsWindow.cs" />
-    <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\QHierarchyInitializer.cs" />
-    <Compile Include="Assets\Plugin\XLua\Examples\13_BuildFromCLI\Editor\BuildFromCLI.cs" />
-    <Compile Include="Assets\Plugin\XLua\Src\Editor\Generator.cs" />
-    <Compile Include="Assets\Plugin\XLua\Src\Editor\Hotfix.cs" />
-    <Compile Include="Assets\Plugin\XLua\Src\Editor\LinkXmlGen\LinkXmlGen.cs" />
-    <Compile Include="Assets\Plugin\XLua\Src\Editor\TemplateRef.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleBrowserMain.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleBuildTab.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleDataSource\ABDataSource.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleDataSource\ABDataSourceProvider.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleDataSource\AssetDatabaseABDataSource.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleManageTab.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleModel\ABModel.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleModel\ABModelAssetInfo.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleModel\ABModelBundleInfo.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetBundleTree.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\AssetListTree.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\BundleDetailList.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\InspectTab\AssetBundleInspectTab.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\InspectTab\AssetBundleRecord.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\InspectTab\InspectSingleBundle.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\InspectTab\InspectTreeView.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\MessageList.cs" />
+    <Compile Include="Assets\Editor\AssetBundles-Browser-master\Editor\MessageSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Code\Module\AudioManager\音频优化规则.txt" />

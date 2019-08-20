@@ -8,9 +8,9 @@ public class Test : MonoBehaviour {
     public GameObject startObj;
     public GameObject targetObj;
     private MotionTrail mTrial;
-
-	// Use this for initialization
-	void Start () {
+    public AnimationCurve mCurve;
+    // Use this for initialization
+    void Start () {
         mTrial = new MotionTrail();
         mTrial.Create(startObj, targetObj);
     }

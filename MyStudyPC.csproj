@@ -260,6 +260,15 @@
     <Compile Include="Assets\Code\Module\Avatar\Avatar.cs" />
     <Compile Include="Assets\Code\Module\Avatar\AvatarManager.cs" />
     <Compile Include="Assets\Code\Module\Avatar\AvatarTest.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\BezierPoint.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\BezierSpline.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Test\MotionTrail.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Test\Test.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Utilities\BezierWalkerLocomotion.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Utilities\BezierWalkerWithSpeed.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Utilities\BezierWalkerWithTime.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Utilities\IBezierWalker.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Utilities\ParticlesFollowBezier.cs" />
     <Compile Include="Assets\Code\Module\BinaryConfigRead\BinaryConfigManager.cs" />
     <Compile Include="Assets\Code\Module\BinaryConfigRead\BinaryConfigParse.cs" />
     <Compile Include="Assets\Code\Module\BinaryConfigRead\ExportCode\AchieveConfig.cs" />
@@ -335,6 +344,7 @@
     <Compile Include="Assets\Code\Module\Test\IsNull\IsNull.cs" />
     <Compile Include="Assets\Code\Module\Test\ShaderMultiCompile\ShaderMultiCompile.cs" />
     <Compile Include="Assets\Code\Module\Test\TestAnimation\TestSpriteAnimation.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestDOTween\TestDOTween.cs" />
     <Compile Include="Assets\Code\Module\Test\TestDragObj\CGridPosition.cs" />
     <Compile Include="Assets\Code\Module\Test\TestDragObj\TestDragComplete.cs" />
     <Compile Include="Assets\Code\Module\Test\TestDragObj\TestDragObj.cs" />
@@ -466,6 +476,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Code\Module\AudioManager\音频优化规则.txt" />
+    <None Include="Assets\Code\Module\Bezier\README.txt" />
     <None Include="Assets\Code\Module\ClickEvent\说明.txt" />
     <None Include="Assets\Code\Module\Component\UniGif\说明.txt" />
     <None Include="Assets\Code\Module\GhostShadow\GhostShadow.shader" />
