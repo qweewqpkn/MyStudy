@@ -39,12 +39,12 @@ Shader "LH/DepthToWorldPos"
 	fixed4 frag(v2f i) : SV_Target
 	{
 		float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
-		//float linearDepth = Linear01Depth(depth);
-		float4 clipPos = float4(i.uv.x*2 -1, i.uv.y*2 -1, depth*2 -1, 1.0f);
+		float linearDepth = Linear01Depth(depth);
+		float4 clipPos = float4(i.uv.x*2 -1, i.uv.y*2 -1, depth, 1.0f);
 		float4 viewPos = mul(ProjectInverseMatrix, clipPos);
 		viewPos = viewPos / viewPos.w;
 		float4 worldPos = mul(WroldToViewInverseMatrix, viewPos);
-		return float4(worldPos.xyz, 1.0f);
+		return float4(viewPos.x, 0.0, 0.0, 1.0f);
 	}
 
 	ENDCG
