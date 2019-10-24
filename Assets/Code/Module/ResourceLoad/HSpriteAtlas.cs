@@ -52,7 +52,10 @@ namespace AssetLoad
             {
                 request.isDone = true;
                 request.progress = 1;
-                request.Assets = obj.ConvertAll((item)=> { return item as UnityEngine.Object; });
+                if(obj != null)
+                {
+                    request.Assets = obj.ConvertAll((item) => { return item as UnityEngine.Object; });
+                }
             });
         
             return request;

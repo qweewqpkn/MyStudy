@@ -286,6 +286,12 @@ namespace AssetLoad
 
         public void Release(string abName, string assetName)
         {
+            if (abName == null || assetName == null)
+            {
+                Debug.LogError("Release abName or assetName is null!!!");
+                return;
+            }
+
             HRes res;
             abName = abName.ToLower();
             assetName = assetName.ToLower();
@@ -314,6 +320,8 @@ namespace AssetLoad
             {
                 resList[i].ReleaseAll();
             }
+
+            HAssetBundle.ReleaseAssetBundleManifest();
         }
     }
 }

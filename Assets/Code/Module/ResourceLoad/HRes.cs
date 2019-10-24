@@ -151,6 +151,11 @@ namespace AssetLoad
 
         protected virtual void OnCompleted(AssetRequest request, bool isPreLoad, Action<AssetLoadData> callback) 
         {
+            if(request.Asset == null && request.Assets == null)
+            {
+                Debuger.LogError("ASSET_LOAD", string.Format("Load Res Error, ABName {0}, AssetName {1}", ABName, AssetName));
+            }
+
             AssetData.mAsset = request.Asset;
             AssetData.mAssets = request.Assets;
             if (callback != null)

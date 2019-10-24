@@ -1,63 +1,75 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace BezierSolution
 {
-	public class BezierWalkerWithSpeed : MonoBehaviour, IBezierWalker
-	{
-		public enum TravelMode { Once, Loop, PingPong };
+    public class BezierWalkerWithSpeed : MonoBehaviour, IBezierWalker
+    {
+        public enum TravelMode { Once, Loop, PingPong };
+        private Transform cachedTransform;
+        public TravelMode travelMode;
+        public float rotationLerpModifier = 10f;
+        public bool lookForward = true;
+        public List<float> mSpeedList;
+        public float speed;
+        public BezierSpline Spline { get; set; }
 
-		private Transform cachedTransform;
+        private float progress = 0f;
+        public float NormalizedT
+        {
+            get { return progress; }
+            set { progress = value; }
+        }
 
-		public BezierSpline spline;
-		public TravelMode travelMode;
+        private bool isGoingForward = true;
+        public bool MovingForward { get { return (speed > 0f) == isGoingForward; } }
 
-		public float speed = 5f;
-		private float progress = 0f;
+        public UnityEvent onPathCompleted = new UnityEvent();
+        private bool onPathCompletedCalledAt1 = false;
+        private bool onPathCompletedCalledAt0 = false;
 
-		public BezierSpline Spline { get { return spline; } }
+        private void Awake()
+        {
+            cachedTransform = transform;
+            mSpeedList = new List<float>() { 5, 10 };
+        }
 
-		public float NormalizedT
-		{
-			get { return progress; }
-			set { progress = value; }
-		}
+        public void Init(List<float> speedList)
+        {
+            if(speedList == null || speedList.Count == 0)
+            {
+                return;
+            }
 
-		//public float movementLerpModifier = 10f;
-		public float rotationLerpModifier = 10f;
+            mSpeedList = speedList;
+        }
 
-		public bool lookForward = true;
-
-		private bool isGoingForward = true;
-		public bool MovingForward { get { return ( speed > 0f ) == isGoingForward; } }
-
-		public UnityEvent onPathCompleted = new UnityEvent();
-		private bool onPathCompletedCalledAt1 = false;
-		private bool onPathCompletedCalledAt0 = false;
-
-		private void Awake()
-		{
-			cachedTransform = transform;
-		}
+        private float GetSpeed(float progress)
+        {
+            int state = Spline.GetStage(progress);
+            if(state >= 0 && state < mSpeedList.Count)
+            {
+                return mSpeedList[state];
+            }
+            
+            return 0;
+        }
 
 		private void Update()
 		{
+            speed = GetSpeed(progress);
 			float targetSpeed = ( isGoingForward ) ? speed : -speed;
-
-			Vector3 targetPos = spline.MoveAlongSpline( ref progress, targetSpeed * Time.deltaTime );
-
-			cachedTransform.position = targetPos;
-			//cachedTransform.position = Vector3.Lerp( cachedTransform.position, targetPos, movementLerpModifier * Time.deltaTime );
+            cachedTransform.position = Spline.MoveAlongSpline(ref progress, targetSpeed * Time.deltaTime);
 
 			bool movingForward = MovingForward;
-
 			if( lookForward )
 			{
 				Quaternion targetRotation;
 				if( movingForward )
-					targetRotation = Quaternion.LookRotation( spline.GetTangent( progress ) );
+					targetRotation = Quaternion.LookRotation(Spline.GetTangent( progress ) );
 				else
-					targetRotation = Quaternion.LookRotation( -spline.GetTangent( progress ) );
+					targetRotation = Quaternion.LookRotation( -Spline.GetTangent( progress ) );
 
 				cachedTransform.rotation = Quaternion.Lerp( cachedTransform.rotation, targetRotation, rotationLerpModifier * Time.deltaTime );
 			}
