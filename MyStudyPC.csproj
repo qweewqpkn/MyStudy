@@ -368,6 +368,7 @@
     <Compile Include="Assets\Code\Render\AverageBlur\AverageBlur.cs" />
     <Compile Include="Assets\Code\Render\BillBoard\BillBoard2.cs" />
     <Compile Include="Assets\Code\Render\Depth\DepthToWorldPos\DepthToWorldPos.cs" />
+    <Compile Include="Assets\Code\Render\Depth\DepthToWorldPos1\DepthToWorldPos1.cs" />
     <Compile Include="Assets\Code\Render\Fog\Fog_PostProcess\Fog_PostProcess.cs" />
     <Compile Include="Assets\Code\Render\GodRays\GodRays1\GodRays1.cs" />
     <Compile Include="Assets\Code\Render\GodRays\GodRays2\GodRays2.cs" />
@@ -378,7 +379,8 @@
     <Compile Include="Assets\Code\Render\Reflection\CubeMapReflection\CubeMapReflection.cs" />
     <Compile Include="Assets\Code\Render\Reflection\MirrorReflection\MirrorReflection.cs" />
     <Compile Include="Assets\Code\Render\Shadow\PlanarShadow\PlanarShadow.cs" />
-    <Compile Include="Assets\Code\Render\SSAO\SSAO.cs" />
+    <Compile Include="Assets\Code\Render\SSAO\SSAO\SSAO.cs" />
+    <Compile Include="Assets\Code\Render\SSAO\SSAO1\SSAO1.cs" />
     <Compile Include="Assets\Code\Render\UNITY_UV_STARTS_AT_TOP\uv_start_at_top.cs" />
     <Compile Include="Assets\Code\Render\UV\UVRotation\UVRotation.cs" />
     <Compile Include="Assets\Code\Render\Water\Water\Water.cs" />
@@ -489,6 +491,7 @@
     <None Include="Assets\Code\Render\BillBoard\BillBoard2.shader" />
     <None Include="Assets\Code\Render\Depth\Depth\Depth.shader" />
     <None Include="Assets\Code\Render\Depth\DepthToWorldPos\DepthToWorldPos.shader" />
+    <None Include="Assets\Code\Render\Depth\DepthToWorldPos1\DepthToWorldPos1.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_Common\Fog_Common.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_Internel\Fog_Internel.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_PostProcess\Fog_PostProcess.shader" />
@@ -512,7 +515,8 @@
     <None Include="Assets\Code\Render\Refraction\Refraction1.shader" />
     <None Include="Assets\Code\Render\Role\Cartoon_QP\Role.shader" />
     <None Include="Assets\Code\Render\Role\Cartoon_QP\RoleBody.shader" />
-    <None Include="Assets\Code\Render\SSAO\SSAO.shader" />
+    <None Include="Assets\Code\Render\SSAO\SSAO\SSAO.shader" />
+    <None Include="Assets\Code\Render\SSAO\SSAO1\SSAO1.shader" />
     <None Include="Assets\Code\Render\ScreenPos\ScreenPos.shader" />
     <None Include="Assets\Code\Render\Shadow\PlanarShadow\Planar.shader" />
     <None Include="Assets\Code\Render\Shadow\PlanarShadow\PlanarShadow.shader" />

@@ -19,7 +19,8 @@ public class DepthToWorldPos : MonoBehaviour {
 
     void OnRenderImage(RenderTexture source, RenderTexture target)
     {
-        material.SetMatrix("ProjectInverseMatrix", (camera.projectionMatrix).inverse);
+        Matrix4x4 projMatrix = GL.GetGPUProjectionMatrix(camera.projectionMatrix, false);
+        material.SetMatrix("ProjectInverseMatrix", projMatrix.inverse);
         material.SetMatrix("WroldToViewInverseMatrix", (camera.worldToCameraMatrix).inverse);
         Graphics.Blit(source, target, material);
     }
