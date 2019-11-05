@@ -9,7 +9,7 @@ function SmartGOManager:__delete()
 end
 
 --获取一个指定资源名的实例
-function SmartGOManager:Spawn(abName, assetName, isPool)
+function SmartGOManager:Spawn(abName, assetName, isPool, size)
     if(abName == nil or abName == "") then
         return nil
     end
@@ -22,13 +22,13 @@ function SmartGOManager:Spawn(abName, assetName, isPool)
         local isPool, prefab = self:IsPool(abName, assetName)
         if(not isPool) then
             local name = string.format("%s/%s", abName, assetName)
-            prefab = ResourceManager.Instance:PreLoadPrefab(abName, assetName)
+            prefab = ResourceManager.instance:PreLoadPrefab(abName, assetName)
             self.mPoolList[name] = prefab
         end
-        local newGO = PoolManager:GetInstance():Spawn(prefab)
+        local newGO = PoolManager:GetInstance():Spawn(prefab, size)
         return newGO
     else
-        local newGO = ResourceManager.Instance:LoadPrefab(abName, assetName)
+        local newGO = ResourceManager.instance:LoadPrefab(abName, assetName)
         return newGO
     end
 end

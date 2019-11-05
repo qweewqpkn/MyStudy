@@ -30,11 +30,9 @@ local function split(split_string, pattern, search_pos_begin, plain)
 		search_pos_begin = find_pos_end + 1
 	end
 
-	if search_pos_begin < string.len(split_string) then
-		split_result[#split_result + 1] = string.sub(split_string, search_pos_begin)
-	else
-		split_result[#split_result + 1] = ""
-	end
+	--if search_pos_begin < string.len(split_string) then
+	split_result[#split_result + 1] = string.sub(split_string, search_pos_begin)
+	--end
 
 	return split_result
 end
@@ -75,8 +73,40 @@ function endswith(target_string, start_pattern, plain)
 	return find_pos_end == #target_string
 end
 
+function IsNullOrEmpty(str)
+	return str == "" or str == nil
+end
+
+local function CharCount(inputstr)
+	local lenInByte = #inputstr
+	local width = 0
+	local i = 1
+	while (i<=lenInByte) 
+	do
+		local curByte = string.byte(inputstr, i)
+		local byteCount = 1
+		if curByte > 0 and curByte <= 127 then
+		    byteCount = 1                                           --1字节字符
+		elseif curByte >= 192 and curByte < 223 then
+		    byteCount = 2                                           --双字节字符
+		elseif curByte >= 224 and curByte < 239 then
+		    byteCount = 3                                           --汉字
+		elseif curByte >= 240 and curByte <= 247 then
+		    byteCount = 4                                           --4字节字符
+		end
+
+		local char = string.sub(inputstr, i, i + byteCount-1)
+
+		i = i + byteCount                                 -- 重置下一字节的索引
+		width = width + 1                                 -- 字符的个数（长度）
+	end
+	return width
+end 
+
 string.split = split
 string.join = join
 string.contains = contains
 string.startswith = startswith
 string.endswith = endswith
+string.IsNullOrEmpty = IsNullOrEmpty
+string.CharCount = CharCount

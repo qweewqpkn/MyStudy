@@ -71,4 +71,19 @@ function TimeStrUtil.TimeToString5(time)
     end
 end
 
+function TimeStrUtil.TimeToString6(time)
+    if(time >= 86400)then
+        local day = time / 86400
+        return string.format(UIUtil.GetGameText("lc_ui_mail_day"), math.floor(day))
+    elseif(time >= 3600) then
+        local hour = time % 86400 / 3600
+        return string.format(UIUtil.GetGameText("lc_ui_mail_hour"), math.floor(hour))
+    elseif (time >= 60) then
+        local minute = time % 3600 / 60
+        return string.format(UIUtil.GetGameText("lc_ui_mail_minute"), math.floor(minute))
+    end
+    local second = time % 60
+    return string.format(UIUtil.GetGameText("lc_ui_mail_second"), math.floor(second))
+end
+
 return TimeStrUtil

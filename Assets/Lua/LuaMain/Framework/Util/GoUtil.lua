@@ -16,14 +16,19 @@ end
 
 function GoUtil.SetActive(obj, state)
     if(obj ~= nil) then
-        obj.gameObject:SetActive(state)
+        if(obj.gameObject.activeSelf ~= state) then
+            obj.gameObject:SetActive(state)
+        end
     end
 end
 
-function GoUtil.SetParent(obj, parent)
+function GoUtil.SetParent(obj, parent, stayWorldPos)
     if(obj ~= nil) then
         if(parent ~= nil) then
-            obj.transform:SetParent(parent.transform)
+            if(stayWorldPos == nil) then
+                stayWorldPos = true
+            end
+            obj.transform:SetParent(parent.transform, stayWorldPos)
         else
             obj.transform:SetParent(nil)
         end
@@ -31,8 +36,16 @@ function GoUtil.SetParent(obj, parent)
 end
 
 function GoUtil.Destroy(obj)
-    if(obj ~= nil) then
+    if(not IsNull(obj)) then
         SmartGOManager:GetInstance():DeSpawn(obj)
+    end
+end
+
+function GoUtil.ResetTransform(obj)
+    if(not IsNull(obj)) then
+        obj.transform.localPosition = Vector3.zero
+        obj.transform.localScale = Vector3.one
+        obj.transform.localEulerAngles = Vector3.zero
     end
 end
 
