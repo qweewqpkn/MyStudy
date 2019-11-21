@@ -3,26 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using XLua;
 
-public class TestLuaFunc : MonoBehaviour {
+public class TestLuaDelegate {
 
-    public delegate void TestFunc(string s);
-    private TestFunc mFunc;
-
-    public void Init(TestFunc func)
+    public delegate void D1(GameObject obj, LuaTable table);
+   
+    public static void TestD1(int a, D1 d1)
     {
-        mFunc = func;
+        GameObject obj = new GameObject();
+        LuaTable t = LuaManager.Instance._LuaEnv.NewTable();
+        d1(obj, t);
     }
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if(mFunc != null)
-        {
-            mFunc("sdfasfa111111111111xx");
-        }
-	}
 }

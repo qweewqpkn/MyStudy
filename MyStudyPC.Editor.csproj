@@ -359,6 +359,7 @@
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToLua.cs" />
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelUtility.cs" />
     <Compile Include="Assets\Editor\CustomTools\UI\UIComponentBindEditor.cs" />
+    <Compile Include="Assets\Editor\EmmyLuaService.cs" />
     <Compile Include="Assets\Editor\XLua\GenWrapConfig.cs" />
     <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\pbase\QBaseComponent.cs" />
     <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QChildrenCountComponent.cs" />
@@ -408,6 +409,9 @@
     <None Include="Assets\Code\Render\BillBoard\BillBoard.shader" />
     <None Include="Assets\Code\Render\BillBoard\BillBoard1.shader" />
     <None Include="Assets\Code\Render\BillBoard\BillBoard2.shader" />
+    <None Include="Assets\Code\Render\CommandBuffer\CBRenderObj\CBBlur.shader" />
+    <None Include="Assets\Code\Render\CommandBuffer\CBRenderObj\CBRenderObj.shader" />
+    <None Include="Assets\Code\Render\CommandBuffer\CBRenderObj\NewUnlitShader.shader" />
     <None Include="Assets\Code\Render\Depth\Depth\Depth.shader" />
     <None Include="Assets\Code\Render\Depth\DepthToWorldPos\DepthToWorldPos.shader" />
     <None Include="Assets\Code\Render\Depth\DepthToWorldPos1\DepthToWorldPos1.shader" />
@@ -503,6 +507,7 @@
     <None Include="Assets\Plugin\XLua\Examples\06_Coroutine\Resources\cs_coroutine.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\async_test.lua.txt" />
     <None Include="Assets\Plugin\XLua\Examples\07_AsyncTest\Resources\message_box.lua.txt" />
+    <None Include="Assets\Plugin\XLua\Gen\link.xml" />
     <None Include="Assets\Plugin\XLua\Resources\perf\memory.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\perf\profiler.lua.txt" />
     <None Include="Assets\Plugin\XLua\Resources\tdr\tdr.lua.txt" />

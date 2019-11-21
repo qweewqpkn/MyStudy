@@ -458,6 +458,7 @@ namespace XLua
         Dictionary<int, WeakReference> delegate_bridges = new Dictionary<int, WeakReference>();
         public object CreateDelegateBridge(RealStatePtr L, Type delegateType, int idx)
         {
+            //LUA_REGISTRYINDEX 表中保存了 以代理内存地址为键 以referenced为值得映射关系 
             LuaAPI.lua_pushvalue(L, idx);
             LuaAPI.lua_rawget(L, LuaIndexes.LUA_REGISTRYINDEX);
             if (!LuaAPI.lua_isnil(L, -1))
@@ -465,6 +466,7 @@ namespace XLua
                 int referenced = LuaAPI.xlua_tointeger(L, -1);
                 LuaAPI.lua_pop(L, 1);
 
+                //判断缓存的代理是否还存活，因为使用了WeakReference来保存代理，所以可能已经被回收了
                 if (delegate_bridges[referenced].IsAlive)
                 {
                     if (delegateType == null)
@@ -473,6 +475,7 @@ namespace XLua
                     }
                     DelegateBridgeBase exist_bridge = delegate_bridges[referenced].Target as DelegateBridgeBase;
                     Delegate exist_delegate;
+                    //手机用DelegateBridgeBase来保存了真正的代理对象，这里根据类型进行获取
                     if (exist_bridge.TryGetDelegate(delegateType, out exist_delegate))
                     {
                         return exist_delegate;

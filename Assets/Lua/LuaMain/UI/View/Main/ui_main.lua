@@ -16,8 +16,13 @@ function ui_main:OnSet()
 
 end
 
-function ui_main:OnRelease()
+function ui_main:OnD1(a, b)
 
+end
+
+function ui_main:OnRelease()
+    Logger.LogError(Logger.Module.UI, self.OnD1)
+    CS.TestLuaDelegate.TestD1(10, self.OnD1)
 end
 
 --构造函数

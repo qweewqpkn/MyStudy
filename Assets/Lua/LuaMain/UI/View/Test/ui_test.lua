@@ -29,6 +29,7 @@ end
 
 --显示时调用(可多次)
 function ui_test:OnShow(...)
+    self.b_content.text = "sdafa"
     
 end
 
