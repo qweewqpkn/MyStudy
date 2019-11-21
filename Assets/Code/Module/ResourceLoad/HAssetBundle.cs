@@ -7,6 +7,8 @@ namespace AssetLoad
 {
     public class HAssetBundle : HRes
     {
+        private static AssetBundle mAssetBundle;
+
         private static AssetBundleManifest mAssetBundleManifest;
         public static AssetBundleManifest AssetBundleManifest
         {
@@ -14,11 +16,20 @@ namespace AssetLoad
             {
                 if(mAssetBundleManifest == null)
                 {
-                    AssetBundle ab = AssetBundle.LoadFromFile(PathManager.URL("Assetbundle", AssetType.eManifest, false));
-                    mAssetBundleManifest = ab.LoadAsset("AssetBundleManifest") as AssetBundleManifest;
+                    mAssetBundle = AssetBundle.LoadFromFile(PathManager.URL("Assetbundle", AssetType.eManifest, false));
+                    mAssetBundleManifest = mAssetBundle.LoadAsset("AssetBundleManifest") as AssetBundleManifest;
                 }
 
                 return mAssetBundleManifest;
+            }
+        }
+
+        public static void ReleaseAssetBundleManifest()
+        {
+            if(mAssetBundle != null)
+            {
+                mAssetBundle.Unload(true);
+                mAssetBundleManifest = null;
             }
         }
 

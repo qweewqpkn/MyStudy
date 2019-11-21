@@ -61,7 +61,7 @@ public class MotionTrail {
             splineObj.transform.localScale = new Vector3(scale, scale, scale);
 
             mBezierWalker = startObj.AddComponent<BezierWalkerWithSpeed>();
-            mBezierWalker.spline = spline;
+            mBezierWalker.Spline = spline;
         }
     }
 	

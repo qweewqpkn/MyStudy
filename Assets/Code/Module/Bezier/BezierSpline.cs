@@ -165,6 +165,13 @@ namespace BezierSolution
 			drawGizmos = false;
 		}
 
+        //获取进行到第几阶段
+        public int GetStage(float normalizedT)
+        {
+            float stage = normalizedT * (loop ? endPoints.Count : (endPoints.Count - 1));
+            return Mathf.FloorToInt(stage);
+        }
+
 		public Vector3 GetPoint( float normalizedT )
 		{
 			if( !loop )

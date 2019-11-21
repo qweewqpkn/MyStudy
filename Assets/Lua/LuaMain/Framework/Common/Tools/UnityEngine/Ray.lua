@@ -28,15 +28,15 @@ Ray.__index = function(t,k)
 	return rawget(unity_ray, k)
 end
 
-Ray.__call = function(t, direction, origin)
-	return Ray.New(direction, origin)
+Ray.__call = function(t, origin, direction)
+	return Ray.New(origin, direction)
 end
 
-function Ray.New(direction, origin)
-	local ray = {}	
-	ray.direction 	= direction:Normalize()
+function Ray.New(origin, direction)
+	local ray = {}
+	ray.direction 	= Vector3.Normalize(direction)
 	ray.origin 		= origin
-	setmetatable(ray, Ray)	
+	setmetatable(ray, Ray)
 	return ray
 end
 

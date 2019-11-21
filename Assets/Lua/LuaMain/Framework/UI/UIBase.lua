@@ -13,6 +13,8 @@ function UIBase:__init(...)
     self.mUseSelfSorting = false --是否使用自带层级
     self.mUseLayer = 1 --界面使用了多少层级，默认为1
     self.mSortingOrder = 0 --界面使用的层级
+
+    self.mHideWildMap = false
 end
 
 function UIBase:OpenPanel(...)
@@ -23,7 +25,9 @@ function UIBase:OpenPanel(...)
         Logger.Log(Logger.Module.UI, "UIManager OpenPanel : " .. self.mAbPath)
         self:OnPreInit()
         --加载界面资源
-        ResourceManager.Instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
+        UIManager:GetInstance():ShowMask(true)
+        ResourceManager.instance:LoadPrefabAsync(self.mAbPath, self.mAbPath, function(obj)
+            UIManager:GetInstance():ShowMask(false)
             if(IsNull(obj)) then
                 Logger.LogError(Logger.Module.UI, string.format("加载界面失败, 界面名字: %s", self.mAbPath))
                 return
@@ -40,8 +44,6 @@ function UIBase:OpenPanel(...)
             obj.transform:SetParent(UIManager:GetInstance().mUIRoot, false)
             --绑定ui的控件
             CS.UIComponentBind.BindToLua(obj, self)
-            --绑定
-            self:OnBind()
             --初始化
             self:OnInit(SafeUnpack(self.mPanelData))
             --加载完成后，界面被标记为隐藏
@@ -49,15 +51,24 @@ function UIBase:OpenPanel(...)
                 Logger.Log(Logger.Module.UI, string.format("加载界面完成后, 立刻就被隐藏了, 界面名字: %s", self.mAbPath))
                 self:ClosePanel()
             else
-                self:ShowPanel(SafeUnpack(self.mPanelData))
                 self:EnterStack()
+                self:ShowPanel(SafeUnpack(self.mPanelData))
             end
+
+            self:GuideOnOpen()
         end)
     elseif self.mPanelState == 2 then
-        Logger.LogError(Logger.Module.UI, "界面已经打开了, 请勿重复打开, 检查逻辑!")
-    elseif self.mPanelState == 3 then
-        self:ShowPanel(...)
+        --关闭界面 播放动画的过程中，又来了打开消息
+        if(self.m_animation_out_timer ~= nil)then
+            self.m_animation_out_timer:Stop()
+            self.m_animation_out_timer = nil
+        end
+        Messenger:GetInstance():RemoveByTarget(self)
         self:EnterStack()
+        self:ShowPanel(...)
+    elseif self.mPanelState == 3 then
+        self:EnterStack()
+        self:ShowPanel(...)
     elseif self.mPanelState == 4 then
         self.mPanelState = 1
     elseif self.mPanelState == 5 then
@@ -93,6 +104,8 @@ function UIBase:ExitStack()
         local view = viewStack:Peek()
         if view ~= nil then
             if view.mUIName == self.mUIName then
+                Logger.Log(Logger.Module.UI, "111 ExitStack call : " .. self.mUIName)
+                view:ClosePanel()
                 viewStack:Pop()
                 if viewStack:Count() > 0 then
                     view = viewStack:Peek()
@@ -103,6 +116,9 @@ function UIBase:ExitStack()
                     view = viewStack:Pop()
                     if view == nil or view.mUIName == self.mUIName then
                         break
+                    else
+                        Logger.Log(Logger.Module.UI, "222 ExitStack call : " .. self.mUIName)
+                        view:ClosePanel()
                     end
                 end
 
@@ -112,31 +128,39 @@ function UIBase:ExitStack()
                 end
             end
         end
+    else
+        Logger.Log(Logger.Module.UI, "333 ExitStack call : " .. self.mUIName)
+        self:ClosePanel()
     end
 
-    if not UIManager:GetInstance():IsStackHaveFullScreen() then
-        if UIManager:GetInstance().mMainUI ~= nil and UIManager:GetInstance().mMainUI.mPanelState == 3 then
-            UIManager:GetInstance().mMainUI:ShowPanel(SafeUnpack(UIManager:GetInstance().mMainUI.mPanelData))
-        end
-    end
+    UIManager:GetInstance():ShowMainUI()
 end
 
 --显示界面
 function UIBase:ShowPanel(...)
     if not IsNull(self.gameObject) then
         self.mPanelState = 2
-        self.gameObject:SetActive(true)
+        self:OnBind()
+        self.gameObject.transform.anchoredPosition = Vector2(0, 0)
+        GoUtil.SetActive(self.gameObject, true)
         self:AnimationIn()
         self:SetCanvas()
         self:OnShow(...)
     end
 end
 
+--真正隐藏界面
+function UIBase:RealHidePanel()
+    self.gameObject.transform.anchoredPosition = Vector2(5000, 0)
+    UIManager:GetInstance():EnableWildMapCam(self, true)
+end
+
 --隐藏界面
 function UIBase:HidePanel()
     if not IsNull(self.gameObject) then
         self.mPanelState = 3
-        self.gameObject:SetActive(false)
+        Messenger:GetInstance():RemoveByTarget(self)
+        self:AnimationOut("hide")
         self:OnHide()
     else
         self.mPanelState = 5
@@ -146,12 +170,15 @@ end
 --真正关闭界面
 function UIBase:RealClosePanel()
     if not IsNull(self.gameObject) then
+        UIManager:GetInstance():EnableWildMapCam(self, true)
+
         self.mPanelState = 0
         CS.UnityEngine.Object.Destroy(self.gameObject)
         self.gameObject = nil
-        self:OnClose()
         Messenger:GetInstance():RemoveByTarget(self)
         UIManager:GetInstance():RemoveViewList(self.mUIName)
+        --引导需要检测UI被关闭
+        Messenger:GetInstance():Broadcast(MsgEnum.GUIDE_CLOSE_UI_FINISH, self.mUIName)
     else
         self.mPanelState = 4
     end
@@ -166,15 +193,25 @@ function UIBase:ClosePanel()
         else
             self.mPanelState = 4
         end
-    elseif(self.mPanelState == 2 or self.mPanelState == 3) then
+    elseif(self.mPanelState == 2) then
         --界面加载完成了
         if self.mIsDontDestroy then
             self:HidePanel()
         else
-            self:AnimationOut()
+            Messenger:GetInstance():RemoveByTarget(self)
+            self:OnClose()
+            self:AnimationOut("close")
+        end
+    elseif(self.mPanelState == 3) then
+        if self.mIsDontDestroy then
+
+        else
+            self:OnClose()
+            self:RealClosePanel()
         end
     elseif(self.mPanelState == 4) then
         --界面销毁中
+        self:OnClose()
         self:RealClosePanel()
     elseif(self.mPanelState == 5) then
         --界面标记为隐藏
@@ -205,10 +242,11 @@ function UIBase:SetCanvas()
         return
     end
     if self.mIsMainUI then
-        UIManager:GetInstance().mSortingOrder = 0 --打开主界面，那么重置界面order
+        --打开主界面，那么重置界面order
+        UIManager:GetInstance().mSortingOrder = 0
     end
-    self.mSortingOrder =  UIManager:GetInstance().mSortingOrder
-    UIManager:GetInstance().mSortingOrder =  UIManager:GetInstance().mSortingOrder + self.mUseLayer
+    self.mSortingOrder = UIManager:GetInstance().mSortingOrder
+    UIManager:GetInstance().mSortingOrder = UIManager:GetInstance():GetMaxSortingOrder() + self.mUseLayer
     canvas.overrideSorting = true
     canvas.sortingOrder = self.mSortingOrder
 end
@@ -233,6 +271,10 @@ function UIBase:OnShow(...)
 
 end
 
+--在打开动画之后调用
+function UIBase:OnShowAfterAnimation()
+end
+
 --界面隐藏调用(为了让子类重写)
 function UIBase:OnHide()
 
@@ -253,78 +295,163 @@ function UIBase:OnReconnect()
 
 end
 
+-----------------------------------------打开关闭动画-----------------------------------------
 function UIBase:AnimationIn()
+    --关闭中来了打开消息
+    if(self.m_animation_out_timer ~= nil)then
+        self.m_animation_out_timer:Stop()
+        self.m_animation_out_timer = nil
+    end
+
+    --进入动画
+    local t_animation = self.gameObject:GetComponent("Animation")
+    if(IsNull(t_animation))then
+        self:OnAnimationInEnd()
+        return
+    end
+    local nameList = Utility.GetAnimations(t_animation)
+    if(nameList.Count == 0)then
+        self:OnAnimationInEnd()
+        return
+    end
+    local animation_name = nil
+    for i = 1, nameList.Count do
+        if(string.contains(nameList[i - 1], "_appear", false))then
+            animation_name = nameList[i - 1]
+        end
+    end
+    if(animation_name == nil)then
+        self:OnAnimationInEnd()
+        return
+    end
+    local t_animation_clip = t_animation:GetClip(animation_name)
+    if(IsNull(t_animation_clip))then
+        self:OnAnimationInEnd()
+        return
+    end
+    t_animation:Play(animation_name)
+
+    --动画结束回调
+    if(self.m_animation_in_timer == nil)then
+        self.m_animation_in_timer = TimerManager:GetInstance():GetTimer(t_animation.clip.length,
+                self.OnAnimationInEnd, self, 1, false, false)
+        self.m_animation_in_timer:Start()
+    else
+        --不处理
+    end
+end
+
+function UIBase:OnAnimationInEnd()
+    if(self.m_animation_in_timer ~= nil)then
+        self.m_animation_in_timer:Stop()
+        self.m_animation_in_timer = nil
+    end
+    --引导需要检测UI被打开
+    Messenger:GetInstance():Broadcast(MsgEnum.GUIDE_ANIMATION_IN_UI_FINISH, self.mUIName)
+    --通知界面
+    self:OnShowAfterAnimation()
+
+    UIManager:GetInstance():EnableWildMapCam(self, false)
+end
+
+function UIBase:AnimationOut(state)
+    UIManager:GetInstance():EnableWildMapCam(self, true)
+
+    local t_animation = self.gameObject:GetComponent("Animation")
+    if(IsNull(t_animation))then
+        self:OnAnimationOutEnd(state)
+        return
+    end
+    local nameList = Utility.GetAnimations(t_animation)
+    if(nameList.Count == 0)then
+        self:OnAnimationOutEnd(state)
+        return
+    end
+    local animation_name = nil
+    for i = 1, nameList.Count do
+        if(string.contains(nameList[i - 1], "_disappear", false))then
+            animation_name = nameList[i - 1]
+        end
+    end
+    if(animation_name == nil)then
+        self:OnAnimationOutEnd(state)
+        return
+    end
+
+    local t_animation_clip = t_animation:GetClip(animation_name)
+    if(IsNull(t_animation_clip))then
+        self:OnAnimationOutEnd(state)
+        return
+    end
+
+    if(self.m_animation_out_timer == nil)then
+        t_animation:Play(animation_name)
+        self.m_animation_out_timer = TimerManager:GetInstance():GetTimer(t_animation_clip.length,
+                self.OnAnimationOutEnd, self, 1, false, false, state)
+        self.m_animation_out_timer:Start()
+    else
+        --关闭的过程中又来了关闭消息，让之前的关闭动画播完即可，只是动画表现，和逻辑无关
+    end
+end
+
+function UIBase:OnAnimationOutEnd(state)
+    if(self.m_animation_out_timer ~= nil)then
+        self.m_animation_out_timer:Stop()
+        self.m_animation_out_timer = nil
+    end
+
+    if(state == "hide")then
+        self:RealHidePanel()
+    elseif(state == "close")then
+        self:RealClosePanel()
+    end
+end
+
+function UIBase:DoAnimation(animation_name)
     local t_animation = self.gameObject:GetComponent("Animation")
     if(IsNull(t_animation))then
         return
-    else
-        Logger.Log(Logger.Module.UI, t_animation)
     end
-    local animation_name = "ui_anim_"..string.lower(self.mUIName)
     local t_animation_clip = t_animation:GetClip(animation_name)
-
-    if(t_animation_clip == nil)then
-        animation_name = "ui_anim_shop"
-        t_animation_clip = t_animation:GetClip(animation_name)--默认是这个
-    end
-
-    if(t_animation_clip == nil)then
+    if(IsNull(t_animation_clip))then
         return
     end
-    local t_aniamtion_state = t_animation:get_Item(animation_name)
-    Logger.Log(Logger.Module.UI, "#################### t_aniamtion_state.name="..t_aniamtion_state.name)
-    t_aniamtion_state.speed = 1
     t_animation:Play(animation_name)
 end
+-----------------------------------------打开关闭动画-----------------------------------------
 
-function UIBase:AnimationOut()
+
+
+
+-----------------------------------------引导-----------------------------------------
+function UIBase:GuideOnOpen()
+    --CHUtil.DumpTable("###########GuideOnOpen 1 "..self.mUIName)
     local t_animation = self.gameObject:GetComponent("Animation")
     if(IsNull(t_animation))then
-        self:RealClosePanel()
+        self:OnGuideOpen()
         return
     end
-
-    local animation_name = "ui_anim_"..string.lower(self.mUIName)
-    local animation_name2 = animation_name.."2"
-
-    local t_aniamtion_state = nil
-    --找第二个动画
-    local t_animation_clip2 = t_animation:GetClip(animation_name2)
-    if(t_animation_clip2 == nil)then
-        --没有。找第一个动画
-        local t_animation_clip1 = t_animation:GetClip(animation_name)
-
-        if(t_animation_clip1 == nil)then
-            animation_name = "ui_anim_shop"
-            t_animation_clip1 = t_animation:GetClip(animation_name)--默认是这个
-        end
-
-        if(t_animation_clip1 == nil)then
-            --还是没有。退出
-            self:RealClosePanel()
-            return
-        else
-            --倒播第一个动画
-            t_aniamtion_state = t_animation:get_Item(animation_name)
-            t_aniamtion_state.speed = -1
-            t_aniamtion_state.time = t_aniamtion_state.length
-            t_animation:Play(animation_name)
-
-        end
-    else
-        --直接播第二个动画
-        t_aniamtion_state.speed = 1
-        t_animation:Play(animation_name2)
+    if(self.m_guide_timer ~= nil)then
+        self.m_guide_timer:Stop()
+        self.m_guide_timer = nil
     end
-
-    Logger.Log(Logger.Module.UI, "#################################################wait panel animation")
-    self.m_timer = Timer.New(function (self)
-        Logger.Log(Logger.Module.UI, "#################################################real close")
-        self:RealClosePanel()
-        self.m_timer:Stop()
-        self.m_timer = nil
-    end, t_aniamtion_state.length, 1, true, self)
-    self.m_timer:Start()
+    self.m_guide_timer = TimerManager:GetInstance():GetTimer(t_animation.clip.length,
+            self.OnGuideOpen, self, 1, false, false)
+    self.m_guide_timer:Start()
 end
+function UIBase:OnGuideOpen()
+    if(self.m_guide_timer ~= nil)then
+        self.m_guide_timer:Stop()
+        self.m_guide_timer = nil
+    end
+    --CHUtil.DumpTable("###########GuideOnOpen 2 "..self.mUIName)
+    --延时2帧
+    local timer = TimerManager:GetInstance():GetTimer(1, function()
+        --引导需要检测UI被打开
+        Messenger:GetInstance():Broadcast(MsgEnum.GUIDE_OPEN_UI_FINISH, self.mUIName)
+    end, self, 2, true)
+    timer:Start()
+end
+-----------------------------------------引导-----------------------------------------
 
 return UIBase

@@ -18,6 +18,11 @@ namespace UnityEngine.UI
         public delegate void NotifyElement(LuaTable t, int index);
         private NotifyElement mNotifyElement;
 
+        [CSharpCallLua]
+        public delegate void NotifyShowRangeElement(int startIndex, int endIndex);
+        private NotifyShowRangeElement mNotifyShowRangeElement;
+
+
         private static GameObject mLoopScrollRectRootGO;
         private static GameObject LoopScrollRectRootGO
         {
@@ -33,9 +38,9 @@ namespace UnityEngine.UI
         }
 
         public List<GameObject> mPrefabList = new List<GameObject>(); //prefab的列表
+        public List<int> mPrefabTypeList = new List<int>(); //保存每个元素使用哪个prefab
         public Dictionary<int, Stack<GameObject>> mTypeGODict = new Dictionary<int, Stack<GameObject>>(); //缓存每种类型对应实例对象映射
         public Dictionary<GameObject, int> mGOTypeDict = new Dictionary<GameObject, int>(); //保存实例和类型的映射
-        public List<int> mPrefabTypeList = new List<int>(); //保存每个元素使用哪个prefab
 
         [Tooltip("Total count, negative means INFINITE mode")]
         public int totalCount;
@@ -48,6 +53,7 @@ namespace UnityEngine.UI
 
         protected int itemTypeStart = 0;
         protected int itemTypeEnd = 0;
+        protected float itemSize = 0;
 
         protected abstract float GetSize(RectTransform item);
         protected abstract float GetDimension(Vector2 vector);
@@ -246,7 +252,7 @@ namespace UnityEngine.UI
         private Vector2 m_Velocity;
         public Vector2 velocity { get { return m_Velocity; } set { m_Velocity = value; } }
 
-        private bool m_Dragging;
+        public bool m_Dragging;
 
         private Vector2 m_PrevPosition = Vector2.zero;
         private Bounds m_PrevContentBounds;
@@ -276,6 +282,9 @@ namespace UnityEngine.UI
 
         private DrivenRectTransformTracker m_Tracker;
 
+        //是否异步加载
+        private bool m_Co = true;
+
         protected LoopScrollRect()
         {
             flexibleWidth = -1;
@@ -283,12 +292,13 @@ namespace UnityEngine.UI
 
         //==========LoopScrollRect==========
 
-        public void Init(int size, NotifyElement notifyElement, List<int> prefabTypeList = null)
+        public void Init(int size, NotifyElement notifyElement, List<int> prefabTypeList = null, NotifyShowRangeElement notifyShowRangeElement = null)
         {
             mPrefabTypeList = prefabTypeList;
             if(mNotifyElement == null)
             {
                 mNotifyElement = notifyElement;
+                mNotifyShowRangeElement = notifyShowRangeElement;
                 totalCount = size;
                 RefillCells();
             }
@@ -296,6 +306,30 @@ namespace UnityEngine.UI
             {
                 RefreshCells(size);
             }
+        }
+
+        //清理（但是不清理prefab模板）
+        public void Clear()
+        {
+            //清理prefab的实例go
+            DestroyAllGO();
+            //清理每个元素使用的prafab类型列表
+            if (mPrefabTypeList != null)
+            {
+                mPrefabTypeList.Clear();
+            }
+            //清理回调函数
+            mNotifyElement = null;
+        }
+
+        public void SetIsCo(bool co)
+        {
+            m_Co = co;
+        }
+
+        public void SetAnchoredPosition(Vector2 pos)
+        {
+            SetContentAnchoredPosition(pos);
         }
 
         public void ClearCells()
@@ -328,6 +362,18 @@ namespace UnityEngine.UI
             }
             StopAllCoroutines();
             StartCoroutine(ScrollToCellCoroutine(index, speed));
+        }
+
+        public void SrollToCellImme(int index)
+        {
+            if (totalCount >= 0 && (index < 0 || index >= totalCount))
+            {
+                Debug.LogWarningFormat("invalid index {0}", index);
+                return;
+            }
+            StopAllCoroutines();
+            content.anchoredPosition = Vector2.zero;
+            RefillCells(index);
         }
 
         IEnumerator ScrollToCellCoroutine(int index, float speed)
@@ -406,84 +452,68 @@ namespace UnityEngine.UI
 
         public void RefreshCells(int size = 0)
         {
-            if (Application.isPlaying && this.isActiveAndEnabled)
+            if (Application.isPlaying)// && this.isActiveAndEnabled
             {
                 if (totalCount > size)
                 {
                     //总数量减少了
+                    //totalCount = size;
+                    //int contentCount = content.childCount;
+                    //if(contentCount <= size)
+                    //{
+                    //    //总数量大于当前的分配子元素
+                    //    if (itemTypeEnd > size)
+                    //    {
+                    //        //当前显示的范围超过了总数量的大小
+                    //        int differCount = itemTypeEnd - size;
+                    //        itemTypeStart = (itemTypeStart - differCount) < 0 ? 0 : itemTypeStart - differCount;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //总数量小于当前的分配子元素
+                    //    itemTypeStart = 0;
+                    //    int differCount = contentCount - size;
+                    //    for(int i = 0; i < differCount; i++)
+                    //    {
+                    //        if(content.childCount > 0)
+                    //        {
+                    //            Transform trans = content.GetChild(0);
+                    //            DeSpawnGO(trans.gameObject);
+                    //        }
+                    //        else
+                    //        {
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+
+                    int reduceCount = totalCount - size;
                     totalCount = size;
-                    int contentCount = content.childCount;
-                    if(contentCount <= size)
+                    itemTypeStart = (itemTypeStart - reduceCount) < 0 ? 0 : itemTypeStart - reduceCount;
+                    for (int i = 0; i < reduceCount; i++)
                     {
-                        //总数量大于当前的分配子元素
-                        if (itemTypeEnd > size)
+                        if (content.childCount > 0)
                         {
-                            //当前显示的范围超过了总数量的大小
-                            int differCount = itemTypeEnd - size;
-                            itemTypeStart = (itemTypeStart - differCount) < 0 ? 0 : itemTypeStart - differCount;
+                            Transform trans = content.GetChild(0);
+                            DeSpawnGO(trans.gameObject);
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
-                    else
-                    {
-                        //总数量小于当前的分配子元素
-                        itemTypeStart = 0;
-                        int differCount = contentCount - size;
-                        for(int i = 0; i < differCount; i++)
-                        {
-                            if(content.childCount > 0)
-                            {
-                                Transform trans = content.GetChild(0);
-                                DeSpawnGO(trans.gameObject);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
 
-                        //更新content的偏移
-                        UpdateBounds();
-                        Vector3 differSize = m_ContentBounds.size - m_ViewBounds.size;
-
-                        if(directionSign == -1)
-                        {
-                            if (differSize.y > 0)
-                            {
-                                //内容大于显示区域的大小
-                                if (m_ContentBounds.min.y > m_ViewBounds.min.y)
-                                {
-                                    float differDis = m_ContentBounds.min.y - m_ViewBounds.min.y;
-                                    m_Content.anchoredPosition += new Vector2(0, differDis);
-                                }
-                            }
-                            else
-                            {
-                                //内容小于显示区域的大小
-                                float differDis = m_ContentBounds.max.y - m_ViewBounds.max.y;
-                                m_Content.anchoredPosition += new Vector2(0, differDis);
-                            }
-                        }
-                        else if(directionSign == 1)
-                        {
-                            if (differSize.x > 0)
-                            {
-                                //内容大于显示区域的大小
-                                if (m_ContentBounds.max.x > m_ViewBounds.max.x)
-                                {
-                                    float differDis = m_ContentBounds.max.x - m_ViewBounds.max.x;
-                                    m_Content.anchoredPosition -= new Vector2(differDis, 0);
-                                }
-                            }
-                            else
-                            {
-                                //内容小于显示区域的大小
-                                float differDis = m_ContentBounds.min.x - m_ViewBounds.min.x;
-                                m_Content.anchoredPosition -= new Vector2(differDis, 0);
-                            }
-                        }
-                    }
+                    ////延时一帧执行,因为DeSpawnGO后不会立即改变ContentBounds的大小，要下一帧才有用
+                    //int timerID = TimerManager.instance.AddFrameTimerAction(1, (tObj) =>
+                    //{
+                    //    //更新content的偏移
+                    //    UpdateBounds();
+                    //    m_Content.anchoredPosition += CalculateOffset(Vector2.zero);
+                    //}, null);
+                    //TimerManager.instance.StartTimer(timerID);
                 }
-                else if(totalCount < size)
+                else if (totalCount < size)
                 {
                     //总数量增加了
                     totalCount = size;
@@ -494,9 +524,12 @@ namespace UnityEngine.UI
                 for (int i = 0; i < content.childCount; i++)
                 {
                     Transform trans = content.GetChild(i);
+                    trans.gameObject.SetActive(true);
                     OnNofityElement(trans, itemTypeEnd);
                     itemTypeEnd++;
                 }
+
+                CalcShowIndexRange();
             }
         }
 
@@ -545,8 +578,13 @@ namespace UnityEngine.UI
 
         public void RefillCells(int offset = 0)
         {
+            StartCoroutine(OnRefillCells(offset));
+        }
+
+        private IEnumerator OnRefillCells(int offset)
+        {
             if (!Application.isPlaying)
-                return;
+                yield break;
 
             StopMovement();
             itemTypeStart = reverseDirection ? totalCount - offset : offset;
@@ -569,12 +607,30 @@ namespace UnityEngine.UI
                 sizeToFill = viewRect.rect.size.y;
             else
                 sizeToFill = viewRect.rect.size.x;
-            
-            while(sizeToFill > sizeFilled)
+
+            while (sizeToFill > sizeFilled)
             {
-                float size = reverseDirection ? NewItemAtStart() : NewItemAtEnd();
-                if(size <= 0) break;
-                sizeFilled += size;
+                if (m_Co)
+                {
+                    if (reverseDirection)
+                    {
+                        yield return NewItemAtStartCo();
+                    }
+                    else
+                    {
+                        yield return NewItemAtEndCo();
+                    }
+
+                    if (itemSize <= 0) break;
+                    sizeFilled += itemSize;
+                }
+                else
+                {
+                    float size = reverseDirection ? NewItemAtStart() : NewItemAtEnd();
+                    //yield return null;
+                    if (size <= 0) break;
+                    sizeFilled += size;
+                }
             }
 
             Vector2 pos = m_Content.anchoredPosition;
@@ -583,6 +639,13 @@ namespace UnityEngine.UI
             else if (directionSign == 1)
                 pos.x = 0;
             m_Content.anchoredPosition = pos;
+
+            if(mGuideCallBack != null)
+            {
+                mGuideCallBack();
+            }
+
+            CalcShowIndexRange();
         }
 
         protected float NewItemAtStart()
@@ -610,6 +673,40 @@ namespace UnityEngine.UI
             }
             
             return size;
+        }
+
+        protected IEnumerator NewItemAtStartCo()
+        {
+            if (totalCount >= 0 && itemTypeStart - contentConstraintCount < 0)
+            {
+                itemSize = 0;
+                yield break;
+            }
+            float size = 0;
+            for (int i = 0; i < contentConstraintCount; i++)
+            {
+                yield return null;
+                if (totalCount >= 0 && itemTypeStart - contentConstraintCount < 0)
+                {
+                    itemSize = 0;
+                    yield break;
+                }
+                itemTypeStart--;
+                RectTransform newItem = InstantiateNextItem(itemTypeStart);
+                newItem.SetAsFirstSibling();
+                size = Mathf.Max(GetSize(newItem), size);
+            }
+            threshold = Mathf.Max(threshold, size * 1.5f);
+
+            if (!reverseDirection)
+            {
+                Vector2 offset = GetVector(size);
+                content.anchoredPosition += offset;
+                m_PrevPosition += offset;
+                m_ContentStartPosition += offset;
+            }
+
+            itemSize = size;
         }
 
         protected float DeleteItemAtStart()
@@ -680,6 +777,46 @@ namespace UnityEngine.UI
             return size;
         }
 
+        protected IEnumerator NewItemAtEndCo()
+        {
+            if (totalCount >= 0 && itemTypeEnd >= totalCount)
+            {
+                itemSize = 0;
+                yield break;
+            }
+
+            float size = 0;
+            // issue 4: fill lines to end first
+            int count = contentConstraintCount - (content.childCount % contentConstraintCount);
+            for (int i = 0; i < count; i++)
+            {
+                yield return null;
+                if (totalCount >= 0 && itemTypeEnd >= totalCount)
+                {
+                    itemSize = 0;
+                    yield break;
+                }
+                RectTransform newItem = InstantiateNextItem(itemTypeEnd);
+                size = Mathf.Max(GetSize(newItem), size);
+                itemTypeEnd++;
+                if (totalCount >= 0 && itemTypeEnd >= totalCount)
+                {
+                    break;
+                }
+            }
+            threshold = Mathf.Max(threshold, size * 1.5f);
+
+            if (reverseDirection)
+            {
+                Vector2 offset = GetVector(size);
+                content.anchoredPosition -= offset;
+                m_PrevPosition -= offset;
+                m_ContentStartPosition -= offset;
+            }
+
+            itemSize = size;
+        }
+
         protected float DeleteItemAtEnd()
         {
             if (((m_Dragging || m_Velocity != Vector2.zero) && totalCount >= 0 && itemTypeStart < contentConstraintCount) 
@@ -730,6 +867,8 @@ namespace UnityEngine.UI
             nextItem.gameObject.SetActive(true);
             nextItem.transform.localScale = Vector3.one;
             OnNofityElement(nextItem, itemIdx);
+
+
             return nextItem;
         }
 
@@ -800,18 +939,20 @@ namespace UnityEngine.UI
                 }
             }
 
+            for (int i = m_Content.childCount - 1; i >= 0; i--)
+            {
+                Transform trans = content.GetChild(i);
+                Destroy(trans.gameObject);
+            }
+
             mTypeGODict.Clear();
             mGOTypeDict.Clear();
-            if (mPrefabTypeList != null)
-            {
-                mPrefabTypeList.Clear();
-            }
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            DestroyAllGO();
+            Clear();
         }
 
         //==========LoopScrollRect==========
@@ -971,6 +1112,9 @@ namespace UnityEngine.UI
             if (eventData.button != PointerEventData.InputButton.Left)
                 return;
 
+            if (!m_Dragging)
+                return;
+
             if (!IsActive())
                 return;
 
@@ -979,6 +1123,7 @@ namespace UnityEngine.UI
                 return;
 
             UpdateBounds();
+            CalcShowIndexRange();
 
             var pointerDelta = localCursor - m_PointerStartLocalCursor;
             Vector2 position = m_ContentStartPosition + pointerDelta;
@@ -997,6 +1142,50 @@ namespace UnityEngine.UI
             }
 
             SetContentAnchoredPosition(position);
+        }
+
+        //计算当前可见的坐标范围
+        protected void CalcShowIndexRange()
+        {
+            if(mNotifyShowRangeElement != null)
+            {
+                int startShowIndex = 0;
+                int endShowIndex = totalCount - 1;
+                int tempIndex = itemTypeStart;
+                for (int i = 0; i < content.childCount; i++)
+                {
+                    Bounds tempBounds = GetBounds4Item(tempIndex);
+
+                    if (directionSign == -1)
+                    {
+                        if (m_ViewBounds.min.y < tempBounds.min.y)
+                        {
+                            endShowIndex = tempIndex;
+                        }
+
+                        if (m_ViewBounds.max.y < tempBounds.min.y)
+                        {
+                            startShowIndex = tempIndex;
+                        }
+                    }
+                    else if(directionSign == 1)
+                    {
+                        if(m_ViewBounds.min.x > tempBounds.min.x)
+                        {
+                            startShowIndex = tempIndex;
+                        }
+
+                        if (m_ViewBounds.max.x > tempBounds.min.x)
+                        {
+                            endShowIndex = tempIndex;
+                        }
+                    }
+
+                    tempIndex++;
+                }
+
+                mNotifyShowRangeElement(startShowIndex, endShowIndex);
+            }
         }
 
         protected virtual void SetContentAnchoredPosition(Vector2 position)
@@ -1023,7 +1212,7 @@ namespace UnityEngine.UI
             UpdateBounds();
             float deltaTime = Time.unscaledDeltaTime;
             Vector2 offset = CalculateOffset(Vector2.zero);
-            if (!m_Dragging && (offset != Vector2.zero || m_Velocity != Vector2.zero))
+            if (!m_Dragging && (offset.sqrMagnitude > 0.01f || m_Velocity.sqrMagnitude > 0.01f))
             {
                 Vector2 position = m_Content.anchoredPosition;
                 for (int axis = 0; axis < 2; axis++)
@@ -1050,7 +1239,7 @@ namespace UnityEngine.UI
                     }
                 }
 
-                if (m_Velocity != Vector2.zero)
+                if (m_Velocity.sqrMagnitude >= Vector2.kEpsilon)
                 {
                     if (m_MovementType == MovementType.Clamped)
                     {
@@ -1059,6 +1248,7 @@ namespace UnityEngine.UI
                     }
 
                     SetContentAnchoredPosition(position);
+                    CalcShowIndexRange();
                 }
             }
 

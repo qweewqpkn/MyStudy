@@ -54,6 +54,7 @@ namespace AssetLoad
         {
             if (ab == null)
             {
+                Debuger.LogError("ASSET_LOAD", "AssetRequest ab is null, assetName is : " + assetName);
                 IsComplete = true;
                 yield break;
             }

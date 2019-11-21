@@ -324,6 +324,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Code\Module\Bezier\Editor\BezierPointEditor.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Editor\BezierSplineEditor.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Editor\BezierUtils.cs" />
+    <Compile Include="Assets\Code\Module\Bezier\Editor\ParticlesFollowBezierEditor.cs" />
     <Compile Include="Assets\Code\Module\Component\LoopRect\Editor\LoopScrollRectInspector.cs" />
     <Compile Include="Assets\Code\Module\Component\LoopRect\Editor\SGDefaultControls.cs" />
     <Compile Include="Assets\Code\Module\Component\LoopRect\Editor\SGMenuOptions.cs" />
@@ -393,6 +397,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Code\Module\AudioManager\音频优化规则.txt" />
+    <None Include="Assets\Code\Module\Bezier\README.txt" />
     <None Include="Assets\Code\Module\ClickEvent\说明.txt" />
     <None Include="Assets\Code\Module\Component\UniGif\说明.txt" />
     <None Include="Assets\Code\Module\GhostShadow\GhostShadow.shader" />
@@ -419,6 +424,7 @@
     <None Include="Assets\Code\Render\Outline\Outline(2).shader" />
     <None Include="Assets\Code\Render\Outline\Outline(3).shader" />
     <None Include="Assets\Code\Render\Outline\说明.txt" />
+    <None Include="Assets\Code\Render\ProjectiveTex\ProjectiveTex.shader" />
     <None Include="Assets\Code\Render\RadialBlur\RadialBlur.shader" />
     <None Include="Assets\Code\Render\RayMarching\RM_Sphere\RM_Sphere.shader" />
     <None Include="Assets\Code\Render\Reflection\CubeMapReflection\CubeMapReflection.shader" />
@@ -513,6 +519,17 @@
     <None Include="Assets\Plugin\XLua\Src\Editor\Template\PackUnpack.tpl.txt" />
     <None Include="Assets\Plugin\XLua\Src\Editor\Template\TemplateCommon.lua.txt" />
     <None Include="Assets\Plugin\XLua\Tutorial\LoadLuaScript\ByFile\Resources\byfile.lua.txt" />
+    <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
+    <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
+    <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
+    <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />
+    <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
+    <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
+    <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
+    <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
     <None Include="Assets\StreamingAssets\ClientRes\Windows\VersionRes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
