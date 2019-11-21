@@ -10,13 +10,15 @@ public class TestLoopRect : MonoBehaviour {
     public Button mAddBtn;
     public Button mReduceBtn;
     public int mNum;
+    public int mAddNum = 5;
+    public int mReduceNum = 5;
     private List<int> mTypeList = new List<int>();
 
 	// Use this for initialization
 	void Start () {
         mAddBtn.onClick.AddListener(() =>
         {
-            mNum = mNum + 5;
+            mNum = mNum + mAddNum;
             for(int i = 0; i < mNum; i++)
             {
                 mTypeList.Add(Random.Range(0, 2));
@@ -24,12 +26,12 @@ public class TestLoopRect : MonoBehaviour {
             mLoopRect.Init(mNum, (t, t1)=>
             {
                 t.Get<TextMeshProUGUI>("b_text").text = t1.ToString();
-            }, mTypeList);
+            });
         });
 
         mReduceBtn.onClick.AddListener(() =>
         {
-            mNum = mNum - 5;
+            mNum = mNum - mReduceNum;
             mLoopRect.Init(mNum, (t, t1) =>
             {
                 t.Get<TextMeshProUGUI>("b_text").text = t1.ToString();

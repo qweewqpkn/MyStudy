@@ -283,7 +283,7 @@ namespace UnityEngine.UI
         private DrivenRectTransformTracker m_Tracker;
 
         //是否异步加载
-        private bool m_Co = true;
+        private bool m_Co = false;
 
         protected LoopScrollRect()
         {
@@ -456,41 +456,16 @@ namespace UnityEngine.UI
             {
                 if (totalCount > size)
                 {
-                    //总数量减少了
-                    //totalCount = size;
-                    //int contentCount = content.childCount;
-                    //if(contentCount <= size)
-                    //{
-                    //    //总数量大于当前的分配子元素
-                    //    if (itemTypeEnd > size)
-                    //    {
-                    //        //当前显示的范围超过了总数量的大小
-                    //        int differCount = itemTypeEnd - size;
-                    //        itemTypeStart = (itemTypeStart - differCount) < 0 ? 0 : itemTypeStart - differCount;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    //总数量小于当前的分配子元素
-                    //    itemTypeStart = 0;
-                    //    int differCount = contentCount - size;
-                    //    for(int i = 0; i < differCount; i++)
-                    //    {
-                    //        if(content.childCount > 0)
-                    //        {
-                    //            Transform trans = content.GetChild(0);
-                    //            DeSpawnGO(trans.gameObject);
-                    //        }
-                    //        else
-                    //        {
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-
                     int reduceCount = totalCount - size;
-                    totalCount = size;
-                    itemTypeStart = (itemTypeStart - reduceCount) < 0 ? 0 : itemTypeStart - reduceCount;
+                    totalCount = size < 0 ? 0 : size;
+                    if (content.childCount - reduceCount < 0)
+                    {
+                        itemTypeStart = itemTypeStart + (content.childCount - reduceCount);
+                        if(itemTypeStart < 0)
+                        {
+                            itemTypeStart = 0;
+                        }
+                    }
                     for (int i = 0; i < reduceCount; i++)
                     {
                         if (content.childCount > 0)
@@ -503,19 +478,10 @@ namespace UnityEngine.UI
                             break;
                         }
                     }
-
-                    ////延时一帧执行,因为DeSpawnGO后不会立即改变ContentBounds的大小，要下一帧才有用
-                    //int timerID = TimerManager.instance.AddFrameTimerAction(1, (tObj) =>
-                    //{
-                    //    //更新content的偏移
-                    //    UpdateBounds();
-                    //    m_Content.anchoredPosition += CalculateOffset(Vector2.zero);
-                    //}, null);
-                    //TimerManager.instance.StartTimer(timerID);
+                    m_Content.anchoredPosition = m_Content.anchoredPosition + new Vector2(0.1f, 0.1f);
                 }
                 else if (totalCount < size)
                 {
-                    //总数量增加了
                     totalCount = size;
                     UpdateBounds(true);
                 }
@@ -639,11 +605,6 @@ namespace UnityEngine.UI
             else if (directionSign == 1)
                 pos.x = 0;
             m_Content.anchoredPosition = pos;
-
-            if(mGuideCallBack != null)
-            {
-                mGuideCallBack();
-            }
 
             CalcShowIndexRange();
         }
