@@ -359,6 +359,7 @@
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelToLua.cs" />
     <Compile Include="Assets\Editor\CustomTools\ExportExcel\Code\ExportExcelUtility.cs" />
     <Compile Include="Assets\Editor\CustomTools\UI\UIComponentBindEditor.cs" />
+    <Compile Include="Assets\Editor\EmmyLuaService.cs" />
     <Compile Include="Assets\Editor\XLua\GenWrapConfig.cs" />
     <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\pbase\QBaseComponent.cs" />
     <Compile Include="Assets\Plugin\QHierarchy\Editor\Scripts\pcomponent\QChildrenCountComponent.cs" />
@@ -408,8 +409,12 @@
     <None Include="Assets\Code\Render\BillBoard\BillBoard.shader" />
     <None Include="Assets\Code\Render\BillBoard\BillBoard1.shader" />
     <None Include="Assets\Code\Render\BillBoard\BillBoard2.shader" />
+    <None Include="Assets\Code\Render\CommandBuffer\CBRenderObj\CBBlur.shader" />
+    <None Include="Assets\Code\Render\CommandBuffer\CBRenderObj\CBRenderObj.shader" />
+    <None Include="Assets\Code\Render\CommandBuffer\CBRenderObj\NewUnlitShader.shader" />
     <None Include="Assets\Code\Render\Depth\Depth\Depth.shader" />
     <None Include="Assets\Code\Render\Depth\DepthToWorldPos\DepthToWorldPos.shader" />
+    <None Include="Assets\Code\Render\Depth\DepthToWorldPos1\DepthToWorldPos1.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_Common\Fog_Common.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_Internel\Fog_Internel.shader" />
     <None Include="Assets\Code\Render\Fog\Fog_PostProcess\Fog_PostProcess.shader" />
@@ -433,7 +438,8 @@
     <None Include="Assets\Code\Render\Refraction\Refraction1.shader" />
     <None Include="Assets\Code\Render\Role\Cartoon_QP\Role.shader" />
     <None Include="Assets\Code\Render\Role\Cartoon_QP\RoleBody.shader" />
-    <None Include="Assets\Code\Render\SSAO\SSAO.shader" />
+    <None Include="Assets\Code\Render\SSAO\SSAO\SSAO.shader" />
+    <None Include="Assets\Code\Render\SSAO\SSAO1\SSAO1.shader" />
     <None Include="Assets\Code\Render\ScreenPos\ScreenPos.shader" />
     <None Include="Assets\Code\Render\Shadow\PlanarShadow\Planar.shader" />
     <None Include="Assets\Code\Render\Shadow\PlanarShadow\PlanarShadow.shader" />

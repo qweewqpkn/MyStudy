@@ -456,29 +456,47 @@ namespace UnityEngine.UI
             {
                 if (totalCount > size)
                 {
-                    int reduceCount = totalCount - size;
-                    totalCount = size < 0 ? 0 : size;
-                    if (content.childCount - reduceCount < 0)
+                    size = size < 0 ? 0 : size;
+                    totalCount = size;
+
+                    if(itemTypeEnd <= size)
                     {
-                        itemTypeStart = itemTypeStart + (content.childCount - reduceCount);
-                        if(itemTypeStart < 0)
+                        //nothing to do 
+                    }
+                    else if (itemTypeStart < size && size < itemTypeEnd)
+                    {
+                        int reduceCount = itemTypeEnd - size;
+                        for (int i = 0; i < reduceCount; i++)
                         {
-                            itemTypeStart = 0;
+                            if (content.childCount > 0)
+                            {
+                                Transform trans = content.GetChild(0);
+                                DeSpawnGO(trans.gameObject);
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
                     }
-                    for (int i = 0; i < reduceCount; i++)
+                    else if(size <= itemTypeStart)
                     {
-                        if (content.childCount > 0)
+                        int reduceCount = content.childCount;
+                        for (int i = 0; i < reduceCount; i++)
                         {
-                            Transform trans = content.GetChild(0);
-                            DeSpawnGO(trans.gameObject);
+                            if (content.childCount > 0)
+                            {
+                                Transform trans = content.GetChild(0);
+                                DeSpawnGO(trans.gameObject);
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
-                        else
-                        {
-                            break;
-                        }
+
+                        itemTypeStart = size;
                     }
-                    m_Content.anchoredPosition = m_Content.anchoredPosition + new Vector2(0.1f, 0.1f);
                 }
                 else if (totalCount < size)
                 {

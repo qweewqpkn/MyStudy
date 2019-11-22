@@ -1005,7 +1005,7 @@ MonoBehaviour:
   mReduceBtn: {fileID: 377158334}
   mNum: 0
   mAddNum: 101
-  mReduceNum: 30
+  mReduceNum: 50
 --- !u!1 &1511257863
 GameObject:
   m_ObjectHideFlags: 0
