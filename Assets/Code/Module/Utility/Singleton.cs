@@ -39,6 +39,14 @@ public class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T>
         }
     }
 
+    public static T instance
+    {
+        get
+        {
+            return Instance;
+        }
+    }
+
     protected virtual void Init()
     {
 

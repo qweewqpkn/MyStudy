@@ -5,31 +5,79 @@ using System.Text;
 using UnityEngine.Networking;
 using System.IO;
 using AssetLoad;
+using System.Collections.Generic;
 
 public class ImageExt : Image
 {
 	private string mABName = "";
     private string mSpriteName = "";
+    private Dictionary<string, List<string>> mAtlasSpriteMap = new Dictionary<string, List<string>>();
 	private bool mGrayState = false;
 	public Material mGrayMaterial = null;
 
-	public void SetSprite(string abName,string spriteName)
-	{
-		if (!string.IsNullOrEmpty (mABName)) {
-			ResourceManager.Instance.Release (mABName, mSpriteName);
-		}
+    public void SetSprite(string abName, string spriteName, bool isSync = false)
+    {
+        if(string.IsNullOrEmpty(abName))
+        {
+            return;
+        }
+
+        if(string.IsNullOrEmpty(spriteName))
+        {
+            return;
+        }
+
+        if(mABName == abName && mSpriteName == spriteName)
+        {
+            return;
+        }
+
+        if(!mAtlasSpriteMap.ContainsKey(abName))
+        {
+            mAtlasSpriteMap[abName] = new List<string>();
+        }
+        mAtlasSpriteMap[abName].Add(spriteName);
+
         mABName = abName;
         mSpriteName = spriteName;
-        ResourceManager.Instance.LoadSpriteAsync (mABName, mSpriteName,  (sprite) =>{
-            this.sprite = sprite;
-		});
+        if (isSync)
+        {
+            sprite = ResourceManager.instance.LoadSprite(mABName, mSpriteName);
+            SetActive(true);
+        }
+        else
+        {
+            ResourceManager.instance.LoadSpriteAsync(mABName, mSpriteName, (sprite) =>
+            {
+                //加载完成后要和最新缓存的名字比较,才能保证是最新
+                if (this != null && sprite != null && sprite.name == mSpriteName)
+                {
+                    this.sprite = sprite;
+                    SetActive(true);
+                }
+            });
+        }
 	}
+
+    private void SetActive(bool isShow)
+    {
+        if (gameObject.activeSelf != isShow)
+        {
+            gameObject.SetActive(isShow);
+        }
+    }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
-		if (null != mABName && !string.IsNullOrEmpty (mABName)) {
-			ResourceManager.Instance.Release(mABName, mSpriteName);
+        foreach(var item in mAtlasSpriteMap)
+        {
+            string atlas = item.Key;
+            List<string> spriteList = item.Value;
+            for(int i = 0; i < spriteList.Count; i++)
+            {
+                ResourceManager.instance.Release(item.Key, spriteList[i]);
+            }
         }
     }
 
@@ -112,9 +160,9 @@ public class ImageExt : Image
     //    byte[] data = texture.EncodeToPNG();
     //    File.WriteAllBytes(save_path, data);
     //
-    //    ResourceManager.Instance.mDicUrlSpriteLocal[url] = "file:///" + save_path;
+    //    ResourceManager.instance.mDicUrlSpriteLocal[url] = "file:///" + save_path;
     //
-    //    ResourceManager.Instance.SaveAllLocalUrlImage();
+    //    ResourceManager.instance.SaveAllLocalUrlImage();
     //}
 
     public bool IsGif(byte[] content)
@@ -138,7 +186,7 @@ public class ImageExt : Image
 			return;
 		if (isGray) {
 			if (null == mGrayMaterial) {
-                mGrayMaterial = ResourceManager.Instance.GetMaterial("Custom/UI/UIGray");
+                mGrayMaterial = ResourceManager.instance.GetMaterial("Custom/UI/UIGray");
 			}
 			material = mGrayMaterial;
 			if (raycast) {

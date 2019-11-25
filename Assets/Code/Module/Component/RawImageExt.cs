@@ -1,11 +1,13 @@
 ﻿using AssetLoad;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RawImageExt : RawImage
 {
     private string mTextureName;
+    private List<string> mTextureNameList = new List<string>();
     private bool mGrayState;
     private Material mGrayMaterial;
     private Texture2D mTexture2D;
@@ -14,37 +16,42 @@ public class RawImageExt : RawImage
     {
         if(name == mTextureName)
         {
-            return;
+            SetActive(true);
+            if(callBack != null)
+            {
+                callBack();
+            }
         }
         else
         {
-            if(!string.IsNullOrEmpty(mTextureName))
-            {
-                ResourceManager.Instance.Release(mTextureName);
-            }
-
+            mTextureNameList.Add(name);
             mTextureName = name;
-            ResourceManager.Instance.LoadTextureAsync(name, name,
+            ResourceManager.instance.LoadTextureAsync(mTextureName, mTextureName,
             (res) =>
             {
-                if(res == null)
+                if(res == null || this == null || IsDestroyed())
                 {
                     return;
                 }
 
-                if(this == null || IsDestroyed())
+                if(res.name == mTextureName)
                 {
-                    ResourceManager.Instance.Release(mTextureName);
-                    return;
-                }
-
-                texture = res;
-                gameObject.SetActive(true);
-                if(callBack != null)
-                {
-                    callBack();
+                    texture = res;
+                    SetActive(true);
+                    if (callBack != null)
+                    {
+                        callBack();
+                    }
                 }
             });
+        }
+    }
+
+    private void SetActive(bool isShow)
+    {
+        if (gameObject.activeSelf != isShow)
+        {
+            gameObject.SetActive(isShow);
         }
     }
 
@@ -67,7 +74,7 @@ public class RawImageExt : RawImage
         {
             if (null == mGrayMaterial)
             {
-                mGrayMaterial = ResourceManager.Instance.GetMaterial("Custom/UI/UIGray");
+                mGrayMaterial = ResourceManager.instance.GetMaterial("Custom/UI/UIGray");
             }
             material = mGrayMaterial;
         }
@@ -81,9 +88,9 @@ public class RawImageExt : RawImage
 
     protected override void OnDestroy()
     {
-        if(!string.IsNullOrEmpty(mTextureName))
+        for(int i = 0; i < mTextureNameList.Count; i++)
         {
-            ResourceManager.Instance.Release(mTextureName);
+            ResourceManager.instance.Release(mTextureNameList[i]);
         }
 
         if(mTexture2D != null) 
