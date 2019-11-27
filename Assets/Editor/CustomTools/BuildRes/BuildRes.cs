@@ -191,15 +191,18 @@ public class BuildRes
                 string ext = Path.GetExtension(files[i]);
                 if (ext != ".meta")
                 {
-                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                    if (resMap.ContainsKey(fileName))
+                    if(!files[i].Contains("Merge"))
                     {
-                        Debug.LogError(string.Format("重名资源{0},请检测Export下的文件!", fileName));
-                        return false;
-                    }
-                    else
-                    {
-                        resMap.Add(fileName, fileName);
+                        string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                        if (resMap.ContainsKey(fileName))
+                        {
+                            Debug.LogError(string.Format("重名资源{0},请检测Export下的文件!", fileName));
+                            return false;
+                        }
+                        else
+                        {
+                            resMap.Add(fileName, fileName);
+                        }
                     }
                 }
             }
@@ -218,6 +221,11 @@ public class BuildRes
                     {
                         AssetImporter ai = AssetImporter.GetAtPath(files[i]);
                         ai.assetBundleName = "font";
+                    }
+                    else if(files[i].Contains("Merge"))
+                    {
+                        AssetImporter ai = AssetImporter.GetAtPath(files[i]);
+                        ai.assetBundleName = "alltexture";
                     }
                     else
                     {
