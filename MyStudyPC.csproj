@@ -357,6 +357,7 @@
     <Compile Include="Assets\Code\Module\Test\TestRectTransform\TestRectTransform.cs" />
     <Compile Include="Assets\Code\Module\Test\TestReflection\TestReflection.cs" />
     <Compile Include="Assets\Code\Module\Test\TestResLoad\TestResLoad.cs" />
+    <Compile Include="Assets\Code\Module\Test\TestResLoadPerformance\TestResLoadPerformance.cs" />
     <Compile Include="Assets\Code\Module\Test\TestSetPixel\TestSetPixel.cs" />
     <Compile Include="Assets\Code\Module\Test\TestTextureDestroy\TestTextureDestroy.cs" />
     <Compile Include="Assets\Code\Module\Test\TestTransform\TestTransform.cs" />
@@ -651,7 +652,6 @@
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Export\Shader\Testlala.shader" />
-    <None Include="Assets\Export\Texture\Shader\ShaderTest.shader" />
     <None Include="Assets\Plugin\DOTween\DOTween.XML" />
     <None Include="Assets\Plugin\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Plugin\DOTween\readme.txt" />

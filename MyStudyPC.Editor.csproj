@@ -475,7 +475,6 @@
     <None Include="Assets\Editor\TexturePacker\Readme.txt" />
     <None Include="Assets\Export\Shader\NewUnlitShader.shader" />
     <None Include="Assets\Export\Shader\Testlala.shader" />
-    <None Include="Assets\Export\Texture\Shader\ShaderTest.shader" />
     <None Include="Assets\Plugin\DOTween\DOTween.XML" />
     <None Include="Assets\Plugin\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Plugin\DOTween\readme.txt" />
