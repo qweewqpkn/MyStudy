@@ -5,20 +5,78 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-public class BuildRes
+[Serializable]
+public class VersionRes
 {
-    [MenuItem("Tools/AssetBundle/增量打包")]
+    public string version;
+    public List<VersionResData> resList;
+}
+
+[Serializable]
+public class VersionResData
+{
+    public string resName;
+    public string resMD5;
+    public long resLength;
+}
+
+[Serializable]
+public class UpdataHistory
+{
+    public List<UpdataHistoryItem> dic;
+}
+[Serializable]
+public class UpdataHistoryItem
+{
+    public string name;
+    public string opt;
+}
+
+public class BuildRes : EditorWindow
+{
+    public enum WindowType
+    {
+        eNone,
+        eSetABName,
+        eBuildDiff,
+    }
+
+    public static WindowType mWindowType = WindowType.eNone;
+
+    [MenuItem("Tools/AssetBundle/增量打包(开发)", false, 500)]
     public static void BuildAdd()
     {
         BuildAB(false);
         BuildLua();
+        Debug.Log(string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
     }
 
-    [MenuItem("Tools/AssetBundle/重新打包")]
+    [MenuItem("Tools/AssetBundle/重新打包(开发)", false, 501)]
     public static void BuildAll()
     {
         BuildAB(true);
         BuildLua();
+        Debug.Log(string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
+    }
+
+    [MenuItem("Tools/AssetBundle/增量打包(正式)", false, 502)]
+    public static void BuildAddOfficial()
+    {
+        BuildAB(false);
+        BuildLua();
+        MD5Res();
+        GeneratorDiff();
+        Debug.Log(string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
+    }
+
+    [MenuItem("Tools/AssetBundle/重新打包(正式)", false, 503)]
+    public static void BuildAllOfficial()
+    {
+        BuildAB(true);
+        BuildLua();
+        MD5Res();
+        GeneratorDiff();
+        Debug.Log(string.Format("{0:yyyy-MM-dd-HH-mm-ss-fff}", DateTime.Now));
     }
 
     static void BuildAB(bool isALL)
@@ -127,21 +185,26 @@ public class BuildRes
         string path = PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform();
         string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
         StringBuilder sb = new StringBuilder();
-        PatchRes patch = new PatchRes();
-        patch.resList = new List<PatchResInfo>(); 
+        VersionRes version = new VersionRes();
+        version.version = "1.00";
+        version.resList = new List<VersionResData>(); 
         for(int i = 0; i < files.Length; i++)
         {
-            PatchResInfo resData = new PatchResInfo();
+            VersionResData resData = new VersionResData();
             resData.resLength = FileUtility.GetFileLength(files[i]);
             resData.resMD5 = FileUtility.MD5File(files[i]);
             resData.resName = files[i].Replace("\\", "/").Replace(path + "/", "");
-            patch.resList.Add(resData);
+            if(resData.resName != "VersionRes.txt")
+            {
+                version.resList.Add(resData);
+            }
+            //sb.AppendLine(string.Format("{0}|{1}|{2}", files[i].Replace("\\", "/").Replace(path + "/", ""), hash, fs.Length));
         }
 
-        string patchJson = JsonUtility.ToJson(patch);
-        FileStream md5FS = File.Open(path + "/PatchRes.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+        string versionJson = JsonUtility.ToJson(version);
+        FileStream md5FS = File.Open(path + "/VersionRes.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
         StreamWriter sw = new StreamWriter(md5FS);
-        sw.Write(patchJson);
+        sw.Write(versionJson);
         sw.Close();
         md5FS.Close();
         md5FS.Dispose();
@@ -178,6 +241,35 @@ public class BuildRes
         FileUtility.ClearEmptyDirectory(path);
     }
 
+    static string GetABName(string path)
+    {
+        string abName = "";
+        path = path.Replace("\\", "/");
+        if(path.Contains("Export/Merge/")) //合并目录，取文件的父目录名字作为AB名
+        {
+            string[] strList = path.Split('/');
+            if(strList.Length >= 2)
+            {
+                abName = strList[strList.Length - 2];
+            }
+            else
+            {
+                Debug.LogError("GetABName Error , Path : " + path);
+            }
+        }
+        else //其余文件,直接取自身名字就可以了
+        {
+            abName = Path.GetFileNameWithoutExtension(path);
+        }
+
+        if(string.IsNullOrEmpty(abName))
+        {
+            Debug.LogError("abName is empty Path : " + path);
+        }
+
+        return abName;
+    }
+
     //设置AB的名字
     static bool SetAllABName()
     {
@@ -191,18 +283,18 @@ public class BuildRes
                 string ext = Path.GetExtension(files[i]);
                 if (ext != ".meta")
                 {
-                    if(!files[i].Contains("Merge"))
+                    string abName = GetABName(files[i]);
+                    if (resMap.ContainsKey(abName))
                     {
-                        string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                        if (resMap.ContainsKey(fileName))
+                        if(!files[i].Replace("\\", "/").Contains("Export/Merge/"))
                         {
-                            Debug.LogError(string.Format("重名资源{0},请检测Export下的文件!", fileName));
+                            Debug.LogError(string.Format("重名资源{0},请检测Export下的文件!", abName));
                             return false;
                         }
-                        else
-                        {
-                            resMap.Add(fileName, fileName);
-                        }
+                    }
+                    else
+                    {
+                        resMap.Add(abName, abName);
                     }
                 }
             }
@@ -210,7 +302,8 @@ public class BuildRes
             for (int i = 0; i < files.Length; i++)
             {
                 string ext = Path.GetExtension(files[i]);
-                if(ext != ".meta")
+                files[i] = files[i].Replace("\\", "/");
+                if (ext != ".meta")
                 {
                     if(files[i].Contains("Shader"))
                     {
@@ -222,10 +315,10 @@ public class BuildRes
                         AssetImporter ai = AssetImporter.GetAtPath(files[i]);
                         ai.assetBundleName = "font";
                     }
-                    else if(files[i].Contains("Merge"))
+                    else if(files[i].Contains("Export/Merge/")) //这个目录下的东西，按照子目录作为一个AB
                     {
                         AssetImporter ai = AssetImporter.GetAtPath(files[i]);
-                        ai.assetBundleName = "alltexture";
+                        ai.assetBundleName = GetABName(files[i]);
                     }
                     else
                     {
@@ -246,9 +339,10 @@ public class BuildRes
     }
 
     //重置AB的名字
+    [MenuItem("Tools/AssetBundle/清空AB名字", false, 600)]
     static void ResetAllABName()
     {
-        string[] files = Directory.GetFiles(PathManager.RES_EXPORT_ROOT_PATH, "*.*", SearchOption.AllDirectories);
+        string[] files = Directory.GetFiles("Assets", "*.*", SearchOption.AllDirectories);
         if (files != null)
         {
             for (int i = 0; i < files.Length; i++)
@@ -261,5 +355,239 @@ public class BuildRes
                 }
             }
         }
+    }
+
+    [MenuItem("Tools/AssetBundle/设置AB名字", false, 601)]
+    private static void SetABNameWindow()
+    {
+        mWindowType = WindowType.eSetABName;
+        EditorWindow window = EditorWindow.GetWindow(typeof(BuildRes));
+        window.Show();
+    }
+
+    private string mABName = "";
+    private static void SetABName(string name)
+    {
+        if (Selection.objects != null)
+        {
+            for (int i = 0; i < Selection.objects.Length; i++)
+            {
+                string assetPath = AssetDatabase.GetAssetPath(Selection.objects[i]);
+                AssetImporter ai = AssetImporter.GetAtPath(assetPath);
+                ai.assetBundleName = name;
+            }
+        }
+    }
+
+    private void OnGUI()
+    {
+        if(mWindowType == WindowType.eSetABName)
+        {
+            mABName = EditorGUILayout.TextField("AB名字", mABName);
+            if (GUILayout.Button("应用AB名字"))
+            {
+                SetABName(mABName);
+            }
+        }
+        else if(mWindowType == WindowType.eBuildDiff)
+        {
+            if (GUILayout.Button("选择资源路径1"))
+            {
+                mDiffResPath1 = EditorUtility.OpenFolderPanel("选择文件", mOfficalPath, "");
+            }
+            mDiffResPath1 = EditorGUILayout.TextField("资源路径1", mDiffResPath1);
+            if (GUILayout.Button("选择资源路径2"))
+            {
+                mDiffResPath2 = EditorUtility.OpenFolderPanel("选择文件", mOfficalPath, "");
+            }
+            mDiffResPath2 = EditorGUILayout.TextField("资源路径2", mDiffResPath2);
+            if (GUILayout.Button("选择生成差异文件路径"))
+            {
+                mOutputDiffPath = EditorUtility.OpenFolderPanel("选择文件", mOfficalPath, "");
+            }
+            mOutputDiffPath = EditorGUILayout.TextField("生成差异文件路径", mOutputDiffPath);
+            if (GUILayout.Button("选择历史差异文件路径"))
+            {
+                mOutputHistoryPath = EditorUtility.OpenFolderPanel("选择文件", mOfficalPath, "");
+            }
+            mOutputHistoryPath = EditorGUILayout.TextField("历史差异文件路径", mOutputHistoryPath);
+            if (GUILayout.Button("生成差异文件"))
+            {
+                GeneratorDiff();
+            }
+        }
+    }
+
+    private static string mDiffResPath1 = "";
+    private static string mDiffResPath2 = "";
+    private static string mOutputDiffPath = "";
+    private static string mOutputHistoryPath = "";
+    private static string mOfficalPath = "";
+    [MenuItem("Tools/AssetBundle/生成差异文件", false, 700)]
+    public static void GeneratorDiffWindow()
+    {
+        //mOfficalPath = PathManager.RES_LOCAL_ROOT_PATH + "/" + PathManager.GetEditorPlatform() + "_offical";
+        mOfficalPath = @"E:\ProjectAAndroid\Branches\Client\MainHotUpdate\ClientRes\Android_offical";
+        //mOfficalPath = @"E:\Project\ProjectA\Branches\Client\Main\ClientRes\Windows_offical";
+        mWindowType = WindowType.eBuildDiff;
+        EditorWindow window = EditorWindow.GetWindow(typeof(BuildRes));
+        window.Show();
+    }
+
+    private static void GeneratorDiff()
+    {
+        StringBuilder result = new StringBuilder();
+        string path1 = mDiffResPath1 + "/VersionRes.txt";
+        string path2 = mDiffResPath2 + "/VersionRes.txt";
+        if (!File.Exists(path1) || !File.Exists(path2))
+        {
+            Debug.LogError("GeneratorDiff 找不到目标文件");
+            return;
+        }
+        string content1 = File.ReadAllText(path1);
+        string content2 = File.ReadAllText(path2);
+        VersionRes data1 = JsonUtility.FromJson<VersionRes>(content1);
+        VersionRes data2 = JsonUtility.FromJson<VersionRes>(content2);
+
+        ReadAllHistory(mOutputHistoryPath);
+
+        string templateStr = "<file path=\"{0}\" opt=\"{1}\" size=\"{2}\"/>";
+        result.AppendLine("<root>");
+        for (int i = 0; i < data1.resList.Count; i++)
+        {
+            VersionResData sourceData = data1.resList[i];
+            VersionResData targetData = data2.resList.Find((VersionResData resData) =>
+            {
+                if (resData.resName == sourceData.resName)
+                {
+                    return true;
+                }
+
+                return false;
+            });
+
+            if (targetData != null)
+            {
+                if (sourceData.resMD5 != targetData.resMD5)
+                {
+                    result.AppendLine(string.Format(templateStr, targetData.resName, GetHistory(targetData.resName, "update"), targetData.resLength));
+                    FileCopyToDir(targetData.resName, mDiffResPath2, mOutputDiffPath);
+                }
+            }
+            else
+            {
+                result.AppendLine(string.Format(templateStr, sourceData.resName, GetHistory(sourceData.resName, "delete"), sourceData.resLength));
+            }
+        }
+
+        for (int i = 0; i < data2.resList.Count; i++)
+        {
+            VersionResData sourceData = data2.resList[i];
+            VersionResData targetData = data1.resList.Find((VersionResData resData) =>
+            {
+                if (resData.resName == sourceData.resName)
+                {
+                    return true;
+                }
+
+                return false;
+            });
+
+            if (targetData == null)
+            {
+                result.AppendLine(string.Format(templateStr, sourceData.resName, GetHistory(sourceData.resName, "add"), sourceData.resLength));
+                FileCopyToDir(sourceData.resName, mDiffResPath2, mOutputDiffPath);
+            }
+        }
+        result.AppendLine("</root>");
+
+        FileStream fs = File.Open(mOutputDiffPath + "/filemanifest.xml", FileMode.Create, FileAccess.ReadWrite);
+        StreamWriter wr = new StreamWriter(fs);
+        wr.Write(result);
+        wr.Close();
+        fs.Close();
+
+        SaveAllHistory(mOutputHistoryPath);
+
+        //ZipUtility.ZipFileFromDirectory(mOutputDiffPath, mOutputDiffPath + ".zip", 4);
+        //ZipUtil.ExeCompOne(mOutputDiffPath, mOutputDiffPath + ".zip");
+
+        Debug.Log("############Finish");
+    }
+
+    public static UpdataHistory history;
+    public static Dictionary<string, string> historDic;
+    public static void ReadAllHistory(string path)
+    {
+        string path1 = path + "/UpdateHistory.txt";
+        if (File.Exists(path1))
+        {
+            string content1 = File.ReadAllText(path1);
+            history = JsonUtility.FromJson<UpdataHistory>(content1);
+        }
+        else
+        {
+            history = new UpdataHistory();
+            history.dic = new List<UpdataHistoryItem>();
+        }
+
+        historDic = new Dictionary<string, string>();
+        for (int i = 0; i < history.dic.Count; i++)
+        {
+            historDic[history.dic[i].name] = history.dic[i].opt;
+        }
+    }
+    public static string GetHistory(string resName, string opt)
+    {
+        if(opt == "delete")
+        {
+            if (historDic.ContainsKey(resName))
+            {
+                historDic.Remove(resName);
+            }
+            return opt;
+        }
+        else
+        {
+            if (historDic.ContainsKey(resName))
+            {
+                historDic[resName] = "update";
+                return "update";
+            }
+            else
+            {
+                historDic.Add(resName, "add");
+                return "add";
+            }
+        }
+    }
+    public static void SaveAllHistory(string path)
+    {
+        history.dic.Clear();
+        foreach (var item in historDic)
+        {
+            UpdataHistoryItem itemList = new UpdataHistoryItem();
+            itemList.name = item.Key;
+            itemList.opt = item.Value;
+            history.dic.Add(itemList);
+        }
+        string versionJson = JsonUtility.ToJson(history);
+        FileStream md5FS = File.Open(path + "/UpdateHistory.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+        StreamWriter sw = new StreamWriter(md5FS);
+        sw.Write(versionJson);
+        sw.Close();
+        md5FS.Close();
+        md5FS.Dispose();
+    }
+
+    static void FileCopyToDir(string res, string source_path, string targetDir)
+    {
+        string dir = targetDir + "/" + res.Remove(res.LastIndexOf('/'));
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        File.Copy(source_path + "/" + res, targetDir + "/" + res);
     }
 }
