@@ -52,7 +52,7 @@ function UIBase:OpenPanel(...)
                 self:ClosePanel()
             else
                 self:EnterStack()
-                self:ShowPanel(SafeUnpack(self.mPanelData))
+                self:ShowPanel(false, SafeUnpack(self.mPanelData))
             end
 
             self:GuideOnOpen()
@@ -65,10 +65,10 @@ function UIBase:OpenPanel(...)
         end
         Messenger:GetInstance():RemoveByTarget(self)
         self:EnterStack()
-        self:ShowPanel(...)
+        self:ShowPanel(false, ...)
     elseif self.mPanelState == 3 then
         self:EnterStack()
-        self:ShowPanel(...)
+        self:ShowPanel(false, ...)
     elseif self.mPanelState == 4 then
         self.mPanelState = 1
     elseif self.mPanelState == 5 then
@@ -82,10 +82,16 @@ function UIBase:EnterStack()
         if(self.mIsFullScreen)then
             local view = UIManager:GetInstance().mViewStack:Peek()
             if view ~= nil then
-                view:HidePanel()
+                view:HidePanel(true)
             end
         end
-        UIManager:GetInstance().mViewStack:Push(self)
+
+        --检测栈中是否已经有了这个界面，如果有了，那么把它提升到栈顶,没有则正常压栈
+        if(UIManager:GetInstance().mViewStack:Contains(self)) then
+            UIManager:GetInstance().mViewStack:MoveToTop(self)
+        else
+            UIManager:GetInstance().mViewStack:Push(self)
+        end
 
         --如果有
         if UIManager:GetInstance():IsStackHaveFullScreen() then
@@ -109,7 +115,7 @@ function UIBase:ExitStack()
                 viewStack:Pop()
                 if viewStack:Count() > 0 then
                     view = viewStack:Peek()
-                    view:ShowPanel(SafeUnpack(view.mPanelData))
+                    view:ShowPanel(true, SafeUnpack(view.mPanelData))
                 end
             else
                 while true do
@@ -124,7 +130,7 @@ function UIBase:ExitStack()
 
                 view = viewStack:Peek()
                 if view ~= nil then
-                    view:ShowPanel(SafeUnpack(view.mPanelData))
+                    view:ShowPanel(true, SafeUnpack(view.mPanelData))
                 end
             end
         end
@@ -137,13 +143,13 @@ function UIBase:ExitStack()
 end
 
 --显示界面
-function UIBase:ShowPanel(...)
+function UIBase:ShowPanel(bImme, ...)
     if not IsNull(self.gameObject) then
         self.mPanelState = 2
         self:OnBind()
         self.gameObject.transform.anchoredPosition = Vector2(0, 0)
         GoUtil.SetActive(self.gameObject, true)
-        self:AnimationIn()
+        self:AnimationIn(bImme)
         self:SetCanvas()
         self:OnShow(...)
     end
@@ -156,11 +162,11 @@ function UIBase:RealHidePanel()
 end
 
 --隐藏界面
-function UIBase:HidePanel()
+function UIBase:HidePanel(bImme)
     if not IsNull(self.gameObject) then
         self.mPanelState = 3
         Messenger:GetInstance():RemoveByTarget(self)
-        self:AnimationOut("hide")
+        self:AnimationOut(bImme, "hide")
         self:OnHide()
     else
         self.mPanelState = 5
@@ -200,7 +206,7 @@ function UIBase:ClosePanel()
         else
             Messenger:GetInstance():RemoveByTarget(self)
             self:OnClose()
-            self:AnimationOut("close")
+            self:AnimationOut(false, "close")
         end
     elseif(self.mPanelState == 3) then
         if self.mIsDontDestroy then
@@ -230,6 +236,14 @@ function UIBase:IsDestroy()
 
         return false
     end
+end
+
+function UIBase:IsShow()
+    if(self.mPanelState == 2) then
+        return true
+    end
+
+    return false
 end
 
 --设置canvas层级
@@ -296,7 +310,7 @@ function UIBase:OnReconnect()
 end
 
 -----------------------------------------打开关闭动画-----------------------------------------
-function UIBase:AnimationIn()
+function UIBase:AnimationIn(bImme)
     --关闭中来了打开消息
     if(self.m_animation_out_timer ~= nil)then
         self.m_animation_out_timer:Stop()
@@ -328,6 +342,11 @@ function UIBase:AnimationIn()
     if(IsNull(t_animation_clip))then
         self:OnAnimationInEnd()
         return
+    else
+        if bImme then
+            self:OnAnimationInEnd()
+            return
+        end
     end
     t_animation:Play(animation_name)
 
@@ -354,7 +373,7 @@ function UIBase:OnAnimationInEnd()
     UIManager:GetInstance():EnableWildMapCam(self, false)
 end
 
-function UIBase:AnimationOut(state)
+function UIBase:AnimationOut(bImme, state)
     UIManager:GetInstance():EnableWildMapCam(self, true)
 
     local t_animation = self.gameObject:GetComponent("Animation")
@@ -382,6 +401,11 @@ function UIBase:AnimationOut(state)
     if(IsNull(t_animation_clip))then
         self:OnAnimationOutEnd(state)
         return
+    else
+        if bImme then
+            self:OnAnimationOutEnd(state)
+            return            
+        end
     end
 
     if(self.m_animation_out_timer == nil)then

@@ -15,11 +15,11 @@ end
 function Stack:Contains(t)
     for i,v in ipairs(self.list) do
         if(v == t) then
-            return true
+            return true, i
         end
     end
 
-    return false
+    return false, -1
 end
 
 function Stack:Peek()
@@ -46,6 +46,21 @@ end
 
 function Stack:Count()
     return #self.list
+end
+
+function Stack:MoveToTop(t)
+    local isHave, index = self:Contains(t)
+    if(isHave) then
+        for i = index, #self.list do
+            if(i == #self.list) then
+                table.remove(self.list, i)
+            else
+                self.list[i] = self.list[i+1]
+            end
+        end
+
+        self:Push(t)
+    end
 end
 
 return Stack

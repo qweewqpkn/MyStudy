@@ -9,17 +9,17 @@
 local Timer = BaseClass("Timer")
 
 -- 构造函数
-local function __init(self, delay, func, obj, loop, use_frame, unscaled)
+local function __init(self, delay, func, obj, loop, use_frame, unscaled, ...)
 	-- 成员变量
 	-- weak表，保证定时器不影响目标对象的回收
 	self.target = setmetatable({}, {__mode = "v"})
 	if delay and func then
-		self:Init(delay, func, obj, loop, use_frame, unscaled)
+		self:Init(delay, func, obj, loop, use_frame, unscaled, ...)
 	end
 end
 
 -- Init
-local function Init(self, delay, func, obj, loop, use_frame, unscaled)
+local function Init(self, delay, func, obj, loop, use_frame, unscaled, ...)
 	assert(type(delay) == "number" and delay >= 0)
 	assert(func ~= nil)
 	-- 时长，秒或者帧
@@ -46,6 +46,7 @@ local function Init(self, delay, func, obj, loop, use_frame, unscaled)
 	self.obj_not_nil = obj and true or false
 	-- 启动定时器时的帧数
 	self.start_frame_count = Time.frameCount
+	self.mParams = SafePack(...)
 end
 
 -- Update
@@ -97,9 +98,9 @@ local function Update(self, is_fixed)
 			-- 说明：运行在保护模式，有错误也只是停掉定时器，不要让客户端挂掉
 			local status, err
 			if self.obj_not_nil then
-				status, err = pcall(self.target.func, self.target.obj)
+				status, err = pcall(self.target.func, self.target.obj, SafeUnpack(self.mParams))
 			else
-				status, err = pcall(self.target.func)
+				status, err = pcall(self.target.func, SafeUnpack(self.mParams))
 			end
 			if not status then
 				self.over = true
@@ -112,7 +113,7 @@ local function Update(self, is_fixed)
 end
 
 -- 启动计时
-local function Start(self)
+local function Start(self, ...)
 	if self.over then
 		Logger.LogError(Logger.Module.COMMON, "You can't start a overed timer, try add a new one!")
 	end
@@ -120,6 +121,7 @@ local function Start(self)
 		self.left = self.delay
 		self.started = true
 		self.start_frame_count = Time.frameCount
+		self.mParams = ConcatSafePack(self.mParams, SafePack(...))
 	end
 end
 

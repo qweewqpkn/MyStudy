@@ -52,13 +52,15 @@ function Messenger:Broadcast(id, ...)
 
 		--chen hang 采用倒序遍历，防止第一个ntf处理后，第二个ntf被跳过的BUG
 		for i = #self.mNotifies[id], 1, -1 do
-			local v = self.mNotifies[id][i]
-			if(v ~= nil and v.func ~= nil) then
-				local args = ConcatSafePack(v.args, SafePack(...))
-				if(v.target ~= nil) then
-					v.func(v.target, SafeUnpack(args))
-				else
-					v.func(SafeUnpack(args))
+			if(self.mNotifies[id] ~= nil)then
+				local v = self.mNotifies[id][i]
+				if(v ~= nil and v.func ~= nil) then
+					local args = ConcatSafePack(v.args, SafePack(...))
+					if(v.target ~= nil) then
+						v.func(v.target, SafeUnpack(args))
+					else
+						v.func(SafeUnpack(args))
+					end
 				end
 			end
 		end
