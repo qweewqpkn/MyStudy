@@ -241,6 +241,27 @@ public class BuildRes : EditorWindow
         FileUtility.ClearEmptyDirectory(path);
     }
 
+    static string GetVariantName(string path)
+    {
+        string variant = "";
+        path = path.Replace("\\", "/");
+        string[] strList = path.Split('/');
+        if (strList.Length >= 2)
+        {
+            variant = strList[strList.Length - 2];
+        }
+        else
+        {
+            Debug.LogError("GetVariantName Error , Path : " + path);
+        }
+
+        if (string.IsNullOrEmpty(variant))
+        {
+            Debug.LogError("variant is empty Path : " + path);
+        }
+        return variant;
+    }
+
     static string GetABName(string path)
     {
         string abName = "";
@@ -286,7 +307,7 @@ public class BuildRes : EditorWindow
                     string abName = GetABName(files[i]);
                     if (resMap.ContainsKey(abName))
                     {
-                        if(!files[i].Replace("\\", "/").Contains("Export/Merge/"))
+                        if(!files[i].Replace("\\", "/").Contains("Export/Merge/") && !files[i].Replace("\\", "/").Contains("Export/Variant/"))
                         {
                             Debug.LogError(string.Format("重名资源{0},请检测Export下的文件!", abName));
                             return false;
@@ -319,6 +340,13 @@ public class BuildRes : EditorWindow
                     {
                         AssetImporter ai = AssetImporter.GetAtPath(files[i]);
                         ai.assetBundleName = GetABName(files[i]);
+                    }
+                    else if(files[i].Contains("Export/Variant/")) //这个目录下的东西，子目录下的资源加上子目录名字作为variant名
+                    {
+                        string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                        AssetImporter ai = AssetImporter.GetAtPath(files[i]);
+                        ai.assetBundleName = fileName;
+                        ai.assetBundleVariant = GetVariantName(files[i]);
                     }
                     else
                     {

@@ -17,6 +17,7 @@ namespace AssetLoad
     public class HRes
     {
         public static Dictionary<string, HRes> mResMap = new Dictionary<string, HRes>();
+        private static List<string> mActiveVariantNameList = new List<string>();
 
         protected ABRequest ABRequest
         {
@@ -92,15 +93,52 @@ namespace AssetLoad
             AssetData = new AssetLoadData();
         }
 
+        public static void ActivateVariantName(string variantName)
+        {
+            mActiveVariantNameList.Add(variantName);
+        }
+
+        public static void RemoveVariantName(string variantName)
+        {
+            mActiveVariantNameList.Remove(variantName);
+        }
+
+        public static string RemapVariantName(string abName, bool isDep)
+        {
+            if(mActiveVariantNameList.Count == 0 || isDep)
+            {
+                return abName;
+            }
+            else
+            {
+                string[] split = abName.Split('.');
+                string[] variantList = HAssetBundle.AssetBundleManifest.GetAllAssetBundlesWithVariant();
+                for(int i = 0; i < variantList.Length; i++)
+                {
+                    string[] curSplit = variantList[i].Split('.');
+                    if (curSplit[0] != split[0])
+                        continue;
+
+                    int found = mActiveVariantNameList.FindIndex((item) => { return item == curSplit[1]; });
+                    if(found != -1)
+                    {
+                        return variantList[i];
+                    }
+                }
+
+                return abName;
+            }
+        }
+
         public static string GetResName(string abName, string assetName)
         {
             return string.IsNullOrEmpty(assetName) ? abName : string.Format("{0}/{1}", abName, assetName);
         }
 
-        public static T Get<T>(string abName, string assetName, AssetType assetType) where T : HRes, new()
+        public static T Get<T>(string abName, string assetName, AssetType assetType, bool isDep = false) where T : HRes, new()
         {
             HRes res = null;
-            abName = abName.ToLower();
+            abName = RemapVariantName(abName.ToLower(), isDep);
             assetName = assetName.ToLower();
             string resName = GetResName(abName, assetName);
             if (!mResMap.TryGetValue(resName, out res))

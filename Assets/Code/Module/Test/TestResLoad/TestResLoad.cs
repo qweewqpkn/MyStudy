@@ -38,9 +38,11 @@ public class TestResLoad : MonoBehaviour {
             //LoadTest8();
             //LoadTest9();
             //LoadSprite();
-            PreLoad();
+            //PreLoad();
             //ReleaseTest();
             //LoadFont();
+
+            LoadABVariant();
         });
     }
 
@@ -313,6 +315,15 @@ public class TestResLoad : MonoBehaviour {
         ResourceManager.Instance.LoadSpriteAsync("sprite", "0003", (sprite) =>
         {
             mSprite1.sprite = sprite;
+        });
+    }
+
+    void LoadABVariant()
+    {
+        ResourceManager.instance.ActivateVariantName("sd");
+        ResourceManager.Instance.LoadPrefabAsync("abvariant", "abvariant", (go, obj) =>
+        {
+            go.name = "123";
         });
     }
 

@@ -47,7 +47,7 @@ public class ABRequest
         mABLoadList.Add(ab);
         for (int i = 0; i < ab.DepList.Count; i++)
         {
-            HAssetBundle depAB = HRes.Get<HAssetBundle>(ab.DepList[i], "", AssetType.eAB);
+            HAssetBundle depAB = HRes.Get<HAssetBundle>(ab.DepList[i], "", AssetType.eAB, true);
             mABLoadList.Add(depAB);
         }
 

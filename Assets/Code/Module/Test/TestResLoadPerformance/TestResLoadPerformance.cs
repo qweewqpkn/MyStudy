@@ -30,7 +30,7 @@ public class TestResLoadPerformance : MonoBehaviour {
         float startTime = Time.realtimeSinceStartup;
         for(int i = 226; i <= 257; i++)
         {
-            ResourceManager.Instance.LoadTexture("alltexture", "_DSC9" + i, true);
+            ResourceManager.Instance.LoadTexture("alltexture", "_DSC9" + i);
         }
         float costTime = Time.realtimeSinceStartup - startTime;
         mAllTimeTxt.text = "All" + costTime.ToString();

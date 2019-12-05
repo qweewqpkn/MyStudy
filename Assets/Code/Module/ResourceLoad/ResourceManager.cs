@@ -27,6 +27,11 @@ namespace AssetLoad
     {
         private Dictionary<string, Material> mMaterialMap = new Dictionary<string, Material>();
 
+        public void ActivateVariantName(string name)
+        {
+            HRes.ActivateVariantName(name);
+        }
+
         #region AB
         //异步加载AB
         public void LoadABAsync(string abName, Action<AssetBundle> callback)

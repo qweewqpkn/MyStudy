@@ -291,6 +291,7 @@ MonoBehaviour:
   mSprite1: {fileID: 94222216}
   mAS: {fileID: 380592297}
   mObj: {fileID: 0}
+  mText: {fileID: 0}
   mStart: 0
   mFrame: 0
 --- !u!81 &243343596
