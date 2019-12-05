@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Code/TestLua/TestLua.unity
+  - enabled: 0
+    path: Assets/Code/Module/Test/TestLua/TestLua.unity
     guid: 3856c855284cbde4f8ca47e6240287dc
+  - enabled: 1
+    path: Assets/Code/Module/Test/TestResLoadPerformance/TestResLoadPerformance.unity
+    guid: 8457b8eea978f2145bcdab05d3af98d6

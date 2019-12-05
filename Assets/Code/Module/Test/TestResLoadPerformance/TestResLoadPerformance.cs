@@ -28,9 +28,9 @@ public class TestResLoadPerformance : MonoBehaviour {
     void LoadAll()
     {
         float startTime = Time.realtimeSinceStartup;
-        for(int i = 1; i <= 15; i++)
+        for(int i = 226; i <= 257; i++)
         {
-            ResourceManager.Instance.LoadTexture("alltexture", "texture" + i);
+            ResourceManager.Instance.LoadTexture("alltexture", "_DSC9" + i, true);
         }
         float costTime = Time.realtimeSinceStartup - startTime;
         mAllTimeTxt.text = "All" + costTime.ToString();
@@ -39,9 +39,9 @@ public class TestResLoadPerformance : MonoBehaviour {
     void LoadOneByOne()
     {
         float startTime = Time.realtimeSinceStartup;
-        for (int i = 1; i <= 15; i++)
+        for (int i = 226; i <= 257; i++)
         {
-            ResourceManager.Instance.LoadTexture("texture" + i, "texture" + i);
+            ResourceManager.Instance.LoadTexture("_DSC9" + i, "_DSC9" + i);
         }
         float costTime = Time.realtimeSinceStartup - startTime;
         mOneByOneTimeTxt.text = "OneByOne" + costTime.ToString();
