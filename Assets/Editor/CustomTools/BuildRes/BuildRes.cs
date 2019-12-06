@@ -246,9 +246,19 @@ public class BuildRes : EditorWindow
         string variant = "";
         path = path.Replace("\\", "/");
         string[] strList = path.Split('/');
-        if (strList.Length >= 2)
+        int variantIndex = -1;
+        for(int i = 0; i < strList.Length; i++)
         {
-            variant = strList[strList.Length - 2];
+            if(strList[i] == "Variant")
+            {
+                variantIndex = i + 1;
+                break;
+            }
+        }
+
+        if (variantIndex != -1)
+        {
+            variant = strList[variantIndex];
         }
         else
         {

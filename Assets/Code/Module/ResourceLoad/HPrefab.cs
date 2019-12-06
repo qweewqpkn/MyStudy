@@ -73,21 +73,26 @@ namespace AssetLoad
         }
 
         //协程请求prefab
-        public static AsyncRequest LoadCoRequest(string abName, string assetName, bool isPreLoad, params object[] args)
+        public static AsyncRequest LoadCoRequest(string abName, string assetName, bool isPreLoad)
         {
             AsyncRequest request = new AsyncRequest();
-            LoadAsync(abName, assetName, isPreLoad, (obj, datas) =>
+            LoadAsync(abName, assetName, isPreLoad, (obj, args) =>
             {
                 request.isDone = true;
                 request.progress = 1;
                 request.Asset = obj;
-            }, args);
+            });
 
             return request;
         }
 
         protected override void OnCompleted(AssetRequest request, bool isPreLoad, Action<AssetLoadData> callback)
         {
+            if (request.Asset == null && request.Assets == null)
+            {
+                Debuger.LogError("ASSET_LOAD", string.Format("Load Res Error, ABName {0}, AssetName {1}", ABName, AssetName));
+            }
+
             AssetData.mAsset = request.Asset;
             if (AssetData.mAsset != null)
             {

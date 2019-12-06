@@ -86,9 +86,9 @@ namespace AssetLoad
         }
 
         //加载prefab协程
-        public AsyncRequest LoadPrefabCoRequest(string abName, string assetName, params object[] args)
+        public AsyncRequest LoadPrefabCoRequest(string abName, string assetName)
         {
-            return HPrefab.LoadCoRequest(abName, assetName, false, args);
+            return HPrefab.LoadCoRequest(abName, assetName, false);
         }
 
         //预加载prefab同步(返回原始prefab,不实例)
@@ -104,9 +104,9 @@ namespace AssetLoad
         }
 
         //预加载prefab协程(返回原始prefab,不实例)
-        public AsyncRequest PreLoadPrefabCoRequest(string abName, string assetName, params object[] args)
+        public AsyncRequest PreLoadPrefabCoRequest(string abName, string assetName)
         {
-            return HPrefab.LoadCoRequest(abName, assetName, true, args);
+            return HPrefab.LoadCoRequest(abName, assetName, true);
         }
         #endregion
 
@@ -327,6 +327,16 @@ namespace AssetLoad
             }
 
             HAssetBundle.ReleaseAssetBundleManifest();
+        }
+
+        public void LogRef()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach(var item in HRes.mResMap)
+            {
+                sb.AppendLine(item.Key + "/" + item.Value.RefCount);
+            }
+            //Debuger.WriteToFile("ResourceRef", sb.ToString());
         }
     }
 }
